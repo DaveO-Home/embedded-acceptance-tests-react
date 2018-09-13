@@ -1,0 +1,36 @@
+{
+    "parserOptions": {
+        "ecmaVersion": 8,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
+    "rules": {
+        "jsx-a11y/href-no-hash": "off",
+        "generator-star-spacing": "off",
+        "camelcase": 0,
+        "comma-dangle": 2,
+        "quotes": 0,
+        "strict": 0
+    },
+    "globals": {
+        "jQuery": true,
+        "$": true,
+        "require": true,
+        "System": true,
+        "testit": true,
+        "Stache": true,
+        "steal": true,
+        "rmain_container": true,
+        "FuseBox": true,
+        "process": true,
+        "module": true,
+        "__karma__": true,
+        "_marked": true
+
+    },
+    "env": { 
+        "browser": true, "jasmine": true, "jquery": true, "amd": true
+    }
+}
