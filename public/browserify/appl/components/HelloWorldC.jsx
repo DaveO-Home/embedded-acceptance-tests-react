@@ -3,7 +3,6 @@ import ReactDOM from "react-dom"
 import App from '../js/app'
 import Setup from '../js/utils/setup'
 import '../assets/App.css'
-import carousel from '../js/carousel'
 
 function Link(props) {
   return <a href={props.url} target="_blank">{props.text}</a>;
@@ -51,7 +50,6 @@ function setData() {
   ReactDOM.render(
     welcomeHtml,
     document.getElementById("main_container"),
-    carousel
   )
 }
 
