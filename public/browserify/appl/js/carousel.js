@@ -45,10 +45,8 @@ export default function () {
     let elements = document.getElementsByClassName('txt-rotate')
     for (let i = 0; i < elements.length; i++) {
         let toRotate = elements[i].getAttribute('data-rotate')
-        //fudging - stealjs has a problem with this is jsx
-        toRotate = '[ "Acceptance Testing with a React App" ]'
         let period = elements[i].getAttribute('data-period')
-
+console.log("ToRotate", toRotate)
         if (toRotate) {
             new TxtRotate(elements[i], JSON.parse(toRotate), period)
         }

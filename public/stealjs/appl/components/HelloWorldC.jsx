@@ -6,6 +6,8 @@ import Setup from 'setup'
 import '~/stealjs/appl/assets/App.css'
 import carousel from 'carousel'
 
+const title = "Acceptance Testing with a React App"
+
 function Link (props) {
   return <a href={props.url} target='_blank'>{props.text}</a>
 }
@@ -18,7 +20,9 @@ const welcomeHtml = (
       <span
           className='txt-rotate'
           data-period='2000'
-          data-rotate='[ "Acceptance Testing with a React App" ]'>
+          //Stealjs does to 
+          // data-rotate='[ "Acceptance Testing with a React App" ]'>
+          data-rotate=''>
         </span>
       </h2>
     </div>

@@ -61,10 +61,11 @@
     "babel-brunch": "^6.1.1",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.6",
-    "babel-loader": "^7.1.5",
+    "babel-loader": "^8.0.4",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-latest": "^6.24.1",
@@ -150,10 +151,9 @@
     "rollup-plugin-uglify": "^5.0.2",
     "semver": "^5.5.1",
     "shelljs": "^0.8.1",
-    "steal": "^1.12.5",
+    "steal": "^2.1.8",
     "steal-css": "^1.3.2",
-    "steal-jsx": "0.0.2",
-    "steal-tools": "^1.11.10",
+    "steal-tools": "^2.0.7",
     "style-loader": "^0.23.0",
     "tablesorter": "^2.31.0",
     "typescript": "^3.0.3",
@@ -211,6 +211,9 @@
       "Menulinks": "stealjs/appl/Menulinks.jsx",
       "Appcss": "stealjs/appl/assets/App.css"
     },
+    "map": {
+      "babel-polyfill": "babel-polyfill/dist/polyfill"
+    },
     "npmAlgorithm": "flat",
     "ext": {
       "css": "steal-css"
@@ -231,7 +234,6 @@
       ]
     },
     "plugins": [
-      "steal-jsx",
       "steal-css"
     ],
     "meta": {
@@ -266,6 +268,9 @@
       "popper": {
         "format": "global",
         "exports": "Popper"
+      },
+      "babel-polyfill/dist/polyfill": {
+        "format": "cjs"
       }
     }
   },
