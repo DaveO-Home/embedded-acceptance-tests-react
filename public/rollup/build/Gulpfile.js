@@ -11,7 +11,6 @@ const csslint = require('gulp-csslint');
 const eslint = require('gulp-eslint');
 const exec = require('child_process').exec;
 const gulp = require('gulp');
-const gulpRollup = require('gulp-rollup');
 const livereload = require('rollup-plugin-livereload');
 const log = require('fancy-log');
 const nodeResolve = require('rollup-plugin-node-resolve');
@@ -28,6 +27,10 @@ const sourcemaps = require('gulp-sourcemaps');
 const stripCode = require("gulp-strip-code");
 const Server = require('karma').Server;
 const uglify = require('gulp-uglify');
+const gulpRollup = require('gulp-rollup');
+const rollupStream = require('rollup-stream')
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
 
 const startComment = "develblock:start",
     endComment = "develblock:end",
@@ -296,6 +299,49 @@ gulp.task('tdd', ['tdd-rollup']);
 gulp.task('test', ['pat']);
 gulp.task('watch', ['rollup-watch']);
 gulp.task('rebuild', ['build-development']);  //remove karma config for node express
+
+/* Something is configured wrong for rollup-stream - using gulp-rollup */
+function streamBuild() {
+    return rollupStream({
+        input: '../appl/main.js',
+        sourcemap: isProduction? true: false,
+            output: {
+                format: "iife",
+                name: "acceptance"
+            },
+            plugins: [
+                progress({
+                    clearLine: isProduction ? false : true
+                }),
+                replaceEnv({
+                    'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
+                }),
+                alias(aliases()),
+                postcss(),
+                nodeResolve({ browser: true, jsnext: true, main: true }),
+                buble(),
+                commonjs(),
+                babel({
+                    babelrc: false,
+                    exclude: ['node_modules/**'],
+                    presets: [["latest", {
+                        es2015: {
+                            modules: false
+                        }
+                    }]],
+                    plugins: ["external-helpers", "transform-react-jsx"]
+                })
+            ],
+      }).on('error', log)
+  
+      .pipe(source('main.js', '../appl'))
+      .pipe(sourcemaps.init({ loadMaps: !isProduction }))
+      .pipe(isProduction ? stripCode({ pattern: regexPattern }) : noop())
+      .pipe(rename('bundle.js'))
+      .pipe(isProduction ? noop() : sourcemaps.write('maps'))
+      .pipe(gulp.dest('./dist'));
+}
+
 
 function rollupBuild() {
     return gulp.src(['../appl/**/*.js'])

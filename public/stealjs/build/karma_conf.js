@@ -8,6 +8,9 @@ module.exports = function (config) {
     config.set({
         basePath: '../../',
         frameworks: ['jasmine-jquery', 'jasmine'],
+        proxies: {
+            "/appl/": "/base/appl/",
+        },
         // list of files / patterns to load in the browser
         files: [
             //Webcomponents for Firefox - used for link tag with import attribute.
@@ -19,18 +22,13 @@ module.exports = function (config) {
             //Module loader - so we can run steal unit tests - see include-all-tests.js
             'node_modules/steal/steal.js',
             {pattern: 'node_modules/steal/**/*.js', watched: false, included: false},
-            {pattern: 'node_modules/steal-jsx/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/steal-css/css.js', watched: false, included: false},
             {pattern: 'node_modules/**/*.map', watched: false, included: false, served: false},
             {pattern: 'node_modules/bootstrap/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/popper.js/dist/umd/*', watched: false, included: false},
-            // {pattern: 'node_modules/de-indent/index.js', watched: false, included: false},
-            // {pattern: 'node_modules/he/he.js', watched: false, included: false},
-            // {pattern: bundler + '/appl/components/**/*.js*', included: false},
             {pattern: 'node_modules/react/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/react-dom/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/redux/**/*.js', watched: false, included: false},
-            // {pattern: 'node_modules/react-router*/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/object-assign/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/prop-types/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/react-router*/**/*.js', watched: false, included: false},
@@ -57,9 +55,6 @@ module.exports = function (config) {
             {pattern: 'index.js', included: false, watched: false, served: false},
             {pattern: bundler + '/appl/**/*.html', included: false},
             {pattern: 'dev-bundle.js', watched: false, included: false},
-            //Test suites
-            // {pattern: bundler + '/appl/jasmine/**/*test.js', included: false, watched: true},
-            //end Test suites
             {pattern: bundler + '/images/favicon.ico', included: false},
             {pattern: bundler + '/appl/assets/*', included: false, watched: false},
             {pattern: 'node_modules/bootstrap/dist/css/bootstrap.min.css', watched: false, included: false},
