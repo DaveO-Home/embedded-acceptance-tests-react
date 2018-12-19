@@ -46,7 +46,7 @@ export default function () {
     for (let i = 0; i < elements.length; i++) {
         let toRotate = elements[i].getAttribute('data-rotate')
         let period = elements[i].getAttribute('data-period')
-console.log("ToRotate", toRotate)
+
         if (toRotate) {
             new TxtRotate(elements[i], JSON.parse(toRotate), period)
         }

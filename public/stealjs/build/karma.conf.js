@@ -9,7 +9,11 @@ module.exports = function (config) {
         basePath: '../../',
         frameworks: ['jasmine-jquery', 'jasmine'],
         proxies: {
-            "/appl/": "/base/appl/",
+            "/views/": "/base/" + bundler + "/appl/views/",
+            "/templates": "/base/" + bundler + "/appl/templates",
+            "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
+            "/README.md": "/base/README.md",
+            "stealjs/appl/": "/base/stealjs/appl/"
         },
         // list of files / patterns to load in the browser
         files: [

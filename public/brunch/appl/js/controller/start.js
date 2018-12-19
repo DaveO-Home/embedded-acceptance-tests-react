@@ -6,7 +6,7 @@ import Menu from '../utils/menu'
 let me
 
 export default App.controllers.Start ||
-    (App.controllers.Start = Object.assign({ // new (Base.extend({
+    (App.controllers.Start = Object.assign({
         name: 'start',
         init () {
             me = this
@@ -26,12 +26,10 @@ export default App.controllers.Start ||
         location: '#/',
         index (options) {
             const indexUrl = 'views/prod/index.html'
-            if (this.base) {
-                me.baseUrl = `base/${window._bundler}/appl/`
-            }
-            const markdownUrl = this.base ? 'base/README.md' : '../../README.md' // typeof testit !== 'undefined' ? '/README.md' : '../../README.md'
+
+            const markdownUrl = '../../README.md'
             this.view({
-                url: me.baseUrl + indexUrl,
+                url: indexUrl,
                 urlMd: markdownUrl,
                 fade: true,
                 controller: 'Start',
@@ -47,8 +45,7 @@ export default App.controllers.Start ||
         'div .login click': function (sender, e) {
             const loginUrl = 'views/prod/login.html'
             me.modal({
-                baseUrl: me.baseUrl,
-                url: me.baseUrl + loginUrl,
+                url: loginUrl,
                 title: 'Account Log In',
                 submit: 'Login',
                 submitCss: 'submit-login',
@@ -68,7 +65,7 @@ export default App.controllers.Start ||
         },
         contact (ev) {
             this.view({
-                url: `${me.baseUrl}views/prod/contact.html`,
+                url: 'prod/contact.html',
                 selector: window.rmain_container || '#main_container',
                 fade: true,
                 contactListener: me.contactListener

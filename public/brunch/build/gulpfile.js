@@ -216,6 +216,7 @@ gulp.task('brunch-tdd', function (done) { //,['accept']
 });
 
 gulp.task('default', ['pat', 'eslint', 'csslint', 'boot', 'build']);
+gulp.task('prod', ['pat', 'eslint', 'csslint', 'boot', 'build']);
 gulp.task('test', ['pat']);
 gulp.task('tdd', ['brunch-tdd']);
 gulp.task('watch', ['brunch-watch']);

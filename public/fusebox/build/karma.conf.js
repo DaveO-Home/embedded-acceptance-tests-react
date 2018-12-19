@@ -1,10 +1,10 @@
-var bundler = "rollup";
+var bundler = "fusebox";
 var startupHtml = bundler + '/appl/testapp_karma.html';
 // Karma configuration
 module.exports = function (config) {
     //whichBrowser to use from gulp task.
-    if (!global.whichBrowsers) {
-        global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"];
+    if (!global.whichBrowser) {
+        global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
     config.set({
         // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -12,25 +12,36 @@ module.exports = function (config) {
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         frameworks: ['jasmine-jquery', 'jasmine'],
+        proxies: {
+            "/views/": "/base/" + bundler + "/appl/views/",
+            "/templates": "/base/" + bundler + "/appl/templates",
+            "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
+            "/README.md": "/base/README.md",
+            "fusebox/appl/": "/base/" + bundler + "/appl/"
+        },
         // list of files / patterns to load in the browser
         files: [
             //Webcomponents for Firefox - used for link tag with import attribute.
-            {pattern: bundler + "/appl/jasmine/webcomponents-hi-sd-ce.js", watched: false},
+            {pattern: bundler + "/tests/webcomponents-hi-sd-ce.js", watched: false},
             //Application and Acceptance specs.
             startupHtml,
             //Jasmine tests
             bundler + '/tests/unit_tests*.js',
             //'node_modules/promise-polyfill/promise.js',
             {pattern: bundler + '/appl/**/*.*', included: false, watched: false},
-            {pattern: 'node_modules/bootstrap/package.json', watched: false, included: false},
-            // {pattern: 'node_modules/font-awesome/**/*', watched: false, included: false},
-            {pattern: 'node_modules/tablesorter/package.json', watched: false, included: false},
+            {pattern: 'package.json', watched: false, included: false},
             {pattern: 'README.md', included: false},
-            //Looking for changes via HMR - tdd should run with Rollup Hot Moudule Reload.
+            {pattern: 'dist_test/' + bundler + '/resources/*', included: false, watched: false},
+            //Looking for changes via HMR - tdd should run with Fusebox Hot Moudule Reload.
+            {pattern: 'dist_test/' + bundler + '/vendor.js', included: false, watched: false},
             //Looking for changes to the client bundle
-            {pattern: 'dist_test/' + bundler + '/bundle.js', included: false, watched: true, served: true},
+            {pattern: 'dist_test/' + bundler + '/acceptance.js', included: false, watched: true, served: true},
             {pattern: bundler + '/images/favicon.ico', included: false, watched: false},
-            {pattern: 'dist_test/node_modules/font-awesome/**/*', included: false, watched: false},
+            {pattern: 'node_modules/bootstrap/dist/css/bootstrap.min.css', watched: false, included: true, served: true},
+            {pattern: 'node_modules/tablesorter/dist/css/theme.blue.min.css', watched: false, included: true, served: true},
+            {pattern: 'node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css', watched: false, included: true, served: true},
+            {pattern: 'node_modules/font-awesome/css/font-awesome.css', watched: false, included: false},
+            {pattern: 'node_modules/font-awesome/fonts/*', watched: false, included: false},
             //Jasmine/Loader tests and starts Karma
             bundler + '/build/karma.bootstrap.js'
         ],
@@ -48,7 +59,7 @@ module.exports = function (config) {
          * This test demo will work with Chrome/ChromeHeadless by default - Webcomponents included above, so FirefoxHeadless should work also. 
          * Other browsers may work with tdd.
          */
-        browsers: global.whichBrowsers,
+        browsers: global.whichBrowser,
         customLaunchers: {
             FirefoxHeadless: {
                 base: 'Firefox',
@@ -59,7 +70,6 @@ module.exports = function (config) {
         exclude: [
         ],
         preprocessors: {
-            '*/**/*.html': []
         },
         reporters: ['mocha'],
         port: 9876,

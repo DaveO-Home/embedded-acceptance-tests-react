@@ -55,14 +55,12 @@ gulp.task('build', ['application'], function () {
  * Build Development bundle from package.json 
  */
 gulp.task('build-development', ['application-development'], function () {
-    
     return isSplitBundle ? browserifyBuild() : noop();
 });
 /**
  * Production Browserify 
  */
 gulp.task('application', ['copyprod'], function () {
-
     isWatchify = false;
     return applicationBuild();
 });
@@ -145,8 +143,7 @@ gulp.task('bootlint', ['eslint', 'csslint'], function (cb) {
 /**
  * Remove previous build
  */
-gulp.task('clean', ['bootlint'], function (done) {
-    
+gulp.task('clean', ['bootlint'], function (done) {   
     isProduction = true;
     dist = prodDist;
     return rmf('../../' + prodDist, [], (err) => {
@@ -159,8 +156,7 @@ gulp.task('clean', ['bootlint'], function (done) {
 /**
  * Remove previous browserify test build
  */
-gulp.task('cleant', function (done) {
-    
+gulp.task('cleant', function (done) {  
     isProduction = false;
     rmf('../../' + testDist + '/node_modules', [], (err) => {
         if (err) {
@@ -229,40 +225,36 @@ gulp.task('b-test', function (done) {
 /**
  * Run watch(HMR)
  */
-gulp.task('b-hmr', ['build-development'], function () {
-    
+gulp.task('b-hmr', ['build-development'], function () {   
     console.log("Watching, will rebuild bundle on code change.");
-
 });
 
 /**
  * Continuous testing - test driven development.  
  */
 gulp.task('tdd-browserify', ['build-development'], function (done) {
-
     if (!browsers) {
         global.whichBrowsers = ["Chrome", "Firefox"];
     }
     new Server({
-        configFile: __dirname + '/karma_conf.js',
+        configFile: __dirname + '/karma.conf.js',
     }, done).start();
-
 });
 /**
  * Karma testing under Opera. -- needs configuation  
  */
 gulp.task('tddo', function (done) {
-
     if (!browsers) {
         global.whichBrowsers = ["Opera"];
     }
     new Server({
-        configFile: __dirname + '/karma_conf.js',
+        configFile: __dirname + '/karma.conf.js',
     }, done).start();
 
 });
 
 gulp.task('default', ['pat', 'eslint', 'csslint', 'bootlint', 'build']);
+gulp.task('prod', ['pat', 'eslint', 'csslint', 'bootlint', 'build']);
 gulp.task('acceptance', ['b-test']);
 gulp.task('tdd', ['tdd-browserify']);
 gulp.task('test', ['pat']);
@@ -271,7 +263,6 @@ gulp.task('server', ['watch']);
 gulp.task('rebuild', ['build-development']);  //remove karma config for node express
 
 function browserifyBuild() {
-
     browserifyInited = browserify({
         debug: !isProduction,
         bundleExternal: true
@@ -342,7 +333,6 @@ function applicationBuild() {
  * Build application bundle for production or development
  */
 function browserifyApp() {
-
     var stream = browserifyInited
             .transform(
                 { global: true },
@@ -362,7 +352,6 @@ function browserifyApp() {
 }
 
 function enableWatchify() {
-
     if (isWatchify) {
         browserifyInited.plugin(watchify);
         browserifyInited.on('update', applicationBuild);
@@ -389,16 +378,14 @@ function copyImages() {
 }
 
 function copyFonts() {
-
     return gulp
             .src(['../../node_modules/font-awesome/fonts/*'])
             .pipe(copy('../../' + dist + '/appl'));
 }
 
 function runKarma(done) {
-    
     new Server({
-        configFile: __dirname + '/karma_conf.js',
+        configFile: __dirname + '/karma.conf.js',
         singleRun: true
     }, function (result) {
         var exitCode = !result ? 0 : result;

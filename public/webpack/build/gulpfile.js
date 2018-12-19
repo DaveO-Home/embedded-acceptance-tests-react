@@ -165,7 +165,7 @@ gulp.task('webpack-tdd', ["test-build"], function (done) {
     }
 
     new Server({
-        configFile: __dirname + '/karma_conf.js'
+        configFile: __dirname + '/karma.conf.js'
     }, done).start();
 });
 /*
@@ -281,6 +281,7 @@ gulp.task("webpack-server", function () {
 });
 
 gulp.task('default', ['pat', 'csslint', 'boot', 'build']);
+gulp.task('prod', ['pat', 'csslint', 'boot', 'build']);
 gulp.task('tdd', ['webpack-tdd']);
 gulp.task('test', ['acceptance-tests']);
 gulp.task('watch', ['webpack-watch']);
@@ -293,7 +294,7 @@ function karmaServer(done) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
     new Server({
-        configFile: __dirname + '/karma_conf.js',
+        configFile: __dirname + '/karma.conf.js',
         singleRun: true,
         watch: false
     }, function (result) {
@@ -339,7 +340,7 @@ function karmaServerSnap(done) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
     new Server({
-        configFile: __dirname + '/karma_conf.js',
+        configFile: __dirname + '/karma.conf.js',
         singleRun: true,
         watch: false
     }, function (result) {
