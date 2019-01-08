@@ -26,6 +26,9 @@ export default function (Start, Helpers, ReactDOM, React, StartC) {
             setTimeout(() => {
                 modal = $('#modalTemplate')
                 nameObject = $('#inputUsername')
+                modal.on('shown.bs.modal', function(html){
+                    modal.modal("toggle"); // primes the toggle - so click will close the modal.
+                });
                 done()
             }, 502)
         })
@@ -35,25 +38,18 @@ export default function (Start, Helpers, ReactDOM, React, StartC) {
             expect(nameObject[0]).toExist()
 
             closeButton = $('.close-modal')
-            closeButton.click(function (ev) {
-                ev.preventDefault()
-                modal.modal('toggle')
-                return false
-            })
             done()
         })
 
         it('Login form - verify cancel and removed from DOM', function (done) {
             expect(modal[0]).toExist()
-            setTimeout(function () {
-                closeButton.click()
+            closeButton.click()
 
-                setTimeout(function () {
-                    expect(modal[0]).not.toBeVisible()
-                    expect(modal[0]).not.toBeInDOM()
-                    done()
-                }, 600)
-            }, 100)
+            setTimeout(function () {
+                expect(modal[0]).not.toBeVisible()
+                expect(modal[0]).not.toBeInDOM()
+                done()
+            }, 600)
         })
     })
 }

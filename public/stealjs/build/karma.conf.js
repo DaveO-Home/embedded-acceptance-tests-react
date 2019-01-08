@@ -36,7 +36,7 @@ module.exports = function (config) {
             {pattern: 'node_modules/object-assign/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/prop-types/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/react-router*/**/*.js', watched: false, included: false},
-            {pattern: 'node_modules/create-react-class/**/*.js', watched: false, included: false},
+            // {pattern: 'node_modules/create-react-class/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/symbol-observable/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/history/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/invariant/**/*.js', watched: false, included: false},
@@ -71,6 +71,7 @@ module.exports = function (config) {
             {pattern: 'node_modules/steal-css/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/font-awesome/css/font-awesome.css', watched: false, included: false},
             {pattern: 'node_modules/font-awesome/fonts/fontawesome-webfont.woff2', watched: false, included: false},
+            {pattern: 'node_modules/scheduler/**/*.js', watched: false, included: false},
             //Jasmine/Steal tests and starts Karma
             bundler + '/build/karma.bootstrap.js'
         ],

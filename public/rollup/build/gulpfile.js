@@ -321,7 +321,7 @@ function streamBuild() {
                 postcss(),
                 nodeResolve({ browser: true, jsnext: true, main: true }),
                 buble(),
-                commonjs(),
+                // commonjs(),
                 babel({
                     babelrc: false,
                     exclude: ['node_modules/**'],
