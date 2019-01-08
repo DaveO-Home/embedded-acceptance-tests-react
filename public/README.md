@@ -4,7 +4,7 @@ This demo is comprised of seven javascript bundlers each configured to run the t
 
 __Note__; the demo was not developed to compare software, rather simply to demonstrate how one might embed test code as part of the build process.  And the configuration also shows how to develop using hot module reload and test driven development.
 
-**Warning**: If the application fails to install with your current node/npm versions, remove the package-lock.json file if found. You should use ```node``` version 6.12.3(npm 3.10.10) to install, however some of the bundlers may require >= 8 or 9 to build.
+**Warning**: If the application fails to install with your current node/npm versions, execute ```npm clean cache --force```, and use at least use ```node``` version 9 and ```npm``` version 6 to install and build.
 
 ## Installation
 
