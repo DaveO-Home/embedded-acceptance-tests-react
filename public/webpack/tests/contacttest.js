@@ -1,6 +1,6 @@
 import { getContact } from '../appl/components/ContactC'
 
-export default function (ContactC, Helpers, ReactDOM, React) {
+export default function (ContactC, Helpers, ReactDOM) {
     /*
      * Test Form validation and submission.
      */
@@ -13,6 +13,7 @@ export default function (ContactC, Helpers, ReactDOM, React) {
         const mainContainer = '#main_container'
 
         it('Contact form - verify required fields', done => {
+            /* eslint no-unused-vars: ["error", { "args": "none" }] */
             getContact().then(function (data) {
                 contact = $(`${mainContainer} form`)
                 nameObject = $('#inputName')

@@ -72,6 +72,7 @@ module.exports = function (config) {
             {pattern: 'node_modules/font-awesome/css/font-awesome.css', watched: false, included: false},
             {pattern: 'node_modules/font-awesome/fonts/fontawesome-webfont.woff2', watched: false, included: false},
             {pattern: 'node_modules/scheduler/**/*.js', watched: false, included: false},
+            {pattern: 'node_modules/isarray/**/*.js', watched: false, included: false},
             //Jasmine/Steal tests and starts Karma
             bundler + '/build/karma.bootstrap.js'
         ],
@@ -106,7 +107,7 @@ module.exports = function (config) {
         port: 9876,
         colors: true,
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_WARN,
+        logLevel: config.LOG_ERROR,
         autoWatch: true,
         singleRun: false,
         loggers: [{

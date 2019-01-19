@@ -23,12 +23,12 @@ export default function (App) {
             spyOn(App, 'loadController').and.callThrough()
             spyOn(App, 'renderTools').and.callThrough()
             spyOn(Helpers, 'isResolved').and.callThrough()
-        }, 3000)
+        }, 5000)
 
         afterAll(() => {
             $('body').empty()            
             window.parent.scrollTo(0, 0);
-        }, 3000)
+        }, 5000)
 
         it('Is Welcome Page Loaded', done => {
             /*

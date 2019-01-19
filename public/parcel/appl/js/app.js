@@ -100,6 +100,7 @@ export default {
             }
         }
     },
+    /* eslint no-unused-vars: ["error", { "args": "none" }] */
     renderTools (options, render) {
         const me = this
         const currentController = this.controllers[capitalize(options.controller)]

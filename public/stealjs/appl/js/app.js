@@ -98,6 +98,7 @@ export default {
             }
         }
     },
+    /* eslint no-unused-vars: ["error", { "args": "none" }] */
     renderTools (options, render) {
         const currentController = this.controllers[capitalize(options.controller)]
         let template

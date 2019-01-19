@@ -12,7 +12,8 @@
         "camelcase": 0,
         "comma-dangle": 2,
         "quotes": 0,
-        "strict": 0
+        "strict": 0,
+        "no-console": ["error", { "allow": ["warn", "error"] }]
     },
     "globals": {
         "jQuery": true,
@@ -27,7 +28,8 @@
         "process": true,
         "module": true,
         "__karma__": true,
-        "_marked": true
+        "_marked": true,
+        "Promise": true
 
     },
     "env": { 

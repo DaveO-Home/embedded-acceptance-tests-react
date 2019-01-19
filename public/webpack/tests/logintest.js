@@ -26,6 +26,7 @@ export default function (Start, Helpers, ReactDOM, React, StartC) {
             setTimeout(() => {
                 modal = $('#modalTemplate')
                 nameObject = $('#inputUsername')
+                /* eslint no-unused-vars: ["error", { "args": "none" }] */
                 modal.on('shown.bs.modal', function (html) {
                     modal.modal('toggle') // primes the toggle - so click will close the modal.
                 })

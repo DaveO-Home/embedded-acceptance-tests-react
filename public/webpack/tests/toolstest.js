@@ -21,6 +21,7 @@ export default function (ToolsC, Helpers, ReactDOM, React) {
                 document.querySelector('#main_container')
               )
             // Wait for Web Page to be loaded
+            /* eslint no-unused-vars: ["error", { "args": "none" }] */
             new Promise(function (resolve, reject) {
                 Helpers.isResolved(resolve, reject, ReactDOM, 'main_container', 0, 0)
             }).catch(function (rejected) {

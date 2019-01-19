@@ -1,6 +1,5 @@
 /* eslint "comma-style": [0, "last"] */
 
-import startsWith from 'lodash-es/startsWith'
 import capitalize from 'lodash-es/capitalize'
 import 'bootstrap'
 
@@ -99,6 +98,7 @@ export default {
             }
         }
     },
+    /* eslint no-unused-vars: ["error", { "args": "none" }] */
     renderTools (options, render) {
         const currentController = this.controllers[capitalize(options.controller)]
         let template

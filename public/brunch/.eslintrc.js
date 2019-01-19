@@ -12,7 +12,8 @@ module.exports = {
     jquery: true
   },
   // https://github.com/standard/standard/blob/master/docs/RULES-en.md
-  extends: 'standard',
+  // extends: 'standard',
+  extends: ["eslint:recommended", "plugin:react/recommended"],
   plugins: [
     'html'
   ],
@@ -45,6 +46,7 @@ module.exports = {
       'process': true,
       '__karma__': true,
       'define': true,
-      'spyOnEvent': true
+      'spyOnEvent': true,
+      'Promise': true
   }
 }

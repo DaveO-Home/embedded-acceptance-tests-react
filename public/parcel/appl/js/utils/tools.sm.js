@@ -55,7 +55,7 @@ function toolsApp(state, action) {
 			newState = Object.assign({}, state);
 			found = findEntry(newState.tools.items[action.index].message, newState.tools.items)
 			return newState;
-
+/*
 		case 'DELETE_TOOLS':
 			let items = [].concat(state.tools.items);
 
@@ -66,7 +66,7 @@ function toolsApp(state, action) {
 					items: items
 				}
 			});
-
+*/
 		case 'CLEAR_TOOLS':
 			return Object.assign({}, state, {
 				tools: {
@@ -95,6 +95,10 @@ function replaceTools(index) {
 	};
 }
 
+function buildStateManagement() {
+	store = createStore(toolsApp, createState());
+}
+/*
 function deleteTools(index) {
 	return {
 		type: 'DELETE_TOOLS',
@@ -107,11 +111,7 @@ function clearTools() {
 		type: 'CLEAR_TOOLS'
 	};
 }
-
-function buildStateManagement() {
-	store = createStore(toolsApp, createState());
-}
-
+*/
 export default {
 	toolsStateManagement() {
 		buildStateManagement()
@@ -125,6 +125,7 @@ export default {
 	replaceCategory(index) {
 		return store.dispatch(replaceTools(index))
 	},
+	/* eslint no-unused-vars: ["error", { "args": "none" }] */
 	findEntry(message, items) {
 		return findEntry(message, store.getState().tools.items)
 	}

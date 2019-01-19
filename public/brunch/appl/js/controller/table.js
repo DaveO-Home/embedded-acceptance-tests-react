@@ -6,6 +6,7 @@ export default App.controllers['Table'] || (App.controllers['Table'] = Object.as
     defaults: {
     },
     name: 'table',
+    /* eslint no-unused-vars: ["error", { "args": "none" }] */
     tools (data) {
         const toolsUrl = 'templates/stache/'
 
@@ -64,7 +65,7 @@ export default App.controllers['Table'] || (App.controllers['Table'] = Object.as
         e.preventDefault()
         this.dropdownEvent(sender)
     },
-    dropdownEvent (sender) { },
+    dropdownEvent (/* sender */) { },
     getHtml () {
         return this.html
     },

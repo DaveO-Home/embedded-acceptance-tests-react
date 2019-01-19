@@ -53,7 +53,7 @@ function toolsApp (state, action) {
             newState = Object.assign({}, state)
             found = findEntry(newState.tools.items[action.index].message, newState.tools.items)
             return newState
-
+/*
         case 'DELETE_TOOLS':
             let items = [].concat(state.tools.items)
 
@@ -64,7 +64,7 @@ function toolsApp (state, action) {
                     items: items
                 }
             })
-
+*/
         case 'CLEAR_TOOLS':
             return Object.assign({}, state, {
                 tools: {
@@ -123,6 +123,7 @@ export default {
     replaceCategory (index) {
         return store.dispatch(replaceTools(index))
     },
+    /* eslint no-unused-vars: ["error", { "args": "none" }] */
     findEntry (message, items) {
         return findEntry(message, store.getState().tools.items)
     }
