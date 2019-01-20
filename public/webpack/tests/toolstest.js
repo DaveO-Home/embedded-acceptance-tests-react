@@ -44,7 +44,7 @@ export default function (ToolsC, Helpers, ReactDOM, React) {
                     afterValue = tools.find('tbody').find('tr:nth-child(1)').find('td:nth-child(2)').text()
                     newReduxValue = $('#tools-state').text().split(' ', 1)
                     done()
-                }, 100)
+                }, 750)
             })
         })
 

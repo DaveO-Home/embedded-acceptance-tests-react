@@ -301,57 +301,62 @@ gulp.task('test', ['pat']);
 gulp.task('watch', ['rollup-watch']);
 gulp.task('rebuild', ['build-development']);  //remove karma config for node express
 
-/* Something is configured wrong for rollup-stream - using gulp-rollup */
+/* Something is configured wrong for rollup-stream? */
 function streamBuild() {
     return rollupStream({
         input: '../appl/main.js',
-        sourcemap: isProduction? true: false,
-            output: {
-                format: "iife",
-                name: "acceptance"
-            },
-            plugins: [
-                progress({
-                    clearLine: isProduction ? false : true
-                }),
-                replaceEnv({
-                    'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
-                }),
-                alias(aliases()),
-                postcss(),
-                nodeResolve({ browser: true, jsnext: true, main: true }),
-                buble(),
-                // commonjs(),
-                babel({
-                    babelrc: false,
-                    exclude: ['node_modules/**'],
-                    presets: [["latest", {
-                        es2015: {
-                            modules: false
-                        }
-                    }]],
-                    plugins: ["external-helpers", "transform-react-jsx"]
-                })
-            ],
-      }).on('error', log)
-  
-      .pipe(source('main.js', '../appl'))
-      .pipe(sourcemaps.init({ loadMaps: !isProduction }))
-      .pipe(isProduction ? stripCode({ pattern: regexPattern }) : noop())
-      .pipe(rename('bundle.js'))
-      .pipe(isProduction ? noop() : sourcemaps.write('maps'))
-      .pipe(gulp.dest('./dist'));
+        sourcemap: isProduction ? true : false,
+        output: {
+            format: "iife",
+            name: "acceptance"
+        },
+        plugins: [
+            progress({
+                clearLine: isProduction ? false : true
+            }),
+            replaceEnv({
+                'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
+            }),
+            alias(aliases()),
+            postcss(),
+            buble(),
+            nodeResolve({
+                jsnext: true, main: true,
+                extensions: ['.js', '.jsx', '.json'],
+            }),
+            commonjs({
+                include: ['../../node_modules/**'],
+            }),
+            babel({
+                babelrc: false,
+                exclude: ['node_modules/**'],
+                presets: [["latest", {
+                    es2015: {
+                        modules: false
+                    }
+                }]],
+                plugins: ["external-helpers", "transform-react-jsx"]
+            })
+        ],
+    }).on('error', log)
+        // .pipe(source('main.js', '../appl'))
+        .pipe(sourcemaps.init({ loadMaps: !isProduction }))
+        .pipe(isProduction ? stripCode({ pattern: regexPattern }) : noop())
+        .pipe(rename('bundle.js'))
+        .pipe(isProduction ? noop() : sourcemaps.write('maps'))
+        .pipe(gulp.dest('./dist'));
 }
 
 
 function rollupBuild() {
+    return streamBuild()
     return gulp.src(['../appl/**/*.js'])
         //.pipe(removeCode({production: isProduction}))
         .pipe(isProduction ? stripCode({ pattern: regexPattern }) : noop())
         .pipe(gulpRollup({
-            allowRealFiles: true,
+            // allowRealFiles: true,
             input: '../appl/main.js',
-            impliedExtensions: ['js', 'jsx'],
+            // impliedExtensions: ['js', 'jsx'],
             output: {
                 format: "iife",
                 name: "acceptance"
@@ -365,9 +370,14 @@ function rollupBuild() {
                 }),
                 alias(aliases()),
                 postcss(),
-                nodeResolve({ browser: true, jsnext: true, main: true }),
                 buble(),
-                commonjs(),
+                nodeResolve({
+                    jsnext: true, main: true,
+                    extensions: ['.js', '.jsx', '.json'],
+                }),
+                commonjs({
+                    include: ['../../node_modules/**'],
+                }),
                 babel({
                     babelrc: false,
                     exclude: ['node_modules/**'],
