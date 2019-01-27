@@ -1,5 +1,6 @@
 .DS_Store
 copyjs.sh
+public/rollup/build/build/*
 gitX/*
 public/parcel/build/.cache
 public/.cache

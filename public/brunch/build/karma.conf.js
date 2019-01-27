@@ -91,10 +91,7 @@ module.exports = {
         captureConsole: true,
         clearContext: false,
         runInParent: true,
-        useIframe: true,
-        jasmine: {
-            random: false
-        }
+        useIframe: true
     },
     // how many browser should be started simultaneous
     concurrency: 5 //Infinity

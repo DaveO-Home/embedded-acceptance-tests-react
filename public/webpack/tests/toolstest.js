@@ -1,6 +1,6 @@
 import ToolsSM from '../appl/js/utils/tools.sm'
 
-export default function (ToolsC, Helpers, ReactDOM, React) {
+export default function (ToolsC, Helpers, ReactDOM, React, timer) {
     /*
      * Test that new data are loaded when the select value changes.
      */
@@ -19,7 +19,7 @@ export default function (ToolsC, Helpers, ReactDOM, React) {
             ReactDOM.render(
                 <ToolsC />,
                 document.querySelector('#main_container')
-              )
+            )
             // Wait for Web Page to be loaded
             /* eslint no-unused-vars: ["error", { "args": "none" }] */
             new Promise(function (resolve, reject) {
@@ -38,13 +38,17 @@ export default function (ToolsC, Helpers, ReactDOM, React) {
                 spyToolsEvent = spyOnEvent(selectorItem, 'select')
                 selectorItem.click()
                 Helpers.fireEvent(selectorItem, 'select')
-                // Note: if page does not refresh, increase the Timeout time.
-                // Using setTimeout instead of Promise.
-                setTimeout(function () {
+                // Note: if page does not refresh, increase the timer time.
+                // Using RxJs instead of Promise.
+                const numbers = timer(50, 50);
+                const observable = numbers.subscribe(timer => {
                     afterValue = tools.find('tbody').find('tr:nth-child(1)').find('td:nth-child(2)').text()
-                    newReduxValue = $('#tools-state').text().split(' ', 1)
-                    done()
-                }, 750)
+                    if (afterValue !== beforeValue || timer === 25) {
+                        newReduxValue = $('#tools-state').text().split(" ", 1)
+                        observable.unsubscribe();
+                        done();
+                    }
+                })
             })
         })
 

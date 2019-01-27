@@ -9,10 +9,11 @@ import React from "react"
 import ReactDOM, { render, unmountComponentAtNode } from "react-dom"
 import StartC, { getStartComp } from "../components/StartC"
 import PdfC, { getPdfComp } from "../components/PdfC"
-import ToolsC, { getToolsComp }  from "../components/ToolsC"
+import ToolsC, { getToolsComp } from "../components/ToolsC"
 import ContactC from "../components/ContactC"
 import Login from "../components/LoginC"
 import WelcomeC from "../components/HelloWorldC"
+import { timer } from "rxjs"
 // import { render, fireEvent, cleanup, waitForElement } from 'react-testing-library'
 
 export default function (App) {
@@ -27,14 +28,14 @@ export default function (App) {
 
         afterAll(() => {
             window.parent.scrollTo(0, 0);
-            $('body').empty()       
+            $('body').empty()
         }, 5000)
 
         it('Is Welcome Page Loaded', done => {
             /*
              * Loading Welcome page.
              */
-            getStartComp().then(function(StartComp) {
+            getStartComp().then(function (StartComp) {
                 ReactDOM.render(
                     <StartComp />,
                     document.getElementById("main_container"),
@@ -57,26 +58,25 @@ export default function (App) {
                 <ToolsC />,
                 document.querySelector("#main_container")
             )
-            new Promise((resolve, reject) => {
-                Helpers.isResolved(resolve, reject, ReactDOM, 'main_container', 0, 0)
-            }).catch(rejected => {
-                fail(`The Tools Page did not load within limited time: ${rejected}`)
-            }).then(resolved => {
-                expect(App.loadController).toHaveBeenCalled()
-                expect(App.renderTools.calls.count()).toEqual(1)
-                expect(App.controllers['Table']).not.toBeUndefined()
-                expect(document.getElementById('main_container').querySelector('#tools').children.length > 1).toBe(true)
+            Helpers.getResource(ReactDOM, 'main_container', 0, 0)
+                .catch(rejected => {
+                    fail(`The Tools Page did not load within limited time: ${rejected}`)
+                }).then(resolved => {
+                    expect(App.loadController).toHaveBeenCalled()
+                    expect(App.renderTools.calls.count()).toEqual(1)
+                    expect(App.controllers['Table']).not.toBeUndefined()
+                    expect(document.getElementById('main_container').querySelector('#tools').children.length > 1).toBe(true)
 
-                domTest('tools', document.querySelector('#main_container'))
-                done()
-            })
+                    domTest('tools', document.querySelector('#main_container'))
+                    done()
+                })
         })
-        
+
         it('Is Pdf Loaded', done => {
             ReactDOM.render(
                 getPdfComp(),
                 document.querySelector("#main_container"),
-                function() {
+                function () {
                     expect(document.querySelector('#main_container').children.length === 1).toBe(true)
 
                     domTest('pdf', document.querySelector('#main_container'))
@@ -90,11 +90,11 @@ export default function (App) {
 
         // Executing here makes sure the tests are run in sequence.
         // Spec to test if page data changes on select change event.
-        toolsTest(ToolsC, Helpers, ReactDOM, React)
+        toolsTest(ToolsC, Helpers, ReactDOM, React, timer)
         // Form Validation
         contactTest(ContactC, Helpers, ReactDOM, React)
         // Verify modal form
-        loginTest(Start, Helpers, ReactDOM, React, StartC)
+        loginTest(Start, Helpers, ReactDOM, React, StartC, timer)
 
         if (testOnly) {
             it('Testing only', () => {

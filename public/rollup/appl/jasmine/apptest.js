@@ -14,6 +14,7 @@ import ContactC from "../components/ContactC"
 import Login from "../components/LoginC"
 import WelcomeC from "../components/HelloWorldC"
 import Menulinks from "../Menulinks"
+import { timer } from "rxjs"
 // import { render, fireEvent, cleanup, waitForElement } from 'react-testing-library'
 
 export default function (App) {
@@ -28,7 +29,7 @@ export default function (App) {
 
         afterAll(() => {
             window.parent.scrollTo(0, 0);
-            $('body').empty()       
+            $('body').empty()
         }, 5000)
 
         it('Is Welcome Page Loaded', done => {
@@ -49,7 +50,7 @@ export default function (App) {
                 )
             })
         })
-        
+
         it('Is Pdf Loaded', done => {
             ReactDOM.render(
                 getPdfComp(),
@@ -71,19 +72,18 @@ export default function (App) {
                 <ToolsC />,
                 document.querySelector("#main_container")
             )
-            new Promise((resolve, reject) => {
-                Helpers.isResolved(resolve, reject, ReactDOM, 'main_container', 0, 2)
-            }).catch(rejected => {
-                fail(`The Tools Page did not load within limited time: ${rejected}`)
-            }).then(resolved => {
-                expect(App.loadController).toHaveBeenCalled()
-                expect(App.renderTools.calls.count()).toEqual(1)
-                expect(App.controllers['Table']).not.toBeUndefined()
-                expect(document.getElementById('main_container').querySelector('#tools').children.length > 1).toBe(true)
+            Helpers.getResource(ReactDOM, 'main_container', 0, 2)
+                .catch(rejected => {
+                    fail(`The Tools Page did not load within limited time: ${rejected}`)
+                }).then(resolved => {
+                    expect(App.loadController).toHaveBeenCalled()
+                    expect(App.renderTools.calls.count()).toEqual(1)
+                    expect(App.controllers['Table']).not.toBeUndefined()
+                    expect(document.getElementById('main_container').querySelector('#tools').children.length > 1).toBe(true)
 
-                domTest('tools', document.querySelector('#main_container'))
-                done()
-            })
+                    domTest('tools', document.querySelector('#main_container'))
+                    done()
+                })
         })
 
         routerTest("table")
@@ -91,11 +91,11 @@ export default function (App) {
 
         // Executing here makes sure the tests are run in sequence.
         // Spec to test if page data changes on select change event.
-        toolsTest(ToolsC, Helpers, ReactDOM, React)
+        toolsTest(ToolsC, Helpers, ReactDOM, React, timer)
         // Form Validation
         contactTest(ContactC, Helpers, ReactDOM, React)
         // Verify modal form
-        loginTest(Start, Helpers, ReactDOM, React, StartC)
+        loginTest(Start, Helpers, ReactDOM, React, StartC, timer)
 
         if (testOnly) {
             it('Testing only', () => {

@@ -64,7 +64,7 @@ module.exports = function (config) {
         port: 9876,
         colors: true,
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_ERROR,
+        logLevel: config.LOG_INFO,
         autoWatch: true,
         singleRun: false,
         loggers: [{
@@ -76,9 +76,6 @@ module.exports = function (config) {
             clearContext: false,
             runInParent: true,
             useIframe: true,
-            jasmine: {
-                random: false
-            }
         },
         concurrency: 5
     });

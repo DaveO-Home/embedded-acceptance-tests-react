@@ -15,6 +15,7 @@ import ContactC from 'ContactC'
 import Login from 'LoginC'
 // import WelcomeC from '../appl/components/HelloWorldC'
 import Menulinks from 'Menulinks'
+import { timer } from 'rxjs'
 // import { render, fireEvent, cleanup, waitForElement } from 'react-testing-library'
 
 export default function (App) {
@@ -95,11 +96,11 @@ export default function (App) {
 
         // Executing here makes sure the tests are run in sequence.
         // Spec to test if page data changes on select change event.
-        toolsTest(ToolsC, Helpers, ReactDOM, React)
+        toolsTest(ToolsC, Helpers, ReactDOM, React, timer)
         // Form Validation
         contactTest(ContactC, Helpers, ReactDOM, React)
         // Verify modal form
-        loginTest(Start, Helpers, ReactDOM, React, StartC)
+        loginTest(Start, Helpers, ReactDOM, React, StartC, timer)
 
         if (testOnly) {
             it('Testing only', () => {

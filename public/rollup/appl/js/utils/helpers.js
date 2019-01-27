@@ -1,12 +1,12 @@
 import moment from 'moment'
 
 export default {
-    scrollTop () {
+    scrollTop() {
         $('html, body').animate({
             scrollTop: 0
         }, 'slow')
     },
-    convertToBoolean (value) {
+    convertToBoolean(value) {
         if (!this.isNullOrEmpty(value)) {
             return false
         }
@@ -25,19 +25,19 @@ export default {
         }
         return Boolean(value)
     },
-    parseJson (json) {
+    parseJson(json) {
         return (JSON && JSON.parse(json)) || $.parseJSON(json)
     },
-    isNullOrEmpty (value) {
+    isNullOrEmpty(value) {
         return typeof value === 'undefined' || value === null || value.length === 0
     },
-    getValueOrDefault (value, defaultValue) {
+    getValueOrDefault(value, defaultValue) {
         return !this.isNullOrEmpty(value) ? value : defaultValue
     },
-    endsWith (str, endswith) {
+    endsWith(str, endswith) {
         return str.endsWith(endswith)
     },
-    getWeekKeys () {
+    getWeekKeys() {
         const nthWeek = moment().format('w')
         const year = moment().format('TYYYY')
         const weekKeys = []
@@ -48,7 +48,7 @@ export default {
         }
         return weekKeys
     },
-    getOptions (keys, values) {
+    getOptions(keys, values) {
         if (!values || values.length !== keys.length) {
             values = keys
         }
@@ -61,7 +61,7 @@ export default {
         return options
     },
     // Insert loaded html into main_container or specified element
-    renderer (controller, options) {
+    renderer(controller, options) {
         const helper = this
 
         return frag => {
@@ -88,7 +88,7 @@ export default {
             helper.scrollTop()
         }
     },
-    isLoaded: function isLoaded (resolve, reject, dataHtml, Controller, counter, length) {
+    isLoaded: function isLoaded(resolve, reject, dataHtml, Controller, counter, length) {
         switch (Controller.name) {
             case 'start':
             case 'table':
@@ -118,7 +118,7 @@ export default {
     ,
     // Custom promise for async call for a resource.
     // If the DOM (#main_container) is populated then the promise is complete.
-    isResolved: function isResolved (resolve, reject, vm, selectorId, counter, length) {
+    isResolved: function isResolved(resolve, reject, vm, selectorId, counter, length) {
         const container = document.getElementById(`${selectorId}`)
         if (!container) {
             resolve('loaded')
@@ -142,9 +142,18 @@ export default {
 
         return true
     },
+    getResource(vm, selector, startCount, childrenLength) {
+        return new Promise((resolve, reject) => {
+            this.isResolved(resolve, reject, vm, selector, startCount, childrenLength)
+        }).catch(rejected => {
+            fail(`The ${selector} Page did not load within limited time: ${rejected}`)
+        }).then(resolved => {
+            return resolved
+        })
+    },
     // Per Stack Overflow - Fire a click event in raw javascript
     /* global extend:true */
-    fireEvent (...args) {
+    fireEvent(...args) {
         let eventType = null
         let i
         let j
@@ -208,7 +217,7 @@ export default {
             args[0].fireEvent(`on${args[1]}`, event)
         }
     },
-    change: function change () {
+    change: function change() {
         let name
         for (name in arguments[1]) {
             if ((typeof arguments[1][name]) === 'object') {

@@ -1,6 +1,6 @@
 import ToolsSM from "../appl/js/utils/tools.sm"
 
-export default function (ToolsC, Helpers, ReactDOM, React) {
+export default function (ToolsC, Helpers, ReactDOM, React, timer) {
     /*
      * Test that new data are loaded when the select value changes.
      */
@@ -19,32 +19,36 @@ export default function (ToolsC, Helpers, ReactDOM, React) {
             ReactDOM.render(
                 <ToolsC />,
                 document.querySelector("#main_container")
-              )
+            )
             // Wait for Web Page to be loaded
-            new Promise(function (resolve, reject) {
-                Helpers.isResolved(resolve, reject, ReactDOM, 'main_container', 0, 0)
-            }).catch(function (rejected) {
-                fail('The Tools Page did not load within limited time: ' + rejected)
-            }).then(function (resolved) {
-                tools = $('#tools')
-                beforeValue = tools.find('tbody').find('tr:nth-child(1)').find('td:nth-child(2)').text()
-                defaultReduxValue = $('#tools-state').text().split(" ", 1)
-
-                selectorObject = $('#dropdown0')
-                selectorObject = document.activeElement
-                selectorObject.click()
-                selectorItem = $('#dropdown1 a')[1]
-                spyToolsEvent = spyOnEvent(selectorItem, 'select')
-                selectorItem.click()
-                Helpers.fireEvent(selectorItem, 'select')
-                // Note: if page does not refresh, increase the Timeout time.
-                // Using setTimeout instead of Promise.
-                setTimeout(function () {
-                    afterValue = tools.find('tbody').find('tr:nth-child(1)').find('td:nth-child(2)').text()
-                    newReduxValue = $('#tools-state').text().split(" ", 1)
+            Helpers.getResource(ReactDOM, 'main_container', 0, 0)
+                .catch(function (rejected) {
+                    fail('The Tools Page did not load within limited time: ' + rejected)
                     done()
-                }, 750)
-            })
+                }).then(function (resolved) {
+                    tools = $('#tools')
+                    beforeValue = tools.find('tbody').find('tr:nth-child(1)').find('td:nth-child(2)').text()
+                    defaultReduxValue = $('#tools-state').text().split(" ", 1)
+
+                    selectorObject = $('#dropdown0')
+                    selectorObject = document.activeElement
+                    selectorObject.click()
+                    selectorItem = $('#dropdown1 a')[1]
+                    spyToolsEvent = spyOnEvent(selectorItem, 'select')
+                    selectorItem.click()
+                    Helpers.fireEvent(selectorItem, 'select')
+                    // Note: if page does not refresh, increase the timer time.
+                    // Using RxJs instead of Promise.
+                    const numbers = timer(50, 50);
+                    const observable = numbers.subscribe(timer => {
+                        afterValue = tools.find('tbody').find('tr:nth-child(1)').find('td:nth-child(2)').text()
+                        if (afterValue !== beforeValue || timer === 25) {
+                            newReduxValue = $('#tools-state').text().split(" ", 1)
+                            observable.unsubscribe();
+                            done();
+                        }
+                    })
+                })
         })
 
         it('setup and click events executed.', function () {
@@ -72,7 +76,7 @@ export default function (ToolsC, Helpers, ReactDOM, React) {
             expect(newReduxValue[0]).toBe('Category1')
         })
 
-        it('verify state management', function() {
+        it('verify state management', function () {
             const items = ToolsSM.getStore().getState().tools.items
             expect(items.length).toBe(2)
             expect(items[0].displayed).toBe(false)

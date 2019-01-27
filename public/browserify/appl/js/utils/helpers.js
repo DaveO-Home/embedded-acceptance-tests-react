@@ -124,7 +124,6 @@ export default {
             resolve('loaded')
             return true
         }
-
         if (container && container.children[0].children.length > length) {
             resolve(`loaded - with counter/length: ${counter} - ${container.children[0].children.length}`)
         } else {
@@ -141,6 +140,15 @@ export default {
         }
 
         return true
+    },
+    getResource (vm, selector, startCount, childrenLength) {
+        return new Promise((resolve, reject) => {
+            this.isResolved(resolve, reject, vm, selector, startCount, childrenLength)
+        }).catch(rejected => {
+            fail(`The ${selector} Page did not load within limited time: ${rejected}`)
+        }).then(resolved => {
+            return resolved
+        })
     },
     // Per Stack Overflow - Fire a click event in raw javascript
     /* global extend:true */

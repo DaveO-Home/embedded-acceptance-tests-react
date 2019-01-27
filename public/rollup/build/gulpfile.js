@@ -23,14 +23,11 @@ const replaceEnv = require('rollup-plugin-replace')
 const rmf = require('rimraf')
 const rollup = require('rollup');
 const serve = require('rollup-plugin-serve');
-const sourcemaps = require('gulp-sourcemaps');
 const stripCode = require("gulp-strip-code");
 const Server = require('karma').Server;
 const uglify = require('gulp-uglify');
-const gulpRollup = require('gulp-rollup');
-const rollupStream = require('rollup-stream')
-const source = require('vinyl-source-stream');
-const buffer = require('vinyl-buffer');
+const chalk = require('chalk');
+const { timer } = require('rxjs');
 
 const startComment = "develblock:start",
     endComment = "develblock:end",
@@ -44,6 +41,7 @@ let browsers = process.env.USE_BROWSERS
 let testDist = "dist_test/rollup"
 let prodDist = "dist/rollup"
 let dist = isProduction ? prodDist : testDist
+let built = false;
 
 if (browsers) {
     global.whichBrowsers = browsers.split(",");
@@ -53,14 +51,13 @@ if (browsers) {
  */
 gulp.task('build-development', ['copy'], function () {
     //var initialTask = this.seq.slice(-1)[0];
-    return rollupBuild();
+    rollupBuild();
 });
 /**
  * Production Rollup 
  */
-gulp.task('build', ['copyprod'], function () {
-
-    return rollupBuild();
+gulp.task('build', ['copyprod'], function (done) {
+    rollupBuild(done);
 });
 /**
  * Default: Production Acceptance Tests 
@@ -69,8 +66,14 @@ gulp.task('pat', ['build-development'], function (done) {
     if (!browsers) {
         global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"];
     }
-
-    runKarma(done);
+    const numbers = timer(3000, 500);
+    const observable = numbers.subscribe(timer => {
+        if(built || timer === 100) {
+            observable.unsubscribe();
+            runKarma(done);
+            built = false
+        }
+    })
 });
 /*
  * javascript linter
@@ -229,18 +232,18 @@ gulp.task('rollup-watch', function () {
                 browser: true,
                 jsnext: true,
                 main: true,
-                extensions: ['.js', '.json']
+                extensions: ['.js', '.jsx']
             }),
             commonjs(),
             babel({
                 babelrc: false,
                 exclude: ['node_modules/**'],
-                presets: [["latest", {
-                    es2015: {
+                presets: [["@babel/preset-react", {
+                    es2017: {
                         modules: false
                     }
                 }]],
-                plugins: ["external-helpers", "transform-react-jsx"]
+                plugins: ["@babel/plugin-transform-react-jsx"]
             }),
             serve({
                 open: false,
@@ -299,102 +302,108 @@ gulp.task('acceptance', ['r-test']);
 gulp.task('tdd', ['tdd-rollup']);
 gulp.task('test', ['pat']);
 gulp.task('watch', ['rollup-watch']);
-gulp.task('rebuild', ['build-development']);  //remove karma config for node express
+gulp.task('rebuild', ['build-development']);
 
-/* Something is configured wrong for rollup-stream? */
-function streamBuild() {
-    return rollupStream({
-        input: '../appl/main.js',
-        sourcemap: isProduction ? true : false,
-        output: {
-            format: "iife",
-            name: "acceptance"
-        },
-        plugins: [
-            progress({
-                clearLine: isProduction ? false : true
-            }),
-            replaceEnv({
-                'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
-            }),
-            alias(aliases()),
-            postcss(),
-            buble(),
-            nodeResolve({
-                jsnext: true, main: true,
-                extensions: ['.js', '.jsx', '.json'],
-            }),
-            commonjs({
-                include: ['../../node_modules/**'],
-            }),
-            babel({
-                babelrc: false,
-                exclude: ['node_modules/**'],
-                presets: [["latest", {
-                    es2015: {
-                        modules: false
-                    }
-                }]],
-                plugins: ["external-helpers", "transform-react-jsx"]
-            })
-        ],
-    }).on('error', log)
-        // .pipe(source('main.js', '../appl'))
-        .pipe(sourcemaps.init({ loadMaps: !isProduction }))
-        .pipe(isProduction ? stripCode({ pattern: regexPattern }) : noop())
-        .pipe(rename('bundle.js'))
-        .pipe(isProduction ? noop() : sourcemaps.write('maps'))
-        .pipe(gulp.dest('./dist'));
+const inputOptions = {
+    input: '../appl/main.js',
+    plugins: [
+        progress({
+            clearLine: isProduction ? false : true
+        }),
+        replaceEnv({
+            'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
+        }),
+        alias(aliases()),
+        postcss(),
+        buble(),
+        nodeResolve({ browser: true, jsnext: true, main: true, extensions: ['.js', '.jsx'] }),
+        babel({
+            babelrc: false,
+            exclude: ['node_modules/**'],
+            presets: [["@babel/preset-react", {
+                es2017: {
+                    modules: false
+                }
+            }]],
+            plugins: ["@babel/plugin-transform-react-jsx"]
+        }),
+        commonjs(),
+    ],
+    onwarn: function (err) {
+        if (!isProduction) {
+            console.log("Warning:", err)
+        }
+        return ""
+    },
+    external: []
+};
+
+const inputOptionsProd = {
+    input: '../appl/main.js',
+    plugins: [
+        progress({
+            clearLine: false
+        }),
+        replaceEnv({
+            'process.env.NODE_ENV': JSON.stringify('production')
+        }),
+        alias(aliases()),
+        postcss(),
+        buble(),
+        nodeResolve({ browser: true, jsnext: true, main: true, extensions: ['.js', '.jsx'] }),
+        babel({
+            babelrc: false,
+            exclude: ['node_modules/**'],
+            presets: [["@babel/preset-react", {
+                es2017: {
+                    modules: false
+                }
+            }]],
+            plugins: ["@babel/plugin-transform-react-jsx"]
+        }),
+        commonjs(),
+    ],
+    onwarn: function (err) {
+        return ""
+    },
+    external: []
+};
+
+const outputOptions = {
+    compact: isProduction ? true : false,
+    format: "iife",
+    name: "acceptance",
+    sourcemap: isProduction ? false : true,
+    file: 'build/bundle.js'
+};
+
+async function rollupBuild(done) {
+    const bundle = await rollup.rollup(isProduction ? inputOptionsProd : inputOptions);
+    await bundle.write(outputOptions);
+
+    await rollup2Build(done)
 }
-
-
-function rollupBuild() {
-    return streamBuild()
-    return gulp.src(['../appl/**/*.js'])
-        //.pipe(removeCode({production: isProduction}))
+function rollup2Build(done) {
+    if (isProduction) {
+        log(chalk.cyan("Starting Bundle Strip Code and Uglify"));
+    } else {
+        log(chalk.cyan("Copying Test Bundle and Map"));
+    }
+    if (!isProduction) {
+        copySrcMaps()
+    }
+    const stream = gulp.src(['build/bundle.js'])
         .pipe(isProduction ? stripCode({ pattern: regexPattern }) : noop())
-        .pipe(gulpRollup({
-            // allowRealFiles: true,
-            input: '../appl/main.js',
-            // impliedExtensions: ['js', 'jsx'],
-            output: {
-                format: "iife",
-                name: "acceptance"
-            },
-            plugins: [
-                progress({
-                    clearLine: isProduction ? false : true
-                }),
-                replaceEnv({
-                    'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
-                }),
-                alias(aliases()),
-                postcss(),
-                buble(),
-                nodeResolve({
-                    jsnext: true, main: true,
-                    extensions: ['.js', '.jsx', '.json'],
-                }),
-                commonjs({
-                    include: ['../../node_modules/**'],
-                }),
-                babel({
-                    babelrc: false,
-                    exclude: ['node_modules/**'],
-                    presets: [["latest", {
-                        es2015: {
-                            modules: false
-                        }
-                    }]],
-                    plugins: ["external-helpers", "transform-react-jsx"]
-                })
-            ],
-        })).on('error', log)
         .pipe(rename('bundle.js'))
         .pipe(isProduction ? uglify() : noop())
-        .pipe(sourcemaps.init({ loadMaps: !isProduction }))
-        .pipe(isProduction ? noop() : sourcemaps.write('maps'))
         .pipe(gulp.dest('../../' + dist));
+    stream.on('end', function () {
+        log(chalk.cyan("Done with compile"));
+        built = true;
+        if (typeof done !== 'undefined') {
+            done()
+        }
+    });
 }
 
 function modResolve(dir) {
@@ -462,14 +471,18 @@ function copyNodeCss() {
 }
 
 function copyFonts() {
-
     return gulp
         .src(['../../node_modules/font-awesome/fonts/*'])
         .pipe(copy('../../' + dist + '/appl'));
 }
 
-function runKarma(done) {
+function copySrcMaps() {
+    return gulp
+        .src(['build/bundle.js.map'])
+        .pipe(gulp.dest('../../' + dist))
+}
 
+function runKarma(done) {
     new Server({
         configFile: __dirname + '/karma.conf.js',
         singleRun: true

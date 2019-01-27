@@ -8,8 +8,9 @@ const path = require('path')
 const postcss = require('rollup-plugin-postcss');
 const progress = require('rollup-plugin-progress');
 const replaceEnv = require('rollup-plugin-replace')
+const babel = require('rollup-plugin-babel');
 
-let isProduction = false
+let isProduction = process.env.BUILD==="true"? true: false
 
 export default {
     allowRealFiles: true,
@@ -18,7 +19,6 @@ export default {
         format: "iife",
         name: "acceptance",
     },
-    format: 'iife',
     plugins: [
         progress({
             clearLine: isProduction ? false : true
@@ -27,23 +27,22 @@ export default {
             'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
         }),
         alias(aliases()),
-        builtins(),
         postcss(),
         buble(),
-        nodeResolve({browser: true, jsnext: true, main: true}),
-        commonjs(),
+        nodeResolve({browser: true, jsnext: true, main: true, extensions: ['.js', '.jsx']}),
         babel({
             babelrc: false,
             exclude: ['node_modules/**'],
-            presets: [["latest", {
-                es2015: {
+            presets: [["@babel/preset-react", {
+                es2017: {
                     modules: false
                 }
             }]],
-            plugins: ["external-helpers", "transform-react-jsx"]
-        })
+            plugins: ["@babel/plugin-transform-react-jsx"]
+        }),
+        commonjs(),
     ],
-    dest: '../../dist_test/rollup/bundle.js'
+    // dest: '../../' +  (isProduction? 'dist': 'dist_test') + '/rollup/bundle.js'
 }
 
 

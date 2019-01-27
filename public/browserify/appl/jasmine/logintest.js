@@ -1,4 +1,4 @@
-export default function (Start, Helpers, ReactDOM, React, StartC) {
+export default function (Start, Helpers, ReactDOM, React, StartC, timer) {
     /*
      * Test Form validation and submission.
      */
@@ -22,15 +22,20 @@ export default function (Start, Helpers, ReactDOM, React, StartC) {
             )
 
             Start.base = true
-            // Not bothering with a promise.
-            setTimeout(() => {
-                modal = $('#modalTemplate')
-                nameObject = $('#inputUsername')
-                modal.on('shown.bs.modal', function(html){
-                    modal.modal("toggle"); // primes the toggle - so click will close the modal.
-                });
-                done()
-            }, 500)
+            // Note: if page does not refresh, increase the timer time.
+            // Using RxJs instead of Promise.
+            const numbers = timer(50, 50);
+            const observable = numbers.subscribe(timer => {
+                modal = $("#modalTemplate");
+                if ((typeof modal[0] !== "undefined" && modal[0].length !== 0) || timer === 20) {
+                    nameObject = $("#inputUsername");
+                    modal.on('shown.bs.modal', function (html) {
+                        modal.modal("toggle");
+                    });
+                    observable.unsubscribe();
+                    done();
+                }
+            })
         })
 
         it('Login form - verify modal with login loaded', function (done) {
@@ -45,11 +50,16 @@ export default function (Start, Helpers, ReactDOM, React, StartC) {
             expect(modal[0]).toExist()
             closeButton.click()
 
-            setTimeout(function () {
-                expect(modal[0]).not.toBeVisible()
-                expect(modal[0]).not.toBeInDOM()
-                done()
-            }, 600)
+            const numbers = timer(50, 50);
+            const observable = numbers.subscribe(timer => {
+                const modal2 = $("#modalTemplate");
+                if (typeof modal2[0] === 'undefined' || timer === 25) {
+                    expect(modal[0]).not.toBeVisible();
+                    expect(modal[0]).not.toBeInDOM();
+                    observable.unsubscribe();
+                    done();
+                }
+            })
         })
     })
 }
