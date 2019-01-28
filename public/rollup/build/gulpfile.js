@@ -227,14 +227,12 @@ gulp.task('rollup-watch', function () {
             }),
             alias(aliases()),
             postcss(),
-            buble(),
             nodeResolve({
                 browser: true,
                 jsnext: true,
                 main: true,
                 extensions: ['.js', '.jsx']
             }),
-            commonjs(),
             babel({
                 babelrc: false,
                 exclude: ['node_modules/**'],
@@ -245,6 +243,7 @@ gulp.task('rollup-watch', function () {
                 }]],
                 plugins: ["@babel/plugin-transform-react-jsx"]
             }),
+            commonjs(),
             serve({
                 open: false,
                 verbose: true,
@@ -315,7 +314,6 @@ const inputOptions = {
         }),
         alias(aliases()),
         postcss(),
-        buble(),
         nodeResolve({ browser: true, jsnext: true, main: true, extensions: ['.js', '.jsx'] }),
         babel({
             babelrc: false,
@@ -327,7 +325,7 @@ const inputOptions = {
             }]],
             plugins: ["@babel/plugin-transform-react-jsx"]
         }),
-        commonjs(),
+        commonjs()
     ],
     onwarn: function (err) {
         if (!isProduction) {
@@ -383,6 +381,7 @@ async function rollupBuild(done) {
 
     await rollup2Build(done)
 }
+
 function rollup2Build(done) {
     if (isProduction) {
         log(chalk.cyan("Starting Bundle Strip Code and Uglify"));
@@ -399,9 +398,9 @@ function rollup2Build(done) {
         .pipe(gulp.dest('../../' + dist));
     stream.on('end', function () {
         log(chalk.cyan("Done with compile"));
-        built = true;
+        built = true;  // releasing rxjs timer to start Karma/Jasmine tests
         if (typeof done !== 'undefined') {
-            done()
+            done() // bundle complete - releases production gulp task 'build'
         }
     });
 }
