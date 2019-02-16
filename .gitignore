@@ -3,6 +3,10 @@ copyjs.sh
 public/rollup/build/build/*
 gitX/*
 public/parcel/build/.cache
+public/parcel/build/.X*
+public/parcel/build/.Y*
+public/.Y*
+public/.X*
 public/.cache
 public/rollup/build/bundle.css
 public/.fusebox
