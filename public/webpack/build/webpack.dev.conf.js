@@ -1,4 +1,5 @@
 'use strict'
+
 const path = require('path')
 const merge = require('webpack-merge')
 const utils = require('./utils')
@@ -6,11 +7,9 @@ const config = require('../config')
 const webpack = require('webpack')
 const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-// const HtmlWebpackPlugin = require('html-webpack-plugin')
-//const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-// const portfinder = require('portfinder')
+const packageDep = require('../../package.json')
 
+const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0])
 const isWatch = process.env.USE_WATCH === 'true'
 const devPublicPath = process.env.PUBLIC_PATH ? process.env.PUBLIC_PATH : '/dist_test/webpack/';
 
@@ -20,9 +19,11 @@ const PORT = process.env.PORT && Number(process.env.PORT)
 baseWebpackConfig.output.publicPath = devPublicPath
 
 const devWebpackConfig = merge(baseWebpackConfig, {
-    
+    stats: 'normal', // minimal, none, normal, verbose, errors-only
+    mode: 'development',
+    cache: false,
     module: {
-        rules: utils.styleLoaders({sourceMap: config.dev.cssSourceMap, usePostCSS: true})
+        rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
     },
     // cheap-module-eval-source-map is faster for development
     devtool: config.dev.devtool,
@@ -32,7 +33,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         clientLogLevel: 'warning',
         historyApiFallback: {
             rewrites: [
-                {from: /.*/, to: path.join(config.dev.assetsPublicPath, 'index.html')}
+                { from: /.*/, to: path.join(config.dev.assetsPublicPath, 'index.html') }
             ]
         },
         hot: true,
@@ -42,8 +43,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         port: PORT || config.dev.port,
         open: config.dev.autoOpenBrowser,
         overlay: config.dev.errorOverlay
-                ? {warnings: false, errors: true}
-        : false,
+            ? { warnings: false, errors: true }
+            : false,
         publicPath: config.dev.assetsPublicPath,
         proxy: config.dev.proxyTable,
         quiet: true, // necessary for FriendlyErrorsPlugin
@@ -55,20 +56,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         new webpack.DefinePlugin({
             'process.env': require('../config/dev.env')
         }),
-//        new webpack.HotModuleReplacementPlugin(),
-//        new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
         new webpack.NoEmitOnErrorsPlugin(),
-        // https://github.com/ampedandwired/html-webpack-plugin
-//        new HtmlWebpackPlugin({
-//            filename: 'index.html',
-//            template: 'index.html',
-//            inject: false
-//        }),
-        new ExtractTextPlugin({
-            filename: '[name].bundle.css',
-            disable: false,
-            allChunks: true
-        }),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
@@ -82,21 +70,25 @@ const devWebpackConfig = merge(baseWebpackConfig, {
                 to: config.dev.assetsSubDirectory,
                 ignore: ['.*']
             },
-            {from: '../images/favicon.ico', to: 'images'},
-            {from: './appl/testapp_dev.html', to: config.dev.assetsSubDirectory},
-            {from: './appl/index.html', to: config.dev.assetsSubDirectory},
-            {from: '../README.md', to: '../'},
-            {from: {
+            { from: '../images/favicon.ico', to: 'images' },
+            { from: './appl/testapp_dev.html', to: config.dev.assetsSubDirectory },
+            { from: './appl/index.html', to: config.dev.assetsSubDirectory },
+            { from: '../README.md', to: '../' },
+            {
+                from: {
                     glob: './appl/views/**/*',
                     dot: false
                 },
-                to: ''},
-            {from: {
+                to: ''
+            },
+            {
+                from: {
                     glob: './appl/templates/**/*',
                     dot: false
                 },
-                to: ''},
-            {from: './appl/assets/*.*', to: ''}
+                to: ''
+            },
+            { from: './appl/assets/*.*', to: '' }
         ])
     ],
     watch: isWatch,

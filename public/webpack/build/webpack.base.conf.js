@@ -2,21 +2,25 @@
 const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const packageDep = require('../../package.json')
+const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0])
 
 function resolve(dir) {
     return path.join(__dirname, '..', dir)
 }
 
 const createLintingRule = () => ({
-        test: /\.(js)$/,
-        loader: 'eslint-loader',
-        enforce: 'pre',
-        include: [resolve('appl'), resolve('test')],
-        options: {
-            formatter: require('eslint-friendly-formatter'),
-            emitWarning: !config.dev.showEslintErrorsInOverlay
-        }
-    })
+    test: /\.(js)$/,
+    loader: 'eslint-loader',
+    enforce: 'pre',
+    include: [resolve('appl'), resolve('test')],
+    options: {
+        formatter: require('eslint-friendly-formatter'),
+        emitWarning: !config.dev.showEslintErrorsInOverlay
+    }
+})
 
 module.exports = {
     context: path.resolve(__dirname, '../'),
@@ -28,8 +32,8 @@ module.exports = {
         filename: '[name].js',
         chunkFilename: 'app[name]-[chunkhash].js',
         publicPath: process.env.NODE_ENV === 'production'
-                ? config.build.assetsPublicPath
-                : config.dev.assetsPublicPath
+            ? config.build.assetsPublicPath
+            : config.dev.assetsPublicPath
     },
     target: "web",
     resolve: {
@@ -56,18 +60,26 @@ module.exports = {
             logintests: resolve("tests/logintest"),
             routertests: resolve("tests/routertest"),
             toolstests: resolve("tests/toolstest"),
-            handlebars : 'handlebars/dist/handlebars.js'
+            handlebars: 'handlebars/dist/handlebars.js'
         }
     },
     module: {
         rules: [
             ...(config.dev.useEslint ? [createLintingRule()] : []),
             {
-                test: /.css$/,
+                test: /\.(css|sass|scss)$/,
                 use: [
-                    { loader: "style-loader" },
-                    { loader: "css-loader" }
-                  ]
+                    MiniCssExtractPlugin.loader,
+                    {
+                        loader: 'css-loader',
+                    },
+                    {
+                        loader: 'resolve-url-loader'
+                    },
+                    {
+                        loader: 'sass-loader'
+                    }
+                ]
             },
             {
                 test: /\.stache$/,
@@ -101,7 +113,8 @@ module.exports = {
                     limit: 10000,
                     name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
                 }
-            }
+            },
+            setJsonLoader(version)
         ]
     },
     node: {
@@ -113,5 +126,48 @@ module.exports = {
         net: 'empty',
         tls: 'empty',
         child_process: 'empty'
+    }
+}
+
+if (version < 4) {
+    module.exports.plugins = (module.exports.plugins || []).concat([
+        new ExtractTextPlugin({
+            filename: '[name].bundle.css',
+            disable: false,
+            allChunks: true
+        })
+    ]);
+}
+else {
+    module.exports.plugins = (module.exports.plugins || []).concat([new MiniCssExtractPlugin({
+        filename: process.env.NODE_ENV === 'development' ? "[name].css" : "[name].[contenthash].css",
+        chunkFilename: process.env.NODE_ENV === 'development' ? "[name].[id].css" : "[name].[id].[contenthash].css"
+    })]);
+}
+function setJsonLoader(version) {
+    let rules = {}
+
+    if (version < 4) {
+        rules = {
+            test: /\.json$/,
+            use: "json-loader"
+        }
+    }
+
+    return rules;
+}
+
+function setSideEffects(version) {
+    if (version > 3.9) {
+        module.exports.module.rules.push(
+            {
+                include: /node_modules/,
+                sideEffects: true
+            });
+        module.exports.module.rules.push(
+            {
+                include: /appl\/css/,
+                sideEffects: true
+            });
     }
 }

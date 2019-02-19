@@ -2,6 +2,7 @@
 const path = require('path')
 const config = require('../config')
 const packageConfig = require('../../package.json')
+const version = Number(/\d/.exec(packageConfig.devDependencies.webpack)[0])
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 exports.assetsPath = function (_path) {
@@ -44,7 +45,7 @@ exports.cssLoaders = function (options) {
 
     // Extract CSS when that option is specified
     // (which is the case during production build)
-    if (options.extract) {
+    if (options.extract && version < 4) {
       return ExtractTextPlugin.extract({
         use: loaders // ,
         // fallback: 'vue-style-loader'

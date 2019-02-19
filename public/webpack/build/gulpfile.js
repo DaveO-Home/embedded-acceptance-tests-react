@@ -22,9 +22,12 @@ const webpackStream = require("webpack-stream")
 const WebpackDevServer = require('webpack-dev-server')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+// const ReloadPlugin = require('reload-html-webpack-plugin');
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
+const package = require('../../package.json')
+const webpackVersion = Number(/\d/.exec(package.devDependencies.webpack)[0])
 
 let webpackConfig = null
 let browsers = process.env.USE_BROWSERS
@@ -244,6 +247,18 @@ gulp.task("webpack-server", function () {
         template: 'appl/testapp_dev.html',
         inject: true
     }));
+
+    // if (!isProduction && useHot) {
+    //     module.exports.plugins = (module.exports.plugins || []).concat([
+    //         new webpack.NamedModulesPlugin(),
+    //         new webpack.HotModuleReplacementPlugin()
+    //     ]);
+        // if (webpackVersion < 4) {
+        //     // module.exports.plugins = (module.exports.plugins || []).concat([
+        //         webpackConfig.plugins.push(new ReloadPlugin())
+        //     // ]);
+        // }
+    // }
 
     WebpackDevServer.addDevServerEntrypoints(webpackConfig, options);
 
