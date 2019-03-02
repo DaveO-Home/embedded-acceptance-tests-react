@@ -66,21 +66,29 @@ module.exports = {
     module: {
         rules: [
             ...(config.dev.useEslint ? [createLintingRule()] : []),
-            {
-                test: /\.(css|sass|scss)$/,
-                use: [
-                    MiniCssExtractPlugin.loader,
-                    {
-                        loader: 'css-loader',
-                    },
-                    {
-                        loader: 'resolve-url-loader'
-                    },
-                    {
-                        loader: 'sass-loader'
-                    }
-                ]
-            },
+            version < 4 ?
+                {
+                    test: /.css$/,
+                    use: [
+                        { loader: "style-loader" },
+                        { loader: "css-loader" }
+                    ]
+                } :
+                {
+                    test: /\.(css|sass|scss)$/,
+                    use: [
+                        MiniCssExtractPlugin.loader,
+                        {
+                            loader: 'css-loader',
+                        },
+                        {
+                            loader: 'resolve-url-loader'
+                        },
+                        {
+                            loader: 'sass-loader'
+                        }
+                    ]
+                },
             {
                 test: /\.stache$/,
                 use: "raw-loader"
@@ -158,7 +166,7 @@ function setJsonLoader(version) {
 }
 
 function setSideEffects(version) {
-    if (version > 3.9) {
+    if (version >= 4) {
         module.exports.module.rules.push(
             {
                 include: /node_modules/,

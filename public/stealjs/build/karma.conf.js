@@ -31,7 +31,7 @@ module.exports = function (config) {
             {pattern: 'node_modules/bootstrap/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/popper.js/dist/umd/*', watched: false, included: false},
             {pattern: 'node_modules/react/**/*.js', watched: false, included: false},
-            {pattern: 'node_modules/react-dom/**/*.js', watched: false, included: false},
+            {pattern: 'node_modules/react-*/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/redux/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/object-assign/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/prop-types/**/*.js', watched: false, included: false},
