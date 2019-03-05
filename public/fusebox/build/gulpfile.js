@@ -28,7 +28,7 @@ const pat = function (done) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
 
-    return new Server({
+    new Server({
         configFile: __dirname + '/karma.conf.js',
         singleRun: true
     }, function (result) {
