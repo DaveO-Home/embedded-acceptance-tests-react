@@ -345,12 +345,15 @@ const inputOptions = {
         }),
         commonjs()
     ],
-    onwarn: function (err) {
-        if (!isProduction) {
-            console.log("Warning:", err)
+    onwarn: function (warning) {
+        if (warning.code === 'THIS_IS_UNDEFINED' ||
+            warning.code === 'CIRCULAR_DEPENDENCY') {
+            return;
         }
-        return ""
+        console.warn(warning.message);
     },
+    treeshake: true,
+    perf: isProduction === true, 
     external: []
 };
 
@@ -379,9 +382,15 @@ const inputOptionsProd = {
         }),
         commonjs(),
     ],
-    onwarn: function (err) {
-        return ""
+    onwarn: function (warning) {
+        if (warning.code === 'THIS_IS_UNDEFINED' ||
+            warning.code === 'CIRCULAR_DEPENDENCY') {
+            return;
+        }
+        console.warn(warning.message);
     },
+    treeshake: true,
+    perf: true, 
     external: []
 };
 
@@ -395,6 +404,9 @@ const outputOptions = {
 
 async function rollupBuild(done) {
     const bundle = await rollup.rollup(isProduction ? inputOptionsProd : inputOptions);
+    if(isProduction) {
+        console.log("Timings:", bundle.getTimings())
+    }
     await bundle.write(outputOptions);
 
     await rollup2Build(done)

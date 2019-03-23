@@ -133,6 +133,12 @@ const cleant = function (done) {
         '../../' + testDist + '/**/*'
     ], { dryRun: dryRun, force: true }, done);
 };
+
+const delCache = function (cb) {
+    return del([
+        '.cache/**/*'
+    ], { dryRun: false, force: true }, cb)
+} 
 /**
  * Resources and content copied to dist directory - for production
  */
@@ -191,12 +197,17 @@ const tddo = function (done) {
 };
 /**
  * Using BrowserSync Middleware for HMR  
+ * You can change the tasks setup to use browserSync....defaulting to parcel internal server/watcher
  */
 const sync = function () {
     const server = browserSync.create('devl');
     dist = testDist;
     server.init({ server: '../../', index: 'index_p.html', port: 3080/*, browser: ['google-chrome']*/ });
-    server.watch('../../' + dist + '/appl.*.*').on('change', server.reload);  //change any file in appl/ to reload app - triggered on watchify results
+    server.watch('../../' + dist + '/appl.*.*').on('change', 
+	function(bundle) {
+		console.log("Starting reload", bundle);
+		server.reload;  //change any file in appl/ to reload app - triggered on watchify results
+		})
     return server;
 };
 
@@ -219,37 +230,35 @@ task(runProd)
 exports.default = runProd
 exports.test = series(runTest, pat)
 exports.tdd = series(runTest, tdd_parcel)
-exports.watch = series(runTestCopy, watch_parcel, sync, watcher)
+exports.watch = series(runTestCopy, delCache, watch_parcel/*, sync, watcher*/)
 exports.acceptance = r_test
 exports.rebuild = series(runTestCopy, runTest)
-// exports.development = parallel(series(runTestCopy, watch_parcel, sync, watcher), series(runTestCopy, build_development, tdd_parcel))
+// exports.development = parallel(series(delCache, runTestCopy, watch_parcel/*, sync, watcher*/), series(delCache, runTestCopy, build_development, tdd_parcel))
 
 function parcelBuild(watch, cb) {
     if (bundleTest && bundleTest === "false") {
         return cb()
     }
     const file = isProduction ? '../appl/testapp.html' : '../appl/testapp_dev.html'
+    const port = 3080
     // Bundler options
     const options = {
         production: isProduction,
         outDir: '../../' + dist,
         outFile: isProduction ? 'testapp.html' : 'testapp_dev.html',
-        publicUrl: './',
+        publicUrl: watch? '/':'./',
         watch: watch,
         cache: !isProduction,
         cacheDir: '.cache',
-        // cssnano needs to be upgraded/downgraded? to minimize
         minify: isProduction,
         target: 'browser',
         https: false,
         logLevel: 3, // 3 = log everything, 2 = log warnings & errors, 1 = log errors
-        // hmrPort: 3080,
         sourceMaps: !isProduction,
-        // hmrHostname: 'localhost',
         detailedReport: isProduction
     };
 
-    // Initialises a bundler using the entrypoint location and options provided
+    // Initializes a bundler using the entrypoint location and options provided
     const bundler = new Bundler(file, options);
     let isBundled = false
 
@@ -258,6 +267,9 @@ function parcelBuild(watch, cb) {
     })
     bundler.on("buildEnd", () => {
         if (isBundled) {
+            if (watch) {
+                log(chalk.cyan("Watching on localhost:3080"))
+            }
             log(chalk.green("Build Successful"))
         }
         else {
@@ -265,6 +277,9 @@ function parcelBuild(watch, cb) {
             process.exit(1)
         }
     })
+    if(watch) {
+        bundler.serve(port)
+    }
     // Run the bundler, this returns the main bundle
     return bundler.bundle()
 }
@@ -276,6 +291,10 @@ function copySrc() {
 }
 
 function copyImages() {
+    if(!isProduction) {
+        src(['../../README.md'])
+        .pipe(copy('../../' + dist + '/appl', {prefix: 1}));
+    }
     return src(['../images/*', '../../README.m*', '../appl/assets/**/*'])
         .pipe(copy('../../' + dist + '/appl'));
 }

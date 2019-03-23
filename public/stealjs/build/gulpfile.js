@@ -80,6 +80,7 @@ const cssLint = function (cb) {
  * Build the application to the production distribution 
  */
 const build = function (cb) {
+    process.env.NODE_ENV='production'
     return stealTools.build({
         main: "stealjs/appl/main",
         baseURL: "../../"
