@@ -10,7 +10,7 @@ import App from './app'
 import Default from './utils/default'
 import Setup from './utils/setup'
 import 'tablesorter'
-import '../../../node_modules/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js'
+import 'tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js'
 import './entry'
 App.init(Default)
 Setup.init()
@@ -28,8 +28,6 @@ if (typeof testit !== 'undefined' && testit) {
     }).then(resolved => {
         // Run acceptance tests. - To run only unit tests, comment the apptest call.
         apptest(App)
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
-        __karma__.start()
     })
 }
 /* develblock:end */

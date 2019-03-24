@@ -26,7 +26,7 @@ if (typeof testit !== "undefined" && testit) {
     }).then(resolved => {
         // Run acceptance tests. - To run only unit tests, comment the apptest call.
         apptest(App)
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000
         __karma__.start()
     })
 }

@@ -74,6 +74,7 @@ module.exports = function (config) {
             {pattern: 'node_modules/font-awesome/fonts/fontawesome-webfont.woff2', watched: false, included: false},
             {pattern: 'node_modules/scheduler/**/*.js', watched: false, included: false},
             {pattern: 'node_modules/isarray/**/*.js', watched: false, included: false},
+            {pattern: 'node_modules/tiny-*/**/*.js', watched: false, included: false},
             //Jasmine/Steal tests and starts Karma
             bundler + '/build/karma.bootstrap.js'
         ],

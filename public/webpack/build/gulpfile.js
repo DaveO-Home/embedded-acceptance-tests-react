@@ -9,6 +9,7 @@ const log = require("fancy-log")
 const rmf = require('rimraf')
 const exec = require('child_process').exec
 const path = require('path')
+const chalk = require('chalk')
 const config = require('../config')
 const Server = require('karma').Server
 const csslint = require('gulp-csslint')
@@ -29,6 +30,24 @@ if (browsers) {
 }
 
 /*
+ * Build the application to the production distribution 
+ */
+const build = function (cb) {
+    let cmd = exec('node build');
+    cmd.stdout.on('data', (data) => {
+        if (data && data.length > 0) {
+            console.log(data.trim());
+        }
+    });
+    cmd.stderr.on('data', (data) => {
+        if (data && data.length > 0)
+            console.log(data.trim())
+    });
+    return cmd.on('exit', (code) => {
+        cb()
+    });
+};
+/*
  * css linter
  */
 const cssLint = function (cb) {
@@ -40,29 +59,29 @@ const cssLint = function (cb) {
         log(err);
         process.exit(1);
     });
-    return stream.on('enc', function (err) {
+    return stream.on('end', function (err) {
+        log(chalk.cyan(`css linting finished - ${err?err:0}`));
         cb()
     });
-};
-/*
- * Build the application to the production distribution 
- */
-const build = function (cb) {
-    return exec('node build', function (err, stdout, stderr) {
-        log(stdout);
-        log(stderr);
-        cb(err);
-    })
 };
 /*
  * Bootstrap html linter 
  */
 const bootLint = function (cb) {
-    log("Starting Gulpboot.js")
-    return exec('npx gulp --gulpfile Gulpboot.js', function (err, stdout, stderr) {
-        log(stdout);
-        log(stderr);
-        cb(err);
+    log(chalk.cyan("Starting Gulpboot.js"))
+    let cmd = exec('npx gulp --gulpfile Gulpboot.js');
+    cmd.stdout.on('data', (data) => {
+        if (data && data.length > 0) {
+            console.log(data.trim());
+        }
+    });
+    cmd.stderr.on('data', (data) => {
+        if (data && data.length > 0)
+            console.log(data.trim())
+    });
+    return cmd.on('exit', (code) => {
+        log(chalk.cyan(`Bootstrap linting finished - ${code}`));
+        cb()
     });
 };
 /**
@@ -119,7 +138,7 @@ const webpack_rebuild = function (cb) {
         .pipe(webpackStream(require('./webpack.dev.conf.js')))
         .pipe(envs.reset)
         .pipe(dest("../../dist_test/webpack"))
-        .on("end", function() {
+        .on("end", function () {
             cb()
         });
 };
@@ -152,7 +171,7 @@ const test_build = function (cb) {
         .pipe(webpackStream(require('./webpack.dev.conf.js')))
         .pipe(envs.reset)
         .pipe(dest("../../dist_test/webpack"))
-        .on("end", function() {
+        .on("end", function () {
             cb()
         });
 };
@@ -190,7 +209,7 @@ const webpack_watch = function (cb) {
         .pipe(envs)
         .pipe(webpackStream(require('./webpack.dev.conf.js')))
         .pipe(dest("../../dist_test/webpack"))
-        .on("end", function() {
+        .on("end", function () {
             cb()
         })
 };
@@ -206,7 +225,7 @@ const set_watch_env = function (cb) {
 
     return src("./appl/index.js")
         .pipe(envs)
-        .on("end", function() {
+        .on("end", function () {
             cb()
         });
 };

@@ -97,6 +97,9 @@ export default function (App) {
         // Verify modal form
         loginTest(Start, Helpers, ReactDOM, React, StartC, timer)
 
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000
+        __karma__.start()
+
         if (testOnly) {
             it('Testing only', () => {
                 fail('Testing only, build will not proceed')
