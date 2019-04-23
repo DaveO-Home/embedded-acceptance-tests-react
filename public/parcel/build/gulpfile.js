@@ -226,6 +226,7 @@ const runProdCopy = parallel(copyprod, copyprod_images)
 const runProd = series(runTest, pat, parallel(esLint, cssLint, bootLint), clean, runProdCopy, build)
 runProd.displayName = "prod"
 
+exports.build = series(clean, runProdCopy, build);
 task(runProd)
 exports.default = runProd
 exports.test = series(runTest, pat)
