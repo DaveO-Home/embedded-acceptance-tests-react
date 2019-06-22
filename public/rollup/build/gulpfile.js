@@ -332,7 +332,7 @@ const inputOptions = {
         }),
         alias(aliases()),
         postcss(),
-        nodeResolve({ browser: true, jsnext: true, main: true, extensions: ['.js', '.jsx'] }),
+        nodeResolve({ /*browser: true, jsnext: true, main: true, */ extensions: ['.js', '.jsx'] }),
         babel({
             babelrc: false,
             exclude: ['node_modules/**'],

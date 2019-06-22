@@ -1,3 +1,10 @@
+public/fusebox/fuse3.7.1.js
+public/fusebox/fuse4.alpha.10.js
+public/fusebox/fuse4.alpha.10.ts
+public/fusebox/tsconfig4.alpha.json
+public/fusebox/tsconfigSav.json
+public/fusebox/tsconfigY.json
+public/packageX.json
 .DS_Store
 copyjs.sh
 public/rollup/build/build/*
