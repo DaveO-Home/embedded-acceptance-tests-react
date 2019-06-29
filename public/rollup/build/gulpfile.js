@@ -73,8 +73,8 @@ const esLint = function (cb) {
     dist = prodDist;
     var stream = src(["../appl/js/**/*.js"])
         .pipe(eslint({
-            configFile: 'eslintConf.json',
-            quiet: 1
+            // configFile: 'eslintConf.json',
+            // quiet: 1
         }))
         .pipe(eslint.format())
         .pipe(eslint.result(result => {

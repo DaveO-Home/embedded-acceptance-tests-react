@@ -66,10 +66,7 @@ const pat = function (done) {
 const esLint = function (cb) {
     dist = prodDist;
     var stream = src(["../appl/js/**/*.js"])
-        .pipe(eslint({
-            configFile: 'eslintConf.json',
-            quiet: 0
-        }))
+        .pipe(eslint({}))
         .pipe(eslint.format())
         .pipe(eslint.result(result => {
             //Keeping track of # of javascript files linted.
@@ -223,7 +220,7 @@ const watch_parcel = function (cb) {
 const runTestCopy = parallel(copy_test, copy_images)
 const runTest = series(cleant, runTestCopy, build_development)
 const runProdCopy = parallel(copyprod, copyprod_images)
-const runProd = series(runTest, pat, parallel(esLint, cssLint, bootLint), clean, runProdCopy, build)
+const runProd = series(runTest, pat, esLint, parallel( cssLint, bootLint), clean, runProdCopy, build)
 runProd.displayName = "prod"
 
 exports.build = series(clean, runProdCopy, build);

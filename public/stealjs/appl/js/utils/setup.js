@@ -2,9 +2,10 @@
 import handlebars from 'handlebars'
 import Menu from 'menu'
 import steal from '@steal'
-//let handebars = {}
+
 window.Stache = handlebars
 window._bundler = 'stealjs'
+
 export default {
     init () {
         steal.done().then(function () {

@@ -29,7 +29,7 @@ export default function (Start, Helpers, ReactDOM, React, StartC, timer) {
                 modal = $("#modalTemplate");
                 if ((typeof modal[0] !== "undefined" && modal[0].length !== 0) || timer === 20) {
                     nameObject = $("#inputUsername");
-                    modal.on('shown.bs.modal', function (html) {
+                    modal.on('shown.bs.modal', function () {
                         modal.modal("toggle");
                     });
                     observable.unsubscribe();

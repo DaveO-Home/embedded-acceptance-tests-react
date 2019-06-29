@@ -5,9 +5,10 @@ import App from '../js/app'
 import Setup from '../js/utils/setup'
 import '../assets/App.css'
 import carousel from '../js/carousel'
+import PropTypes from 'prop-types';
 
 function Link (props) {
-  return <a href={props.url} target='_blank'>{props.text}</a>
+  return <a href={props.url} target='_blank' rel='noopener noreferrer'>{props.text}</a>
 }
 
 const welcomeHtml = (
@@ -53,5 +54,10 @@ function setData () {
     carousel
   )
 }
+
+Link.propTypes = {
+  text: PropTypes.string,
+  url: PropTypes.string
+};
 
 export default Welcome
