@@ -1,6 +1,7 @@
 
 import handlebars from "handlebars";
-import Menu from "menu";
+import Menu from "./menu";
+import "./set.globals";
 window.Stache = handlebars;
 
 export default {

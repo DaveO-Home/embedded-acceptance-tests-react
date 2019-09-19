@@ -1,6 +1,6 @@
 /* Note; this is being handled in  the PdfC component */
-import App from "app";
-import Base from "basecontrol";
+import App from "../app";
+import Base from "../utils/base.control";
 Base.init();
 export default App.controllers.Pdf || (App.controllers.Pdf = Object.assign({
     name: "pdf",

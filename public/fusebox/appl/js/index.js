@@ -1,14 +1,14 @@
 
-import "config";
-import Setup from "setup";
+import "./config";
+import Setup from "./utils/setup";
 import popper from "popper.js";
-import App from "app";
-import Default from "default";
-import "pager";
+import App from "./app";
+import Default from "./utils/default";
+import "tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js";
 import "../entry";
 /* eslint "import/first": [ "warn", "DISABLE-absolute-first" ] */
 /* develblock:start */
-import apptest from "apptest";
+import apptest from "../jasmine/apptest";
 window._bundler = "fusebox";
 /* develblock:end */
 window.Popper = popper;

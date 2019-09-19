@@ -1,5 +1,5 @@
-var bundler = "fusebox";
-var startupHtml = bundler + "/appl/testapp_karma.html";
+const bundler = "fusebox";
+const startupHtml = "dist_test/" + bundler + "/appl/testapp_dev.html";
 // Karma configuration
 module.exports = function (config) {
     // whichBrowser to use from gulp task.
@@ -17,7 +17,9 @@ module.exports = function (config) {
             "/templates": "/base/" + bundler + "/appl/templates",
             "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
             "/README.md": "/base/README.md",
-            "fusebox/appl/": "/base/" + bundler + "/appl/"
+            "fusebox/appl/": "/base/" + bundler + "/appl/",
+            "/appl/assets": "/base/" + bundler + "/appl/assets",
+            "/resources/": "/base/dist_test/" + bundler + "/appl/resources/"
         },
         // list of files / patterns to load in the browser
         files: [
@@ -31,11 +33,14 @@ module.exports = function (config) {
             {pattern: bundler + "/appl/**/*.*", included: false, watched: false},
             {pattern: "package.json", watched: false, included: false},
             {pattern: "README.md", included: false},
-            {pattern: "dist_test/" + bundler + "/resources/*", included: false, watched: false},
+            {pattern: "dist_test/" + bundler + "/appl/resources/*", included: false, watched: false},
+            // {pattern: bundler + "/appl/assets/*", included: false, watched: false},
             // Looking for changes via HMR - tdd should run with Fusebox Hot Moudule Reload.
-            {pattern: "dist_test/" + bundler + "/vendor.js", included: false, watched: false},
+            {pattern: "dist_test/" + bundler + "/*vendor.js", included: false, watched: false},
+            {pattern: "dist_test/" + bundler + "/*dev.js", included: false, watched: false},
+            {pattern: "dist_test/" + bundler + "/*entry.js", included: false, watched: false},
             // Looking for changes to the client bundle
-            {pattern: "dist_test/" + bundler + "/acceptance.js", included: false, watched: true, served: true},
+            {pattern: "dist_test/" + bundler + "/*app.js", included: false, watched: false, served: true},
             {pattern: bundler + "/images/favicon.ico", included: false, watched: false},
             {pattern: "node_modules/bootstrap/dist/css/bootstrap.min.css", watched: false, included: true, served: true},
             {pattern: "node_modules/tablesorter/dist/css/theme.blue.min.css", watched: false, included: true, served: true},

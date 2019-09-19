@@ -1,6 +1,6 @@
 
-import App from "app";
-import Helpers from "helpers";
+import App from "../app";
+import Helpers from "./helpers";
 
 export default {
     defaults: {
