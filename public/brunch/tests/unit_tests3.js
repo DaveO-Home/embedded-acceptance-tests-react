@@ -1,14 +1,14 @@
 
-"use strict";
+
 
 function StripCanjsLoader(content, startComment, endComment) {
     
-    //var regexPattern2 = new RegExp("[\\t ]*\\/\\* ?" + startComment + " ?\\*\\/[\\s\\S]*?\\/\\* ?" + endComment + " ?\\*\\/[\\t ]*\\n?", "g");
-    //var regexPattern  = new RegExp("[\\t ]*\\/\\/[\\s]*\\![\\s]*" + startComment + " ?[\\s\\S]*?\\/\\/[\\s]*\\![\\s]*" + endComment + " ?[\\t ]*\\n?", "g");
-    //var regexPattern  = new RegExp("[\\t ]*(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" + startComment + " ?[\\*\\/]?[\\s\\S]*?\\/\\/[\\s]*\\![\\s]*" + endComment + " ?[\\*\\/]?[\\t ]*\\n?", "g");
+    // var regexPattern2 = new RegExp("[\\t ]*\\/\\* ?" + startComment + " ?\\*\\/[\\s\\S]*?\\/\\* ?" + endComment + " ?\\*\\/[\\t ]*\\n?", "g");
+    // var regexPattern  = new RegExp("[\\t ]*\\/\\/[\\s]*\\![\\s]*" + startComment + " ?[\\s\\S]*?\\/\\/[\\s]*\\![\\s]*" + endComment + " ?[\\t ]*\\n?", "g");
+    // var regexPattern  = new RegExp("[\\t ]*(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" + startComment + " ?[\\*\\/]?[\\s\\S]*?\\/\\/[\\s]*\\![\\s]*" + endComment + " ?[\\*\\/]?[\\t ]*\\n?", "g");
     var regexPattern  = new RegExp("[\\t ]*(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" + startComment + " ?[\\*\\/]?[\\s\\S]*?(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" + endComment + " ?(\\*\\/)?[\\t ]*\\n?", "g");
     
-    content = content.replace(regexPattern, '');
+    content = content.replace(regexPattern, "");
 
     return content;
 }

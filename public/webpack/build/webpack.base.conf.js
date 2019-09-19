@@ -1,45 +1,45 @@
-'use strict'
-const path = require('path')
-const utils = require('./utils')
-const config = require('../config')
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+const path = require("path");
+const utils = require("./utils");
+const config = require("../config");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const packageDep = require('../../package.json')
-const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0])
+const packageDep = require("../../package.json");
+const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0]);
 
 function resolve(dir) {
-    return path.join(__dirname, '..', dir)
+    return path.join(__dirname, "..", dir);
 }
 
 const createLintingRule = () => ({
     test: /\.(js)$/,
-    loader: 'eslint-loader',
-    enforce: 'pre',
-    include: [resolve('appl'), resolve('test')],
+    loader: "eslint-loader",
+    enforce: "pre",
+    include: [resolve("appl"), resolve("test")],
     options: {
-        formatter: require('eslint-friendly-formatter'),
+        formatter: require("eslint-friendly-formatter"),
         emitWarning: !config.dev.showEslintErrorsInOverlay
     }
-})
+});
 
 module.exports = {
-    context: path.resolve(__dirname, '../'),
+    context: path.resolve(__dirname, "../"),
     entry: {
-        app: './appl/main.js'
+        app: "./appl/main.js"
     },
     output: {
         path: config.build.assetsRoot,
-        filename: '[name].js',
-        chunkFilename: 'app[name]-[chunkhash].js',
-        publicPath: process.env.NODE_ENV === 'production'
+        filename: "[name].js",
+        chunkFilename: "app[name]-[chunkhash].js",
+        publicPath: process.env.NODE_ENV === "production"
             ? config.build.assetsPublicPath
             : config.dev.assetsPublicPath
     },
     target: "web",
     resolve: {
-        extensions: ['.js', '.json'],
+        extensions: [".js", ".json"],
         alias: {
-            '@': resolve('appl'),
+            "@": resolve("appl"),
             app: resolve("appl/js/app.js"),
             basecontrol: resolve("appl/js/utils/base.control"),
             config: resolve("appl/js/config"),
@@ -60,7 +60,7 @@ module.exports = {
             logintests: resolve("tests/logintest"),
             routertests: resolve("tests/routertest"),
             toolstests: resolve("tests/toolstest"),
-            handlebars: 'handlebars/dist/handlebars.js'
+            handlebars: "handlebars/dist/handlebars.js"
         }
     },
     module: {
@@ -79,13 +79,13 @@ module.exports = {
                     use: [
                         MiniCssExtractPlugin.loader,
                         {
-                            loader: 'css-loader',
+                            loader: "css-loader",
                         },
                         {
-                            loader: 'resolve-url-loader'
+                            loader: "resolve-url-loader"
                         },
                         {
-                            loader: 'sass-loader'
+                            loader: "sass-loader"
                         }
                     ]
                 },
@@ -95,31 +95,31 @@ module.exports = {
             },
             {
                 test: /\.js$/,
-                loader: 'babel-loader',
-                include: [resolve('appl'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
+                loader: "babel-loader",
+                include: [resolve("appl"), resolve("test"), resolve("node_modules/webpack-dev-server/client")]
             },
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-                loader: 'url-loader',
+                loader: "url-loader",
                 options: {
                     limit: 10000,
-                    name: utils.assetsPath('img/[name].[hash:7].[ext]')
+                    name: utils.assetsPath("img/[name].[hash:7].[ext]")
                 }
             },
             {
                 test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
-                loader: 'url-loader',
+                loader: "url-loader",
                 options: {
                     limit: 10000,
-                    name: utils.assetsPath('media/[name].[hash:7].[ext]')
+                    name: utils.assetsPath("media/[name].[hash:7].[ext]")
                 }
             },
             {
                 test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-                loader: 'url-loader',
+                loader: "url-loader",
                 options: {
                     limit: 10000,
-                    name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+                    name: utils.assetsPath("fonts/[name].[hash:7].[ext]")
                 }
             },
             setJsonLoader(version)
@@ -129,18 +129,18 @@ module.exports = {
         setImmediate: false,
         // prevent webpack from injecting mocks to Node native modules
         // that does not make sense for the client
-        dgram: 'empty',
-        fs: 'empty',
-        net: 'empty',
-        tls: 'empty',
-        child_process: 'empty'
+        dgram: "empty",
+        fs: "empty",
+        net: "empty",
+        tls: "empty",
+        child_process: "empty"
     }
-}
+};
 
 if (version < 4) {
     module.exports.plugins = (module.exports.plugins || []).concat([
         new ExtractTextPlugin({
-            filename: '[name].bundle.css',
+            filename: "[name].bundle.css",
             disable: false,
             allChunks: true
         })
@@ -148,18 +148,18 @@ if (version < 4) {
 }
 else {
     module.exports.plugins = (module.exports.plugins || []).concat([new MiniCssExtractPlugin({
-        filename: process.env.NODE_ENV === 'development' ? "[name].css" : "[name].[contenthash].css",
-        chunkFilename: process.env.NODE_ENV === 'development' ? "[name].[id].css" : "[name].[id].[contenthash].css"
+        filename: process.env.NODE_ENV === "development" ? "[name].css" : "[name].[contenthash].css",
+        chunkFilename: process.env.NODE_ENV === "development" ? "[name].[id].css" : "[name].[id].[contenthash].css"
     })]);
 }
 function setJsonLoader(version) {
-    let rules = {}
+    let rules = {};
 
     if (version < 4) {
         rules = {
             test: /\.json$/,
             use: "json-loader"
-        }
+        };
     }
 
     return rules;

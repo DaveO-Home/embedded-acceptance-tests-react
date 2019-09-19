@@ -1,10 +1,10 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import Menulinks from 'Menulinks'
+import React from "react";
+import ReactDOM from "react-dom";
+import Menulinks from "Menulinks";
 
-if (typeof testit === 'undefined' || !testit) {
+if (typeof testit === "undefined" || !testit) {
   ReactDOM.render(
     <Menulinks />,
-    document.getElementById('root')
-  )
+    document.getElementById("root")
+  );
 }

@@ -1,9 +1,9 @@
-"use strict";
+
 Object.defineProperty(exports, "__esModule", { value: true });
 var copy = require("copy");
-/*eslint no-extra-semi: "warn"*/
-/*global exports:true*/
-/*eslint no-console: ["error", { allow: ["warn", "error"] }] */
+/* eslint no-extra-semi: "warn"*/
+/* global exports:true*/
+/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 var CopyFsClass = /** @class */ (function () {
     function CopyFsClass(options) {
         this.options = options;
@@ -17,7 +17,7 @@ var CopyFsClass = /** @class */ (function () {
             });
         });
     }
-    ;
+    
     return CopyFsClass;
 }());
 exports.CopyFsClass = CopyFsClass;

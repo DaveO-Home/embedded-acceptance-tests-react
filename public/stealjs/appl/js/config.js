@@ -1,8 +1,8 @@
 
-import 'package.json!npm'
-import steal from "@steal"
+import "package.json!npm";
+import steal from "@steal";
 //!steal-remove-start
-import App from 'app'
+import App from "app";
 /*
  * Startup live-reload in another window first - gulp hmr
  */
@@ -17,6 +17,6 @@ steal.import("live-reload").then(reload => {
 });
 //!steal-remove-end
 
-if(typeof testit !== 'undefined') {
-    window._bundler = 'stealjs'
+if(typeof testit !== "undefined") {
+    window._bundler = "stealjs";
 }

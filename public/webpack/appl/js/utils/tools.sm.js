@@ -1,58 +1,58 @@
 // Per Tutorial: Let’s Build a Redux Powered React Application - Robin Orheden
 
-import { createStore } from 'redux'
+import { createStore } from "redux";
 
-let store = null
+let store = null;
 
 function createState () {
     let defaultState = {
         tools: {
             items: []
         }
-    }
+    };
 
-    return defaultState
+    return defaultState;
 }
 
 function findEntry (message, items) {
-    let idx = -1
-    let current = -1
+    let idx = -1;
+    let current = -1;
     items.forEach((item, index) => {
         if (item.message === message) {
-            idx = index
-            item.displayed = true
+            idx = index;
+            item.displayed = true;
         } else if (item.displayed === true) {
-            current = index
-            item.displayed = false
+            current = index;
+            item.displayed = false;
         }
-    })
+    });
 
-    return { 'idx': idx, 'current': current }
+    return { "idx": idx, "current": current };
 }
 
 function toolsApp (state, action) {
-    let newState = null
-    let found = -1
+    let newState = null;
+    let found = -1;
 
     switch (action.type) {
-        case 'ADD_TOOLS':
-            newState = Object.assign({}, state)
-            found = findEntry(action.message, newState.tools.items)
+        case "ADD_TOOLS":
+            newState = Object.assign({}, state);
+            found = findEntry(action.message, newState.tools.items);
             if (found.idx === -1) {
                 newState.tools.items.push({
                     message: action.message,
                     displayed: true,
                     index: newState.tools.items.length,
                     current: newState.tools.items.length
-                })
+                });
             }
 
-            return newState
+            return newState;
 
-        case 'REPLACE_TOOLS':
-            newState = Object.assign({}, state)
-            found = findEntry(newState.tools.items[action.index].message, newState.tools.items)
-            return newState
+        case "REPLACE_TOOLS":
+            newState = Object.assign({}, state);
+            found = findEntry(newState.tools.items[action.index].message, newState.tools.items);
+            return newState;
 /*
         case 'DELETE_TOOLS':
             let items = [].concat(state.tools.items)
@@ -65,32 +65,32 @@ function toolsApp (state, action) {
                 }
             })
 */
-        case 'CLEAR_TOOLS':
+        case "CLEAR_TOOLS":
             return Object.assign({}, state, {
                 tools: {
                     items: []
                 }
-            })
+            });
 
         default:
-            return state
+            return state;
     }
 }
 
 function addTools (message) {
     return {
-        type: 'ADD_TOOLS',
+        type: "ADD_TOOLS",
         message: message,
         displayed: true
-    }
+    };
 }
 
 function replaceTools (index) {
     return {
-        type: 'REPLACE_TOOLS',
+        type: "REPLACE_TOOLS",
         index: index,
         displayed: true
-    }
+    };
 }
 
 // function deleteTools (index) {
@@ -107,24 +107,24 @@ function replaceTools (index) {
 // }
 
 function buildStateManagement () {
-    store = createStore(toolsApp, createState())
+    store = createStore(toolsApp, createState());
 }
 
 export default {
     toolsStateManagement () {
-        buildStateManagement()
+        buildStateManagement();
     },
     getStore () {
-        return store
+        return store;
     },
     addCategory (message) {
-        return store.dispatch(addTools(message))
+        return store.dispatch(addTools(message));
     },
     replaceCategory (index) {
-        return store.dispatch(replaceTools(index))
+        return store.dispatch(replaceTools(index));
     },
     /* eslint no-unused-vars: ["error", { "args": "none" }] */
     findEntry (message, items) {
-        return findEntry(message, store.getState().tools.items)
+        return findEntry(message, store.getState().tools.items);
     }
-}
+};

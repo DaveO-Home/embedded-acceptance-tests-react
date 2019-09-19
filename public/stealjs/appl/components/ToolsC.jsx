@@ -1,170 +1,168 @@
 /* eslint no-unused-vars: 0 */
-import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
-import Table from 'table'
-import Setup from 'setup'
-import App from 'app'
-import Helpers from 'helpers2'
-import ToolsSM from 'toolssm'
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
+import Table from "table";
+import Setup from "setup";
+import App from "app";
+import Helpers from "helpers2";
+import ToolsSM from "toolssm";
 
 class Tools extends React.Component {
     componentDidMount () {
         getToolsComp().then(function (ToolsComp) {
             ReactDOM.render(
                 <ToolsComp />,
-                document.getElementById('main_container')
-            )
-        })
+                document.getElementById("main_container")
+            );
+        });
     }
-    componentWillReceiveProps () {
+    UNSAFE_componentWillReceiveProps () {
         getToolsComp().then(function (ToolsComp) {
             ReactDOM.render(
                 <ToolsComp />,
-                document.getElementById('main_container')
-            )
-        })
+                document.getElementById("main_container")
+            );
+        });
     }
 
     render () {
-        return (<span></span>)
+        return (<span></span>);
     }
 }
 
 function getToolsComp () {
-    ToolsSM.toolsStateManagement()
+    ToolsSM.toolsStateManagement();
 
     return new Promise(function (resolve, reject) {
-        let count = 0
-        const controllerName = 'Table'
-        const actionName = 'tools'
-        const failMsg = `Load problem with: '${controllerName}/${actionName}'.`
+        let count = 0;
+        const controllerName = "Table";
+        const actionName = "tools";
+        const failMsg = `Load problem with: '${controllerName}/${actionName}'.`;
         App.loadController(controllerName, Table, controller => {
             if (controller &&
                 controller[actionName]) {
-                controller[actionName]({})
+                controller[actionName]({});
             } else {
-                console.error(failMsg)
+                console.error(failMsg);
             }
         }, err => {
-            console.error(`${failMsg} - ${err}`)
-        })
-        Helpers.isLoaded(resolve, reject, {}, Table, count, 10)
-    })
-        .catch(function (rejected) {
-            console.warn('Failed', rejected)
-        })
-        .then(function (resolved) {
-            const innerHtml = { __html: resolved }
+            console.error(`${failMsg} - ${err}`);
+        });
+        Helpers.isLoaded(resolve, reject, {}, Table, count, 10);
+    }).then(function (resolved) {
+            const innerHtml = { __html: resolved };
 
             class Tools extends Component {
                 componentDidMount () {
-                    Table.decorateTable('tools')
-                    Helpers.scrollTop()
-                    if (App.controllers['Start']) {
-                        App.controllers['Start'].initMenu()
+                    Table.decorateTable("tools");
+                    Helpers.scrollTop();
+                    if (App.controllers["Start"]) {
+                        App.controllers["Start"].initMenu();
                     }
-                    Setup.init()
+                    Setup.init();
                     ReactDOM.render(
                         <ToolsSelect />,
-                        $('#main_container section')[0]
-                    )
+                        $("#main_container section")[0]
+                    );
                     ReactDOM.render(
                         <ToolsValue />,
-                        document.getElementById('tools-state')
-                    )
+                        document.getElementById("tools-state")
+                    );
                 }
                 render () {
                     return (
                         <span dangerouslySetInnerHTML={innerHtml} />
-                    )
+                    );
                 }
             }
 
-            return Tools
-        })
+            return Tools;
+        }).catch(function (rejected) {
+            console.warn("Failed", rejected);
+        });
 }
 
-export { getToolsComp }
+export { getToolsComp };
 
-export default Tools
+export default Tools;
 
 class ToolsValue extends React.Component {
     constructor () {
-        super()
+        super();
         this.state = {
             items: []
-        }
+        };
     }
-    componentWillMount () {
-        const store = ToolsSM.getStore()
-        let state = store.getState()
+    UNSAFE_componentWillMount () {
+        const store = ToolsSM.getStore();
+        let state = store.getState();
 
         store.subscribe(() => {
             this.setState({
                 items: state.tools.items
-            })
-        })
+            });
+        });
     }
 
     render () {
-        const items = ToolsSM.getStore().getState().tools.items
-        let index = -1
-        let message = 'unknown'
+        const items = ToolsSM.getStore().getState().tools.items;
+        let index = -1;
+        let message = "unknown";
         items.forEach((item, _index) => {
             if (item.displayed) {
-                index = _index
+                index = _index;
             }
-        })
+        });
         if (index !== -1) {
-            message = items[index].message
+            message = items[index].message;
         }
 
         return (
             <span>
                 {message} (using Redux)
             </span>
-        )
+        );
     }
 }
 
 class ToolsSelect extends React.Component {
     constructor () {
-        super()
-        this.store = ToolsSM.getStore()
+        super();
+        this.store = ToolsSM.getStore();
         this.state = {
             items: []
-        }
+        };
     }
 
-    componentWillMount () {
+    UNSAFE_componentWillMount () {
         this.store.subscribe(() => {
-            let state = this.store.getState()
+            let state = this.store.getState();
             this.setState({
                 items: state.tools.items
-            })
-        })
+            });
+        });
     }
     componentDidMount () {
-        $($('#dropdown1 a')[0]).fa({ icon: 'check' }) // Default
-        ToolsSM.addCategory('Combined')
+        $($("#dropdown1 a")[0]).fa({ icon: "check" }); // Default
+        ToolsSM.addCategory("Combined");
     }
 
     onCompletedClick (e) {
-        e.preventDefault()
-        const controller = App.controllers['Table']
-        const message = e.target.text.trim()
-        let store = ToolsSM.getStore()
-        const found = ToolsSM.findEntry(message, store.getState().tools.items)
+        e.preventDefault();
+        const controller = App.controllers["Table"];
+        const message = e.target.text.trim();
+        let store = ToolsSM.getStore();
+        const found = ToolsSM.findEntry(message, store.getState().tools.items);
 
-        controller.dropdownEvent(e)
+        controller.dropdownEvent(e);
         if (found.idx === -1) {
-            ToolsSM.addCategory(message)
+            ToolsSM.addCategory(message);
         } else {
-            ToolsSM.replaceCategory(found.idx)
+            ToolsSM.replaceCategory(found.idx);
         }
 
-        $('#dropdown1 a i').each(function () { this.remove() })
-        $(e.target).fa({ icon: 'check' })
+        $("#dropdown1 a i").each(function () { this.remove(); });
+        $(e.target).fa({ icon: "check" });
     }
 
     render () {
@@ -185,6 +183,6 @@ class ToolsSelect extends React.Component {
                     <a className="dropdown-item smallerfont" onClick={this.onCompletedClick.bind(this)}>Category2</a>
                 </div>
             </div>
-        )
+        );
     }
 }

@@ -230,8 +230,6 @@ __Note__; You may need to remove cache `..../public/parcel/build/.cache` during 
 
   __Note__; tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-3\. ***Special Considerations***
-
 ### V.  **Rollup**
 
 1\. ***Development Server Window*** -

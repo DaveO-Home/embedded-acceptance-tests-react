@@ -1,8 +1,8 @@
-import React/*, { Component }*/ from "react"
-import ReactDOM from "react-dom"
-import start from '../js/controller/start'
+import React, { Component } from "react";
+// import ReactDOM from "react-dom"
+import start from "../js/controller/start";
 
-class Login extends React.Component {
+class Login extends Component {
   render() {
     return (
       <small>
@@ -13,7 +13,7 @@ class Login extends React.Component {
 }
 
 function handleClick(e) {
-  start['div .login click'](e);
+  start["div .login click"](e);
 }
 
-export default Login
+export default Login;

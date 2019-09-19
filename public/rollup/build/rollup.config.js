@@ -1,20 +1,20 @@
 /* This is not used */
-const alias = require('rollup-plugin-alias');
-const buble = require('rollup-plugin-buble');
-const builtins = require('rollup-plugin-node-builtins');
-const commonjs = require('rollup-plugin-commonjs');
-const nodeResolve = require('rollup-plugin-node-resolve');
-const path = require('path')
-const postcss = require('rollup-plugin-postcss');
-const progress = require('rollup-plugin-progress');
-const replaceEnv = require('rollup-plugin-replace')
-const babel = require('rollup-plugin-babel');
+const alias = require("rollup-plugin-alias");
+const buble = require("rollup-plugin-buble");
+const builtins = require("rollup-plugin-node-builtins");
+const commonjs = require("rollup-plugin-commonjs");
+const nodeResolve = require("rollup-plugin-node-resolve");
+const path = require("path");
+const postcss = require("rollup-plugin-postcss");
+const progress = require("rollup-plugin-progress");
+const replaceEnv = require("rollup-plugin-replace");
+const babel = require("rollup-plugin-babel");
 
-let isProduction = process.env.BUILD==="true"? true: false
+let isProduction = process.env.BUILD==="true"? true: false;
 
 export default {
     allowRealFiles: true,
-    input: '../appl/main.js',
+    input: "../appl/main.js",
     output: {
         format: "iife",
         name: "acceptance",
@@ -24,15 +24,15 @@ export default {
             clearLine: isProduction ? false : true
         }),
         replaceEnv({
-            'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
+            "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development")
         }),
         alias(aliases()),
         postcss(),
         buble(),
-        nodeResolve({browser: true, jsnext: true, main: true, extensions: ['.js', '.jsx']}),
+        nodeResolve({browser: true, jsnext: true, main: true, extensions: [".js", ".jsx"]}),
         babel({
             babelrc: false,
-            exclude: ['node_modules/**'],
+            exclude: ["node_modules/**"],
             presets: [["@babel/preset-react", {
                 es2017: {
                     modules: false
@@ -43,11 +43,11 @@ export default {
         commonjs(),
     ],
     // dest: '../../' +  (isProduction? 'dist': 'dist_test') + '/rollup/bundle.js'
-}
+};
 
 
 function modResolve(dir) {
-    return path.join(__dirname, '..', dir)
+    return path.join(__dirname, "..", dir);
 }
 
 function aliases() {
@@ -72,6 +72,6 @@ function aliases() {
         "logintest": "./logintest.js",
         "routertest": "./routertest.js",
         "toolstest": "./toolstest.js",
-        '@': modResolve('appl'),
+        "@": modResolve("appl"),
     };
 }

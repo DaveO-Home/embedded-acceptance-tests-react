@@ -1,2 +1,1 @@
-import './js/index' // Loads React, App modules and test environment
-
+import "./js/index"; // Loads React, App modules and test environment

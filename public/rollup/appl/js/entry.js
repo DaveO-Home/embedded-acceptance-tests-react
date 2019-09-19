@@ -9,10 +9,10 @@ import Menulinks from "../Menulinks";
 //     )
 //   }, 1000)
 // } else {
-if (typeof testit === 'undefined' || !testit) {
+if (typeof testit === "undefined" || !testit) {
   ReactDOM.render(
     <Menulinks />,
     document.getElementById("root")
-  )
+  );
 }
 // }

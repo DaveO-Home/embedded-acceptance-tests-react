@@ -1,26 +1,26 @@
-'use strict'
 
-const path = require('path')
-const merge = require('webpack-merge')
-const utils = require('./utils')
-const config = require('../config')
-const webpack = require('webpack')
-const baseWebpackConfig = require('./webpack.base.conf')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const packageDep = require('../../package.json')
 
-const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0])
-const isWatch = process.env.USE_WATCH === 'true'
-const devPublicPath = process.env.PUBLIC_PATH ? process.env.PUBLIC_PATH : '/dist_test/webpack/';
+const path = require("path");
+const merge = require("webpack-merge");
+const utils = require("./utils");
+const config = require("../config");
+const webpack = require("webpack");
+const baseWebpackConfig = require("./webpack.base.conf");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const packageDep = require("../../package.json");
 
-const HOST = process.env.HOST
-const PORT = process.env.PORT && Number(process.env.PORT)
+const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0]);
+const isWatch = process.env.USE_WATCH === "true";
+const devPublicPath = process.env.PUBLIC_PATH ? process.env.PUBLIC_PATH : "/dist_test/webpack/";
 
-baseWebpackConfig.output.publicPath = devPublicPath
+const HOST = process.env.HOST;
+const PORT = process.env.PORT && Number(process.env.PORT);
+
+baseWebpackConfig.output.publicPath = devPublicPath;
 
 const devWebpackConfig = merge(baseWebpackConfig, {
-    stats: 'normal', // minimal, none, normal, verbose, errors-only
-    mode: 'development',
+    stats: "normal", // minimal, none, normal, verbose, errors-only
+    mode: "development",
     cache: false,
     module: {
         rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
@@ -30,10 +30,10 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
     // these devServer options should be customized in /config/index.js
     devServer: {
-        clientLogLevel: 'warning',
+        clientLogLevel: "warning",
         historyApiFallback: {
             rewrites: [
-                { from: /.*/, to: path.join(config.dev.assetsPublicPath, 'index.html') }
+                { from: /.*/, to: path.join(config.dev.assetsPublicPath, "index.html") }
             ]
         },
         hot: true,
@@ -54,41 +54,41 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     },
     plugins: [
         new webpack.DefinePlugin({
-            'process.env': require('../config/dev.env')
+            "process.env": require("../config/dev.env")
         }),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
             "window.jQuery": "jquery",
-            Popper: ['popper.js', 'default']
+            Popper: ["popper.js", "default"]
         }),
         // copy custom static assets
         new CopyWebpackPlugin([
             {
-                from: path.resolve(__dirname, '../static'),
+                from: path.resolve(__dirname, "../static"),
                 to: config.dev.assetsSubDirectory,
-                ignore: ['.*']
+                ignore: [".*"]
             },
-            { from: '../images/favicon.ico', to: 'images' },
-            { from: './appl/testapp_dev.html', to: config.dev.assetsSubDirectory },
-            { from: './appl/index.html', to: config.dev.assetsSubDirectory },
-            { from: '../README.md', to: '../' },
+            { from: "../images/favicon.ico", to: "images" },
+            { from: "./appl/testapp_dev.html", to: config.dev.assetsSubDirectory },
+            { from: "./appl/index.html", to: config.dev.assetsSubDirectory },
+            { from: "../README.md", to: "../" },
             {
                 from: {
-                    glob: './appl/views/**/*',
+                    glob: "./appl/views/**/*",
                     dot: false
                 },
-                to: ''
+                to: ""
             },
             {
                 from: {
-                    glob: './appl/templates/**/*',
+                    glob: "./appl/templates/**/*",
                     dot: false
                 },
-                to: ''
+                to: ""
             },
-            { from: './appl/assets/*.*', to: '' }
+            { from: "./appl/assets/*.*", to: "" }
         ])
     ],
     watch: isWatch,
@@ -99,7 +99,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
 module.exports = devWebpackConfig;
 
-//module.exports = new Promise((resolve, reject) => {
+// module.exports = new Promise((resolve, reject) => {
 //  portfinder.basePort = process.env.PORT || config.dev.port
 //  portfinder.getPort((err, port) => {
 //    if (err) {
@@ -123,4 +123,4 @@ module.exports = devWebpackConfig;
 //      resolve(devWebpackConfig)
 //    }
 //  })
-//})
+// })

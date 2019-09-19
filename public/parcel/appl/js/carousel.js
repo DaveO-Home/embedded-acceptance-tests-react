@@ -3,7 +3,7 @@ var TxtRotate = function (el, toRotate, period) {
 	this.el = el;
 	this.loopNum = 0;
 	this.period = parseInt(period, 10) || 2000;
-	this.txt = '';
+	this.txt = "";
 	this.tick();
 	this.isDeleting = false;
 };
@@ -18,7 +18,7 @@ TxtRotate.prototype.tick = function () {
 		this.txt = fullTxt.substring(0, this.txt.length + 1);
 	}
 
-	this.el.innerHTML = '<span class="wrap">' + this.txt + '</span>';
+	this.el.innerHTML = "<span class=\"wrap\">" + this.txt + "</span>";
 
 	var that = this;
 	var delta = 300 - Math.random() * 100;
@@ -28,7 +28,7 @@ TxtRotate.prototype.tick = function () {
 	if (!this.isDeleting && this.txt === fullTxt) {
 		delta = this.period;
 		this.isDeleting = true;
-	} else if (this.isDeleting && this.txt === '') {
+	} else if (this.isDeleting && this.txt === "") {
 		this.isDeleting = false;
 		this.loopNum++;
 		delta = 500;
@@ -37,14 +37,14 @@ TxtRotate.prototype.tick = function () {
 	setTimeout(function () {
 		that.tick();
 	}, delta);
-}
+};
 
 // window.onload = function () {
 export default function () {	
-	var elements = document.getElementsByClassName('txt-rotate');
+	var elements = document.getElementsByClassName("txt-rotate");
 	for (var i = 0; i < elements.length; i++) {
-		var toRotate = elements[i].getAttribute('data-rotate');
-		var period = elements[i].getAttribute('data-period');
+		var toRotate = elements[i].getAttribute("data-rotate");
+		var period = elements[i].getAttribute("data-period");
 		if (toRotate) {
 			new TxtRotate(elements[i], JSON.parse(toRotate), period);
 		}

@@ -1,12 +1,12 @@
-import React from "react"
-import { BrowserRouter as Router, Route, Link, HashRouter } from "react-router-dom";
-import ReactDOM from "react-dom"
-import Start from "./components/StartC"
-import Pdf from "./components/PdfC"
-import Tools from "./components/ToolsC"
-import Contact from "./components/ContactC"
-import Welcome from "./components/HelloWorldC"
-import Login from "./components/LoginC"
+import React from "react";
+import { /* BrowserRouter as Router, */ Route, Link, HashRouter } from "react-router-dom";
+import ReactDOM from "react-dom";
+import Start from "./components/StartC";
+import Pdf from "./components/PdfC";
+import Tools from "./components/ToolsC";
+import Contact from "./components/ContactC";
+import Welcome from "./components/HelloWorldC";
+import Login from "./components/LoginC";
 
 const SideBar = () => (
     <div className="collapse small show" id="submenu1" aria-expanded="true">
@@ -15,7 +15,7 @@ const SideBar = () => (
                 <Link to="/"><i className="fa fa-fw fa-home"></i> Home</Link>
             </li>
             <li className="nav-item" >
-                <Link to={{pathname: '/pdf/test'}}><i className="fa fa-fw fa-file-pdf-o"></i> PDF View</Link>
+                <Link to={{pathname: "/pdf/test"}}><i className="fa fa-fw fa-file-pdf-o"></i> PDF View</Link>
             </li>
             <li className="nav-header nav-item">Statistics</li>
             <li className="nav-item">
@@ -36,20 +36,20 @@ const SideBar = () => (
         </div>
     </div>
 
-)
+);
 
 const Menulinks = () => (
     <HashRouter>
       <SideBar />
     </HashRouter>
-  )
+  );
 // For tests the Login will be attached to the test page in apptest.js
-if (typeof testit === 'undefined' || (typeof testit !== 'undefined' && !testit)) 
+if (typeof testit === "undefined" || (typeof testit !== "undefined" && !testit)) 
 {
     ReactDOM.render(
         <Login />,
         document.getElementById("nav-login")
-    )
+    );
 }
 
-export default Menulinks
+export default Menulinks;

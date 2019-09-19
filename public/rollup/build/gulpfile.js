@@ -2,32 +2,31 @@
  * Successful acceptance tests & lints start the production build.
  * Tasks are run serially, 'pat'(run acceptance tests) -> 'build-development' -> ('eslint', 'csslint', 'bootlint') -> 'build'
  */
-const { src, dest, series, parallel, task } = require('gulp');
-const alias = require('rollup-plugin-alias');
-const babel = require('rollup-plugin-babel');
-const buble = require('rollup-plugin-buble');
-const commonjs = require('rollup-plugin-commonjs');
+const { src, dest, series, parallel, task } = require("gulp");
+const alias = require("rollup-plugin-alias");
+const babel = require("rollup-plugin-babel");
+const buble = require("rollup-plugin-buble");
+const commonjs = require("rollup-plugin-commonjs");
 const copy = require("gulp-copy");
-const csslint = require('gulp-csslint');
-const eslint = require('gulp-eslint');
-const exec = require('child_process').exec;
-const livereload = require('rollup-plugin-livereload');
-const log = require('fancy-log');
-const nodeResolve = require('rollup-plugin-node-resolve');
-const noop = require('gulp-noop');
-const path = require('path')
-const postcss = require('rollup-plugin-postcss');
-const progress = require('rollup-plugin-progress');
-const rename = require('gulp-rename');
-const replaceEnv = require('rollup-plugin-replace')
-const rmf = require('rimraf')
-const rollup = require('rollup');
-const serve = require('rollup-plugin-serve');
+const csslint = require("gulp-csslint");
+const eslint = require("gulp-eslint");
+const exec = require("child_process").exec;
+const livereload = require("rollup-plugin-livereload");
+const log = require("fancy-log");
+const nodeResolve = require("rollup-plugin-node-resolve");
+const noop = require("gulp-noop");
+const path = require("path");
+const postcss = require("rollup-plugin-postcss");
+const progress = require("rollup-plugin-progress");
+const rename = require("gulp-rename");
+const replaceEnv = require("rollup-plugin-replace");
+const rmf = require("rimraf");
+const rollup = require("rollup");
+const serve = require("rollup-plugin-serve");
 const stripCode = require("gulp-strip-code");
-const Server = require('karma').Server;
-const uglify = require('gulp-uglify');
-const chalk = require('chalk');
-const { timer } = require('rxjs');
+const Server = require("karma").Server;
+const uglify = require("gulp-uglify");
+const chalk = require("chalk");
 
 const startComment = "develblock:start",
     endComment = "develblock:end",
@@ -35,12 +34,12 @@ const startComment = "develblock:start",
         startComment + " ?[\\*\\/]?[\\s\\S]*?(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" +
         endComment + " ?(\\*\\/)?[\\t ]*\\n?", "g");
 
-let lintCount = 0
-let isProduction = process.env.NODE_ENV == 'production'
-let browsers = process.env.USE_BROWSERS
-let testDist = "dist_test/rollup"
-let prodDist = "dist/rollup"
-let dist = isProduction ? prodDist : testDist
+let lintCount = 0;
+let isProduction = process.env.NODE_ENV == "production";
+let browsers = process.env.USE_BROWSERS;
+let testDist = "dist_test/rollup";
+let prodDist = "dist/rollup";
+let dist = isProduction ? prodDist : testDist;
 
 if (browsers) {
     global.whichBrowsers = browsers.split(",");
@@ -71,39 +70,39 @@ const pat = function (done) {
  */
 const esLint = function (cb) {
     dist = prodDist;
-    var stream = src(["../appl/js/**/*.js"])
+    var stream = src(["../appl/**/*.js", "../appl/**/*.jsx"])
         .pipe(eslint({
-            // configFile: 'eslintConf.json',
-            // quiet: 1
+            configFile: "../../.eslintrc.js",
+            quiet: 1
         }))
         .pipe(eslint.format())
         .pipe(eslint.result(result => {
-            //Keeping track of # of javascript files linted.
+            // Keeping track of # of javascript files linted.
             lintCount++;
         }))
         .pipe(eslint.failAfterError());
 
-    stream.on('error', function () {
+    stream.on("error", function () {
         process.exit(1);
     });
 
-    return stream.on('end', function () {
-        log("# javascript files linted: " + lintCount);
-        cb()
+    return stream.on("end", function () {
+        log(chalk.blue.bold("# javascript & jsx files linted: " + lintCount));
+        cb();
     });
 };
 /*
  * css linter
  */
 const cssLint = function (cb) {
-    var stream = src(['../appl/css/site.css'])
+    var stream = src(["../appl/css/site.css"])
         .pipe(csslint())
         .pipe(csslint.formatter());
 
-    stream.on('error', function () {
+    stream.on("error", function () {
         process.exit(1);
     });
-    return stream.on('end', function () {
+    return stream.on("end", function () {
         cb();
     });
 };
@@ -112,7 +111,7 @@ const cssLint = function (cb) {
  */
 const bootLint = function (cb) {
 
-    exec('npx gulp --gulpfile Gulpboot.js', function (err, stdout, stderr) {
+    exec("npx gulp --gulpfile Gulpboot.js", function (err, stdout, stderr) {
         log(stdout);
         log(stderr);
         cb(err);
@@ -125,8 +124,8 @@ const clean = function (done) {
     isProduction = true;
     dist = prodDist;
     return rmf(`../../${prodDist}/**/*`, err => {
-        done(err)
-    })
+        done(err);
+    });
 };
 /**
  * Remove previous test build
@@ -135,8 +134,8 @@ const cleant = function (done) {
     isProduction = false;
     dist = testDist;
     return rmf(`../../${dist}/**/*`, err => {
-        done(err)
-    })
+        done(err);
+    });
 };
 /**
  * Resources and content copied to dist directory - for production
@@ -205,7 +204,7 @@ const rollup_tdd = function (done) {
         global.whichBrowsers = ["Chrome", "Firefox"];
     }
     new Server({
-        configFile: __dirname + '/karma.conf.js',
+        configFile: __dirname + "/karma.conf.js",
     }, done).start();
 };
 /**
@@ -216,20 +215,20 @@ const tddo = function (done) {
         global.whichBrowsers = ["Opera"];
     }
     new Server({
-        configFile: __dirname + '/karma.conf.js',
+        configFile: __dirname + "/karma.conf.js",
     }, done).start();
 };
 
 const rollup_watch = function (cb) {
     const watchOptions = {
         allowRealFiles: true,
-        input: '../appl/main.js',
+        input: "../appl/main.js",
         plugins: [
             progress({
                 clearLine: isProduction ? false : true
             }),
             replaceEnv({
-                'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
+                "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development")
             }),
             alias(aliases()),
             postcss(),
@@ -237,11 +236,11 @@ const rollup_watch = function (cb) {
                 browser: true,
                 jsnext: true,
                 main: true,
-                extensions: ['.js', '.jsx']
+                extensions: [".js", ".jsx"]
             }),
             babel({
                 babelrc: false,
-                exclude: ['node_modules/**'],
+                exclude: ["node_modules/**"],
                 presets: [["@babel/preset-react", {
                     es2017: {
                         modules: false
@@ -265,14 +264,14 @@ const rollup_watch = function (cb) {
         ],
         output: {
             name: "acceptance",
-            file: '../../' + dist + '/bundle.js',
+            file: "../../" + dist + "/bundle.js",
             format: "iife",
             sourcemap: true
         }
     };
-    watcher = rollup.watch(watchOptions);
+    const watcher = rollup.watch(watchOptions);
     let starting = false;
-    watcher.on('event', event => {
+    watcher.on("event", event => {
         switch (event.code) {
             case "START":
                 log("Starting...");
@@ -287,7 +286,7 @@ const rollup_watch = function (cb) {
             case "END":
                 if (!starting) {
                     log("Watch Shutdown Normally");
-                    cb()
+                    cb();
                 }
                 starting = false;
                 break;
@@ -305,37 +304,39 @@ const rollup_watch = function (cb) {
     });
 };
 
-const testCopyRun = series(copy_fonts, parallel(copy_test, copy_images, copy_node_css, copy_css))
-const testRun = series(cleant, testCopyRun, build_development)
-const lintRun = parallel(esLint, cssLint, bootLint)
-const prodCopyRun = series(copyprod_fonts, parallel(copyprod, copyprod_images, copyprod_node_css, copyprod_css))
-const prodRun = series(cleant, testCopyRun, build_development, pat, lintRun, clean, prodCopyRun, build)
-prodRun.displayName = 'prod'
+const testCopyRun = series(copy_fonts, parallel(copy_test, copy_images, copy_node_css, copy_css));
+const testRun = series(cleant, testCopyRun, build_development);
+const lintRun = parallel(esLint, cssLint, bootLint);
+const prodCopyRun = series(copyprod_fonts, parallel(copyprod, copyprod_images, copyprod_node_css, copyprod_css));
+const prodRun = series(cleant, testCopyRun, build_development, pat, lintRun, clean, prodCopyRun, build);
+prodRun.displayName = "prod";
 
-task(prodRun)
-exports.default = prodRun
-exports.test = series(testRun, pat)
-exports.tdd = series(testRun, rollup_tdd)
-exports.watch = rollup_watch
-exports.rebuild = testRun
-exports.acceptance = r_test
-exports.development = parallel(rollup_watch, rollup_tdd)
+task(prodRun);
+exports.default = prodRun;
+exports.prd = series(clean, prodCopyRun, build);
+exports.test = series(testRun, pat);
+exports.tdd = series(testRun, rollup_tdd);
+exports.watch = rollup_watch;
+exports.rebuild = testRun;
+exports.acceptance = r_test;
+exports.development = parallel(rollup_watch, rollup_tdd);
+exports.lint = lintRun;
 
 const inputOptions = {
-    input: '../appl/main.js',
+    input: "../appl/main.js",
     plugins: [
         progress({
             clearLine: isProduction ? false : true
         }),
         replaceEnv({
-            'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
+            "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development")
         }),
         alias(aliases()),
         postcss(),
-        nodeResolve({ /*browser: true, jsnext: true, main: true, */ extensions: ['.js', '.jsx'] }),
+        nodeResolve({ /* browser: true, jsnext: true, main: true, */ extensions: [".js", ".jsx"] }),
         babel({
             babelrc: false,
-            exclude: ['node_modules/**'],
+            exclude: ["node_modules/**"],
             presets: [["@babel/preset-react", {
                 es2017: {
                     modules: false
@@ -343,36 +344,41 @@ const inputOptions = {
             }]],
             plugins: ["@babel/plugin-transform-react-jsx"]
         }),
-        commonjs()
+        commonjs({
+            namedExports: {
+                "../../node_modules/react/index.js": ["createElement", "Component"],
+                "../../node_modules/react-is/index.js": ["isValidElementType"]
+            },
+        })
     ],
     onwarn: function (warning) {
-        if (warning.code === 'THIS_IS_UNDEFINED' ||
-            warning.code === 'CIRCULAR_DEPENDENCY') {
+        if (warning.code === "THIS_IS_UNDEFINED" ||
+            warning.code === "CIRCULAR_DEPENDENCY") {
             return;
         }
         console.warn(warning.message);
     },
     treeshake: true,
-    perf: isProduction === true, 
+    perf: isProduction === true,
     external: []
 };
 
 const inputOptionsProd = {
-    input: '../appl/main.js',
+    input: "../appl/main.js",
     plugins: [
         progress({
-            clearLine: false
+            clearLine: true
         }),
         replaceEnv({
-            'process.env.NODE_ENV': JSON.stringify('production')
+            "process.env.NODE_ENV": JSON.stringify("production")
         }),
         alias(aliases()),
         postcss(),
         buble(),
-        nodeResolve({ browser: true, jsnext: true, main: true, extensions: ['.js', '.jsx'] }),
+        nodeResolve({ /* browser: true, jsnext: true, main: true,*/ extensions: [".js", ".jsx"] }),
         babel({
             babelrc: false,
-            exclude: ['node_modules/**'],
+            exclude: ["node_modules/**"],
             presets: [["@babel/preset-react", {
                 es2017: {
                     modules: false
@@ -380,17 +386,22 @@ const inputOptionsProd = {
             }]],
             plugins: ["@babel/plugin-transform-react-jsx"]
         }),
-        commonjs(),
+        commonjs({
+            namedExports: {
+                "../../node_modules/react/index.js": ["createElement", "Component"],
+                "../../node_modules/react-is/index.js": ["isValidElementType"]
+            },
+        })
     ],
     onwarn: function (warning) {
-        if (warning.code === 'THIS_IS_UNDEFINED' ||
-            warning.code === 'CIRCULAR_DEPENDENCY') {
+        if (// warning.code === 'THIS_IS_UNDEFINED' ||
+            warning.code === "CIRCULAR_DEPENDENCY") {
             return;
         }
         console.warn(warning.message);
     },
     treeshake: true,
-    perf: true, 
+    perf: true,
     external: []
 };
 
@@ -399,17 +410,17 @@ const outputOptions = {
     format: "iife",
     name: "acceptance",
     sourcemap: isProduction ? false : true,
-    file: 'build/bundle.js'
+    file: "build/bundle.js"
 };
 
 async function rollupBuild(done) {
     const bundle = await rollup.rollup(isProduction ? inputOptionsProd : inputOptions);
-    if(isProduction) {
-        console.log("Timings:", bundle.getTimings())
+    if (isProduction) {
+        log("Timings:", bundle.getTimings());
     }
     await bundle.write(outputOptions);
 
-    await rollup2Build(done)
+    await rollup2Build(done);
 }
 
 function rollup2Build(done) {
@@ -419,23 +430,23 @@ function rollup2Build(done) {
         log(chalk.cyan("Copying Test Bundle and Map"));
     }
     if (!isProduction) {
-        copySrcMaps()
+        copySrcMaps();
     }
-    const stream = src(['build/bundle.js'])
+    const stream = src(["build/bundle.js"])
         .pipe(isProduction ? stripCode({ pattern: regexPattern }) : noop())
-        .pipe(rename('bundle.js'))
+        .pipe(rename("bundle.js"))
         .pipe(isProduction ? uglify() : noop())
-        .pipe(dest('../../' + dist));
-    stream.on('end', function () {
+        .pipe(dest("../../" + dist));
+    stream.on("end", function () {
         log(chalk.cyan("Done with compile"));
-        if (typeof done !== 'undefined') {
-            done()
+        if (typeof done !== "undefined") {
+            done();
         }
     });
 }
 
 function modResolve(dir) {
-    return path.join(__dirname, '..', dir)
+    return path.join(__dirname, "..", dir);
 }
 
 function aliases() {
@@ -463,49 +474,49 @@ function aliases() {
         "logintest": "./logintest.js",
         "routertest": "./routertest.js",
         "toolstest": "./toolstest.js",
-        '@': modResolve('appl'),
+        "@": modResolve("appl"),
     };
 }
 
 function copySrc() {
-    return src(['../appl/views/**/*', '../appl/templates/**/*', '../appl/index.html', '../appl/assets/**/*', isProduction ? '../appl/testapp.html' : '../appl/testapp_dev.html'])
-        .pipe(copy('../../' + dist + '/appl'));
+    return src(["../appl/views/**/*", "../appl/templates/**/*", "../appl/index.html", "../appl/assets/**/*", isProduction ? "../appl/testapp.html" : "../appl/testapp_dev.html"])
+        .pipe(copy("../../" + dist + "/appl"));
 }
 
 function copyIndex() {
-    return src(['../index.html'])
-        .pipe(copy('../../' + dist + '/rollup'));
+    return src(["../index.html"])
+        .pipe(copy("../../" + dist + "/rollup"));
 }
 
 function copyImages() {
-    return src(['../images/*', '../../README.md'])
-        .pipe(copy('../../' + dist + '/appl'));
+    return src(["../images/*", "../../README.md"])
+        .pipe(copy("../../" + dist + "/appl"));
 }
 
 function copyCss() {
-    return src(['../appl/css/site.css'])
-        .pipe(copy('../../' + dist + '/appl'));
+    return src(["../appl/css/site.css"])
+        .pipe(copy("../../" + dist + "/appl"));
 }
 
 function copyNodeCss() {
-    return src(['../../node_modules/bootstrap/dist/css/bootstrap.min.css', "../../node_modules/font-awesome/css/font-awesome.css",
+    return src(["../../node_modules/bootstrap/dist/css/bootstrap.min.css", "../../node_modules/font-awesome/css/font-awesome.css",
         "../../node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css", "../../node_modules/tablesorter/dist/css/theme.blue.min.css"])
-        .pipe(copy('../../' + dist + '/appl'));
+        .pipe(copy("../../" + dist + "/appl"));
 }
 
 function copyFonts() {
-    return src(['../../node_modules/font-awesome/fonts/*'])
-        .pipe(copy('../../' + dist + '/appl'));
+    return src(["../../node_modules/font-awesome/fonts/*"])
+        .pipe(copy("../../" + dist + "/appl"));
 }
 
 function copySrcMaps() {
-    return src(['build/bundle.js.map'])
-        .pipe(dest('../../' + dist))
+    return src(["build/bundle.js.map"])
+        .pipe(dest("../../" + dist));
 }
 
 function runKarma(done) {
     new Server({
-        configFile: __dirname + '/karma.conf.js',
+        configFile: __dirname + "/karma.conf.js",
         singleRun: true
     }, function (result) {
         var exitCode = !result ? 0 : result;
@@ -518,38 +529,24 @@ function runKarma(done) {
     }).start();
 
 }
-//per stackoverflow - Converting milliseconds to minutes and seconds with Javascript
+// per stackoverflow - Converting milliseconds to minutes and seconds with Javascript
 function millisToMinutesAndSeconds(millis) {
     var minutes = Math.floor(millis / 60000);
     var seconds = ((millis % 60000) / 1000).toFixed(0);
     return ((seconds == 60 ? (minutes + 1) + ":00" : minutes + ":" + (seconds < 10 ? "0" : "") + seconds) + (minutes === 0 ? " seconds" : "minutes"));
 
 }
-/*
- * From Stack Overflow - Node (Gulp) process.stdout.write to file
- * @type type
- */
-if (process.env.USE_LOGFILE == 'true') {
-    var fs = require('fs');
-    var origstdout = process.stdout.write,
-        origstderr = process.stderr.write,
-        outfile = 'node_output.log',
-        errfile = 'node_error.log';
-
-    if (fs.exists(outfile)) {
-        fs.unlink(outfile);
-    }
-    if (fs.exists(errfile)) {
-        fs.unlink(errfile);
-    }
-
-    process.stdout.write = function (chunk) {
-        fs.appendFile(outfile, chunk.replace(/\x1b\[[0-9;]*m/g, ''));
-        origstdout.apply(this, arguments);
+// From Stack Overflow - Node (Gulp) process.stdout.write to file
+if (process.env.USE_LOGFILE == "true") {
+    var fs = require("fs");
+    var util = require("util");
+    var logFile = fs.createWriteStream("log.txt", { flags: "w" });
+    // Or "w" to truncate the file every time the process starts.
+    var logStdout = process.stdout;
+/* eslint no-console: 0 */
+    console.log = function () {
+        logFile.write(util.format.apply(null, arguments) + "\n");
+        logStdout.write(util.format.apply(null, arguments) + "\n");
     };
-
-    process.stderr.write = function (chunk) {
-        fs.appendFile(errfile, chunk.replace(/\x1b\[[0-9;]*m/g, ''));
-        origstderr.apply(this, arguments);
-    };
+    console.error = console.log;
 }

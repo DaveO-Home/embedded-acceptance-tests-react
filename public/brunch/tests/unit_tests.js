@@ -1,6 +1,6 @@
-"use strict"
+
 describe("Unit Tests - Suite 1", function () {
-    //Application Tests use Promises
+    // Application Tests use Promises
     it("Verify that browser supports Promises", function () {
         var isNativePromise = false,
                 isPolyfillPromise = false;
@@ -12,11 +12,11 @@ describe("Unit Tests - Suite 1", function () {
             }
         }
         if (isNativePromise === isPolyfillPromise) {
-            console.warn("Promise support required, add polyfill to karma configuration.")
+            console.warn("Promise support required, add polyfill to karma configuration.");
         }
         expect(isNativePromise !== isPolyfillPromise).toBeTruthy();
     });
-    //per https://www.bram.us/2016/10/31/checking-if-a-browser-supports-es6/
+    // per https://www.bram.us/2016/10/31/checking-if-a-browser-supports-es6/
     var spec = "ES6 Support", no = "";
     var supportsES6 = function () {
         try {

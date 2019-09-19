@@ -1,9 +1,9 @@
 /* eslint no-unused-vars: 0 */
-import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
-import App from 'app'
-import Setup from 'setup'
-import Helpers from 'helpers2'
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
+import App from "app";
+import Setup from "setup";
+import Helpers from "helpers2";
 
 const contactHtml = (
     <span id="data" name="contact">
@@ -13,7 +13,7 @@ const contactHtml = (
                     <h2>Contact <small>US</small></h2>
                 </div>
 
-                <address className="pull-left" style={{ width: '300px' }}>
+                <address className="pull-left" style={{ width: "300px" }}>
                     <strong>The Best Company</strong><br />
                     111 Swell Ave. Suite 105<br />
                     Middle, Earth 11111
@@ -83,66 +83,66 @@ const contactHtml = (
                     </fieldset>
                 </form>
             </div>
-            <div style={{ width: '150px' }}> </div>
+            <div style={{ width: "150px" }}> </div>
         </div>
-    </span>)
+    </span>);
 
 class Contact extends Component {
     componentDidMount () {
-        setData()
+        setData();
         setTimeout(function () { // Next tick
-            const el = $('#data')
-            initStart(el)
-        }, 1)
+            const el = $("#data");
+            initStart(el);
+        }, 1);
     }
 
     render () {
-        if (App.controllers['Start']) {
-            App.controllers['Start'].initMenu()
+        if (App.controllers["Start"]) {
+            App.controllers["Start"].initMenu();
         }
-        Setup.init()
-        return (<span></span>)
+        Setup.init();
+        return (<span></span>);
     }
 }
 
 function setData () {
     ReactDOM.render(
         contactHtml,
-        document.getElementById('main_container')
-    )
+        document.getElementById("main_container")
+    );
 }
 
 function getContact () {
-    setData()
+    setData();
     return new Promise((resolve, reject) => {
-        Helpers.isResolved(resolve, reject, ReactDOM, 'main_container', 0, 0)
+        Helpers.isResolved(resolve, reject, ReactDOM, "main_container", 0, 0);
     }).catch(rejected => {
-        fail(`Contact Page did not load within limited time: ${rejected}`)
+        fail(`Contact Page did not load within limited time: ${rejected}`);
     }).then(resolved => {
-        const el = $('#data')
-        initStart(el)
-        return this
-    })
+        const el = $("#data");
+        initStart(el);
+        return this;
+    });
 }
 
-export { getContact }
+export { getContact };
 
-export default Contact
+export default Contact;
 
 const initStart = (el) => {
-    const controllerName = 'Start'
-    const actionName = 'init'
-    const failMsg = `Load problem with: '${controllerName}/${actionName}'.`
+    const controllerName = "Start";
+    const actionName = "init";
+    const failMsg = `Load problem with: '${controllerName}/${actionName}'.`;
 
     App.loadController(controllerName, {}, controller => {
         if (controller &&
             controller[actionName]) {
-            controller.initMenu()
-            controller.contactListener(el, controller)
+            controller.initMenu();
+            controller.contactListener(el, controller);
         } else {
-            console.error(failMsg)
+            console.error(failMsg);
         }
     }, err => {
-        console.error(`${failMsg} - ${err}`)
-    })
-}
+        console.error(`${failMsg} - ${err}`);
+    });
+};

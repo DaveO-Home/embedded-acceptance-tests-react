@@ -5,3 +5,4 @@
 /*.js
 ../test/unit/coverage/
 marked.js
+../tests/webcomponents-hi-sd-ce.js
