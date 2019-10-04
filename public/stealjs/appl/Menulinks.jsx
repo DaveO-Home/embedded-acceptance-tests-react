@@ -8,6 +8,7 @@ import Tools from "ToolsC";
 import Contact from "ContactC";
 import Welcome from "HelloWorldC";
 import Login from "LoginC";
+import Dodex from "DodexC";
 
 const SideBar = () => (
     <div className="collapse small show" id="submenu1" aria-expanded="true">
@@ -41,9 +42,13 @@ const SideBar = () => (
 
 const Menulinks = () => (
     <HashRouter>
-      <SideBar />
+        <SideBar />
     </HashRouter>
-  );
+);
+
+const Dodexlink = () => (
+    <Dodex />
+);
 
 if (typeof testit === "undefined" || (typeof testit !== "undefined" && !testit)) {
     ReactDOM.render(
@@ -53,3 +58,4 @@ if (typeof testit === "undefined" || (typeof testit !== "undefined" && !testit))
 }
 
 export default Menulinks;
+export { Dodexlink };

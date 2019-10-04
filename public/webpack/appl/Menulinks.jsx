@@ -2,12 +2,13 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link, HashRouter } from "react-router-dom";
 import ReactDOM from "react-dom";
-import Start from "./components/StartC";
-import Pdf from "./components/PdfC";
-import Tools from "./components/ToolsC";
-import Contact from "./components/ContactC";
-import Welcome from "./components/HelloWorldC";
-import Login from "./components/LoginC";
+import Start from "StartC";
+import Pdf from "PdfC";
+import Tools from "ToolsC";
+import Contact from "ContactC";
+import Welcome from "HelloWorldC";
+import Login from "LoginC";
+import Dodex from "DodexC";
 
 const SideBar = () => (
     <div className="collapse small show" id="submenu1" aria-expanded="true">
@@ -45,6 +46,10 @@ const Menulinks = () => (
     </HashRouter>
   );
 
+const Dodexlink = () => (
+    <Dodex />
+);
+
 if (typeof testit === "undefined" || (typeof testit !== "undefined" && !testit)) {
     ReactDOM.render(
         <Login />,
@@ -53,3 +58,4 @@ if (typeof testit === "undefined" || (typeof testit !== "undefined" && !testit))
 }
 
 export default Menulinks;
+export { Dodexlink };

@@ -15,7 +15,11 @@ module.exports = function (config) {
             "/templates": "/base/" + bundler + "/appl/templates",
             "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
             "/README.md": "/base/README.md",
-            "webpack/appl/": "/base/" + bundler + "/appl/"
+            "webpack/appl/": "/base/" + bundler + "/appl/",
+            "/node_modules": "/base/node_modules",
+            "/dodex": "/base/" + bundler + "/appl/dodex",
+            "/images": "/base/" + bundler + "/images",
+            "/appl/assets": "/base/" + bundler + "/appl/assets" 
         },
         // list of files / patterns to load in the browser
         files: [
@@ -25,6 +29,12 @@ module.exports = function (config) {
             bundler + "/appl/testapp_karma.html",
             // Jasmine tests
             bundler + "/tests/unit_tests*.js",
+            {pattern: "node_modules/dodex/dist/dodex.min.css", included: false, watched: false},
+            {pattern: "node_modules/bootstrap/dist/css/bootstrap.min.css", included: false, watched: false},
+            {pattern: "node_modules/font-awesome/css/font-awesome.css", included: false, watched: false},
+            {pattern: "node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css", included: false, watched: false},
+            {pattern: "node_modules/tablesorter/dist/css/theme.blue.min.css", included: false, watched: false},
+            {pattern: "node_modules/font-awesome/fonts/*", included: false, watched: false},
             {pattern: bundler + "/appl/**/*.*", included: false, watched: false},
             {pattern: "package.json", watched: false, included: false},
             {pattern: "README.md", included: false},
@@ -32,7 +42,7 @@ module.exports = function (config) {
             // Test suites
             {pattern: bundler + "/tests/**/*test.js", included: false},
             // end Test suites
-            {pattern: bundler + "/images/favicon.ico", included: false},
+            {pattern: bundler + "/images/*", included: false},
             // Jasmine/setup for tests and may start Karma
             bundler + "/build/karma.bootstrap.js"
         ],

@@ -19,7 +19,7 @@ Link.propTypes = {
 
 const welcomeHtml = (
   <div id="welcome" className="App">
-    <link href="./App.css" rel="stylesheet" />
+    <link href="../App.css" rel="stylesheet" />
     <div className="App-header">
       <img className="App-logo" src="./assets/logo.svg" />
       <h2>Hi - &nbsp;

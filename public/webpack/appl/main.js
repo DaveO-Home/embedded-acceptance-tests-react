@@ -9,7 +9,7 @@ import "tablepager";
 /* develblock:start */
 import apptest from "apptests";
 /* develblock:end */
-import "./entry";
+import "entry";
 
 App.init(Default);
 Setup.init();

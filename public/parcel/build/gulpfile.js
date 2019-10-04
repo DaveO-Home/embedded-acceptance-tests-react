@@ -3,7 +3,7 @@
  * Tasks are run serially, 'pat'(run acceptance tests) -> 'build-development' -> ('eslint', 'csslint', 'bootlint') -> 'build'
  */
 
-const { src, dest, series, parallel, task} = require("gulp");
+const { src, dest, series, parallel, task } = require("gulp");
 const Server = require("karma").Server;
 const eslint = require("gulp-eslint");
 const csslint = require("gulp-csslint");
@@ -127,7 +127,7 @@ const delCache = function (cb) {
     return del([
         ".cache/**/*"
     ], { dryRun: false, force: true }, cb);
-}; 
+};
 /**
  * Resources and content copied to dist directory - for production
  */
@@ -192,11 +192,11 @@ const sync = function () {
     const server = browserSync.create("devl");
     dist = testDist;
     server.init({ server: "../../", index: "index_p.html", port: 3080/* , browser: ['google-chrome']*/ });
-    server.watch("../../" + dist + "/appl.*.*").on("change", 
-	function(bundle) {
-		log("Starting reload", bundle);
-		server.reload;  // change any file in appl/ to reload app - triggered on watchify results
-		});
+    server.watch("../../" + dist + "/appl.*.*").on("change",
+        function (bundle) {
+            log("Starting reload", bundle);
+            server.reload;  // change any file in appl/ to reload app - triggered on watchify results
+        });
     return server;
 };
 
@@ -212,7 +212,7 @@ const watch_parcel = function (cb) {
 const runTestCopy = parallel(copy_test, copy_images);
 const runTest = series(cleant, runTestCopy, build_development);
 const runProdCopy = parallel(copyprod, copyprod_images);
-const runProd = series(runTest, pat, esLint, parallel( cssLint, bootLint), clean, runProdCopy, build);
+const runProd = series(runTest, pat, esLint, parallel(cssLint, bootLint), clean, runProdCopy, build);
 runProd.displayName = "prod";
 
 exports.build = series(clean, runProdCopy, build);
@@ -237,7 +237,7 @@ function parcelBuild(watch, cb) {
         production: isProduction,
         outDir: "../../" + dist,
         outFile: isProduction ? "testapp.html" : "testapp_dev.html",
-        publicUrl: watch? "/":"./",
+        publicUrl: watch ? "/" : "./",
         watch: watch,
         cache: !isProduction,
         cacheDir: ".cache",
@@ -268,7 +268,7 @@ function parcelBuild(watch, cb) {
             process.exit(1);
         }
     });
-    if(watch) {
+    if (watch) {
         bundler.serve(port);
     }
     // Run the bundler, this returns the main bundle
@@ -282,11 +282,13 @@ function copySrc() {
 }
 
 function copyImages() {
-    if(!isProduction) {
+    if (!isProduction) {
         src(["../../README.md"])
-        .pipe(copy("../../" + dist + "/appl", {prefix: 1}));
+            .pipe(copy("../../" + dist + "/appl", { prefix: 1 }));
     }
-    return src(["../images/*", "../../README.m*", "../appl/assets/**/*"])
+    src(["../images/*"])
+        .pipe(copy("../../" + dist + "../"));
+    return src(["../images/*", "../../README.m*", "../appl/assets/**/*", "../appl/dodex/**/*"])
         .pipe(copy("../../" + dist + "/appl"));
 }
 
@@ -313,7 +315,7 @@ if (process.env.USE_LOGFILE == "true") {
     var logFile = fs.createWriteStream("log.txt", { flags: "w" });
     // Or "w" to truncate the file every time the process starts.
     var logStdout = process.stdout;
-/*eslint no-console: 0 */
+    /*eslint no-console: 0 */
     console.log = function () {
         logFile.write(util.format.apply(null, arguments) + "\n");
         logStdout.write(util.format.apply(null, arguments) + "\n");

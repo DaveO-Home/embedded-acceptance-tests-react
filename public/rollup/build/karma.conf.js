@@ -17,7 +17,10 @@ module.exports = function (config) {
             "/templates": "/base/" + bundler + "/appl/templates",
             "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
             "/README.md": "/base/README.md",
-            "rollup/appl/": "/base/" + bundler + "/appl/"
+            "rollup/appl/": "/base/" + bundler + "/appl/",
+            "/images/": "/base/" + bundler + "/images/",
+            "/assets/": "/base/" + bundler + "/appl/assets/",
+            "/dodex/": "/base/" + bundler + "/appl/dodex/"
         },
         // list of files / patterns to load in the browser
         files: [
@@ -36,7 +39,7 @@ module.exports = function (config) {
             // Looking for changes via HMR - tdd should run with Rollup Hot Moudule Reload.
             // Looking for changes to the client bundle
             {pattern: "dist_test/" + bundler + "/bundle.js", included: false, watched: true, served: true},
-            {pattern: bundler + "/images/favicon.ico", included: false, watched: false},
+            {pattern: bundler + "/images/*", included: false, watched: false},
             {pattern: "dist_test/node_modules/font-awesome/**/*", included: false, watched: false},
             // Jasmine/Loader tests and starts Karma
             bundler + "/build/karma.bootstrap.js"

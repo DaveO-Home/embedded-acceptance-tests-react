@@ -55,7 +55,7 @@ const build = function (cb) {
 const esLint = function (cb) {
     process.env.NODE_ENV = "production";
     let lintCount = 0;
-    var stream = src(["../appl/**/*.js", "../tests/*.js"])
+    var stream = src(["../appl/**/*.js", "../tests/*.js", "../appl/**/*.jsx"])
         .pipe(eslint({
             configFile: "../../.eslintrc.js",
             quiet: 1
@@ -73,7 +73,7 @@ const esLint = function (cb) {
     });
 
     return stream.on("end", function () {
-        log(chalk.blue.bold("# javascript files linted: " + lintCount));
+        log(chalk.blue.bold("# js & jsx files linted: " + lintCount));
         cb();
     });
 };

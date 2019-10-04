@@ -7,6 +7,7 @@ import Tools from "./components/ToolsC";
 import Contact from "./components/ContactC";
 import Welcome from "./components/HelloWorldC";
 import Login from "./components/LoginC";
+import Dodex from "./components/DodexC";
 
 const SideBar = () => (
     <div className="collapse small show" id="submenu1" aria-expanded="true">
@@ -43,6 +44,10 @@ const Menulinks = () => (
       <SideBar />
     </HashRouter>
   );
+
+const Dodexlink = () => (
+    <Dodex />
+);
 // For tests the Login will be attached to the test page in apptest.js
 if (typeof testit === "undefined" || (typeof testit !== "undefined" && !testit)) 
 {
@@ -53,3 +58,4 @@ if (typeof testit === "undefined" || (typeof testit !== "undefined" && !testit))
 }
 
 export default Menulinks;
+export { Dodexlink };

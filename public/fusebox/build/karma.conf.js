@@ -19,7 +19,9 @@ module.exports = function (config) {
             "/README.md": "/base/README.md",
             "fusebox/appl/": "/base/" + bundler + "/appl/",
             "/appl/assets": "/base/" + bundler + "/appl/assets",
-            "/resources/": "/base/dist_test/" + bundler + "/appl/resources/"
+            "/resources/": "/base/dist_test/" + bundler + "/appl/resources/",
+            "/dodex/": "/base/" + bundler + "/appl/dodex/",
+            "/images/": "/base/" + bundler + "/images/"
         },
         // list of files / patterns to load in the browser
         files: [

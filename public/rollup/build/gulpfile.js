@@ -479,7 +479,7 @@ function aliases() {
 }
 
 function copySrc() {
-    return src(["../appl/views/**/*", "../appl/templates/**/*", "../appl/index.html", "../appl/assets/**/*", isProduction ? "../appl/testapp.html" : "../appl/testapp_dev.html"])
+    return src(["../appl/views/**/*", "../appl/templates/**/*", "../appl/dodex/**/*", "../appl/index.html", "../appl/assets/**/*", isProduction ? "../appl/testapp.html" : "../appl/testapp_dev.html"])
         .pipe(copy("../../" + dist + "/appl"));
 }
 

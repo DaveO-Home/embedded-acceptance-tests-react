@@ -89,13 +89,14 @@ const build = function (cb) {
         bundleAssets: {
             infer: true,
             glob: [
-                "../images/favicon.ico",
+                "../images/*",
                 "../appl/testapp.html",
                 "../appl/index.html",
                 "../index.html",
                 "../appl/assets/logo.svg",
                 "../appl/views/**/*",
                 "../appl/templates/**/*",
+                "../appl/dodex/**/*",
                 "../../README.md",
                 "../../node_modules/bootstrap/dist/css/bootstrap.min.css",
                 "../appl/css/site.css",

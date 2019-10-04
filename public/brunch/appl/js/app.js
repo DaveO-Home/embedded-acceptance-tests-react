@@ -20,7 +20,7 @@ if (typeof testit !== "undefined" && testit) {
 
 export default {
     controllers: [],
-    init (options) {
+    init(options) {
         options = options || {};
         this.initPage(options);
         // Check on tools dropdown
@@ -35,23 +35,23 @@ export default {
             });
         };
     },
-    initPage () {
+    initPage() {
         $("[data-toggle=collapse]").click(function (e) {
             // Don't change the hash
             e.preventDefault();
             $(this).find("i").toggleClass("fa-chevron-right fa-chevron-down");
         });
     },
-    toUrl (url) {
+    toUrl(url) {
         return url;
     },
-    toScriptsUrl (url) {
+    toScriptsUrl(url) {
         return url;
     },
-    toViewsUrl (url) {
+    toViewsUrl(url) {
         return url;
     },
-    loadController (controllerName, controller, fnLoad, fnError) {
+    loadController(controllerName, controller, fnLoad, fnError) {
         const me = this;
 
         if (this.controllers[controllerName]) {
@@ -75,11 +75,10 @@ export default {
             }
         }
     },
-    loadView (options, fnLoad) {
+    loadView(options, fnLoad) {
         if (options && fnLoad) {
             const resolvedUrl = this.toViewsUrl(options.url);
             const currentController = this.controllers[capitalize(options.controller)];
-
             if (options.url) {
                 $.get(resolvedUrl, fnLoad)
                     .done((data, err) => {
@@ -99,7 +98,7 @@ export default {
         }
     },
     /* eslint no-unused-vars: ["error", { "args": "none" }] */
-    renderTools (options, render) {
+    renderTools(options, render) {
         const currentController = this.controllers[capitalize(options.controller)];
         let template;
         const jsonUrl = "templates/tools_ful.json";
@@ -132,8 +131,8 @@ export default {
                     }, "json").fail((data, err) => {
                         console.error(`Error fetching fixture data: ${err}`);
                     });
-                    function getValue (item, keys, values) {
-                        for (let idx = 0; idx < keys.length; idx++) {
+                    function getValue(item, keys, values) {
+                        for (let idx = 0;idx < keys.length;idx++) {
                             if (keys[idx] === item) return values[idx];
                         }
                     }
@@ -148,8 +147,8 @@ export default {
                 console.warn(data);
             });
     },
-    getValue (item, keys, values) {
-        for (let idx = 0; idx < keys.length; idx++) {
+    getValue(item, keys, values) {
+        for (let idx = 0;idx < keys.length;idx++) {
             if (keys[idx] === item) return values[idx];
         }
     }

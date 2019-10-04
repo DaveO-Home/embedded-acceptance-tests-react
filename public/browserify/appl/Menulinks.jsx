@@ -1,5 +1,5 @@
 import React from "react";
-import {/* BrowserRouter as Router, */ Route, Link, HashRouter } from "react-router-dom";
+import { /* BrowserRouter as Router, */  Route, Link, HashRouter /* , StaticRouter */ } from "react-router-dom";
 import ReactDOM from "react-dom";
 import Start from "./components/StartC";
 import Pdf from "./components/PdfC";
@@ -7,6 +7,7 @@ import Tools from "./components/ToolsC";
 import Contact from "./components/ContactC";
 import Welcome from "./components/HelloWorldC";
 import Login from "./components/LoginC";
+import Dodex from "./components/DodexC";
 
 const SideBar = () => (
     <div className="collapse small show" id="submenu1" aria-expanded="true">
@@ -19,11 +20,11 @@ const SideBar = () => (
             </li>
             <li className="nav-header nav-item">Statistics</li>
             <li className="nav-item">
-                <Link to="/table/tools"><i className="fa fa-fw fa-table"></i> Tabular View</Link>
+                <Link to={{ pathname: "/table/tools" }}><i className="fa fa-fw fa-table"></i> Tabular View</Link>
             </li>
             <li className="nav-header nav-item">React</li>
             <li className="nav-item">
-                <Link to="/welcome"><i className="fa fa-fw fa-hand-paper-o"></i> React Welcome</Link>
+                <Link to={{ pathname: "/welcome" }}><i className="fa fa-fw fa-hand-paper-o"></i> React Welcome</Link>
             </li>
         </ul>
         <div className="content">
@@ -44,11 +45,16 @@ const Menulinks = () => (
     </HashRouter>
 );
 
+const Dodexlink = () => (
+    <Dodex />
+);
+
 if (typeof testit === "undefined" || (typeof testit !== "undefined" && !testit)) {
-        ReactDOM.render(
-            <Login />,
-            document.getElementById("nav-login")
-        );
+    ReactDOM.render(
+        <Login />,
+        document.getElementById("nav-login")
+    );
 }
 
 export default Menulinks;
+export { Dodexlink };

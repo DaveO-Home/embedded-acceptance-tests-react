@@ -7,6 +7,7 @@ import Tools from "./components/ToolsC";
 import Contact from "./components/ContactC";
 import Welcome from "./components/HelloWorldC";
 import Login from "./components/LoginC";
+import Dodex from "./components/DodexC";
 
 const SideBar = () => (
     <div className="collapse small show" id="submenu1" aria-expanded="true">
@@ -15,7 +16,7 @@ const SideBar = () => (
                 <Link to="/"><i className="fa fa-fw fa-home"></i> Home</Link>
             </li>
             <li className="nav-item" >
-                <Link to={{pathname: "/pdf/test"}}><i className="fa fa-fw fa-file-pdf-o"></i> PDF View</Link>
+                <Link to={{ pathname: "/pdf/test" }}><i className="fa fa-fw fa-file-pdf-o"></i> PDF View</Link>
             </li>
             <li className="nav-header nav-item">Statistics</li>
             <li className="nav-item">
@@ -40,12 +41,16 @@ const SideBar = () => (
 
 const Menulinks = () => (
     <HashRouter>
-      <SideBar />
+        <SideBar />
     </HashRouter>
-  );
+);
+
+const Dodexlink = () => (
+    <Dodex />
+);
+
 // For testing Component Login gets loaded in apptest.js
-if (typeof testit === "undefined" || (typeof testit !== "undefined" && !testit)) 
-{
+if (typeof testit === "undefined" || (typeof testit !== "undefined" && !testit)) {
     ReactDOM.render(
         <Login />,
         document.getElementById("nav-login")
@@ -53,3 +58,4 @@ if (typeof testit === "undefined" || (typeof testit !== "undefined" && !testit))
 }
 
 export default Menulinks;
+export { Dodexlink };

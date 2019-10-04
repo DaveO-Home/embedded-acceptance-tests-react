@@ -1,13 +1,20 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
+import PropTypes from "prop-types";
 import Setup from "../js/utils/setup";
 import App from "../js/app";
 
 App.init();
-const url = "views/prod/Test.pdf";
-const pdfIframe = (
-  <iframe id="data" name="pdfDO" src={url} className="col-lg-12" style={{ height: "750px" }}><span/></iframe>
-);
+
+class Link extends Component {
+  render() {
+    const props = { src:"views/prod/Test.pdf" };
+    return <iframe id="data" name="pdfDO" src={props.src} className="col-lg-12" style={{ height: "750px" }}></iframe>;
+  }
+}
+Link.propTypes = {
+  src: PropTypes.string.isRequired,
+};
 
 class Pdf extends Component {
   componentDidMount() { setPdfComp(); }
@@ -23,12 +30,12 @@ class Pdf extends Component {
 }
 
 function getPdfComp() {
-  return pdfIframe;
+  return <Link src="" />;
 }
 
 function setPdfComp() {
   ReactDOM.render(
-    pdfIframe,
+    <Link src="" />,
     document.getElementById("main_container")
   );
 }

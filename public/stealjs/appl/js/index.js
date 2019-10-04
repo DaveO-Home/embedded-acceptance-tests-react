@@ -9,7 +9,7 @@ import "tablepager";
 import apptest from "apptest";
 //!steal-remove-end
 window.Popper = popper;
-import "~/stealjs/appl/entry.js";
+import "entry";
 //
 App.init(Default);
 Setup.init();

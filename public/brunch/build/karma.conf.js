@@ -23,7 +23,11 @@ module.exports = {
         "/templates": "/base/" + bundler + "/appl/templates",
         "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
         "/README.md": "/base/README.md",
-        "brunch/appl/": "/base/" + bundler + "/appl/"
+        "brunch/appl/": "/base/" + bundler + "/appl/",
+        "/assets/": "/base/" + bundler + "/appl/assets/",
+        "/dodex/": "/base/" + bundler + "/appl/dodex/",
+        "/appl/dodex/": "/base/" + bundler + "/appl/dodex/",
+        "/images/": "/base/" + bundler + "/images/"
     },
     // list of files / patterns to load in the browser
     files: [
@@ -43,9 +47,8 @@ module.exports = {
         { pattern: "dist_test/" + bundler + "/acceptance.js", included: false, watched: true, served: true },
         { pattern: "dist_test/" + bundler + "/*.css", included: false, watched: false },
         { pattern: "dist_test/" + bundler + "/*.map", included: false, watched: false },
-        { pattern: "dist_test/" + bundler + "/*.map", included: false, watched: false },
         { pattern: "dist_test/" + "/fonts/*", included: false, watched: false },
-        { pattern: bundler + "/images/favicon.ico", included: false, watched: false },
+        { pattern: bundler + "/images/*", included: false, watched: false },
         // Jasmine/Loader tests and starts Karma
         bundler + "/build/karma.bootstrap.js"
     ],

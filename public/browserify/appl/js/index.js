@@ -21,13 +21,11 @@ if (typeof testit !== "undefined" && testit) {
         setTimeout(function () {
             resolve(0);
         }, 10);
-    }).catch(rejected => {
-        fail(`Error ${rejected}`);
     }).then((resolved) => {
         // Run acceptance tests. - To run only unit tests, comment the apptest call.
         apptest(App);
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
-        __karma__.start();
+    }).catch(rejected => {
+        throw `Error ${rejected}`;
     });
 }
 //endRemoveIf(production)

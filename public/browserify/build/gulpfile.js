@@ -67,7 +67,7 @@ const application = function (cb) {
  * Development Browserify - optional watchify and reload 
  */
 const application_development = function (cb) {
-    //Set isWatchify=true via env USE_WATCH for tdd/test   
+    // Set isWatchify=true via env USE_WATCH for tdd/test   
     return applicationBuild(cb);
 };
 /**
@@ -92,7 +92,7 @@ const esLint = function (cb) {
         }))
         .pipe(eslint.format())
         .pipe(eslint.result(result => {
-            //Keeping track of # of javascript files linted.
+            // Keeping track of # of javascript files linted.
             lintCount++;
             // log(chalk.cyan.bold(result.filePath));
         }))
@@ -202,7 +202,7 @@ const copy_fonts = function () {
 const watch = function () {
     dist = testDist;
     browserSync.init({ server: "../../", index: "index_b.html", port: 3080, browser: ["google-chrome"] });
-    browserSync.watch("../../" + dist + "/index.js").on("change", browserSync.reload);  //change any file in appl/ to reload app - triggered on watchify results
+    browserSync.watch("../../" + dist + "/index.js").on("change", browserSync.reload);  // change any file in appl/ to reload app - triggered on watchify results
 
     return browserSync;
 };
@@ -269,6 +269,7 @@ exports.server = watch;
 exports.hmr = runHmr;
 exports.development = parallel(watch, runHmr, runTdd);
 exports.lint = runLint;
+exports.copy = runCopyTest;
 
 function browserifyBuild(cb) {
     browserifyInited = browserify({
@@ -376,7 +377,7 @@ function enableWatchify() {
 }
 
 function copySrc() {
-    return src(["../appl/views/**/*", "../appl/templates/**/*", "../appl/index.html", isProduction ? "../appl/testapp.html" : "../appl/testapp_dev.html"])
+    return src(["../appl/views/**/*", "../appl/templates/**/*", "../appl/dodex/**/*", "../appl/index.html", isProduction ? "../appl/testapp.html" : "../appl/testapp_dev.html"])
         .pipe(copy("../../" + dist + "/appl"));
 }
 
@@ -411,14 +412,14 @@ function runKarma(done) {
 
 }
 
-//From Stack Overflow - Node (Gulp) process.stdout.write to file
+// From Stack Overflow - Node (Gulp) process.stdout.write to file
 if (process.env.USE_LOGFILE == "true") {
     var fs = require("fs");
     var util = require("util");
     var logFile = fs.createWriteStream("log.txt", { flags: "w" });
     // Or "w" to truncate the file every time the process starts.
     var logStdout = process.stdout;
-/*eslint no-console: 0 */
+/* eslint no-console: 0 */
     console.log = function () {
         logFile.write(util.format.apply(null, arguments) + "\n");
         logStdout.write(util.format.apply(null, arguments) + "\n");

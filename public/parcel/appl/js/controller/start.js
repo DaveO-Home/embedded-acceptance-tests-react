@@ -45,7 +45,7 @@ export default App.controllers.Start ||
         },
         "div .login click": function (e) {
             const loginUrl = "views/prod/login.html";
-            if(e) {
+            if(e && typeof e.preventDefault === "function") {
                 e.preventDefault();
             }
             me.modal({

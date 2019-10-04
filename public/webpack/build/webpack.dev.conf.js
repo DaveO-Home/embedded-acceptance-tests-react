@@ -70,7 +70,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
                 to: config.dev.assetsSubDirectory,
                 ignore: [".*"]
             },
-            { from: "../images/favicon.ico", to: "images" },
+            { from: "./images/**/*", to: "" },
             { from: "./appl/testapp_dev.html", to: config.dev.assetsSubDirectory },
             { from: "./appl/index.html", to: config.dev.assetsSubDirectory },
             { from: "../README.md", to: "../" },
@@ -84,6 +84,13 @@ const devWebpackConfig = merge(baseWebpackConfig, {
             {
                 from: {
                     glob: "./appl/templates/**/*",
+                    dot: false
+                },
+                to: ""
+            },
+            {
+                from: {
+                    glob: "./appl/dodex/**/*",
                     dot: false
                 },
                 to: ""

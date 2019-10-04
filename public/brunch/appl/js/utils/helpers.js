@@ -63,7 +63,7 @@ export default {
     // Insert loaded html into main_container or specified element
     renderer (controller, options) {
         const helper = this;
-
+ 
         return frag => {
             if (options.react) {
                 return frag;
@@ -96,7 +96,6 @@ export default {
                 break;
             default:
         }
-
         if (dataHtml.length > length) {
             resolve(dataHtml);
         } else {

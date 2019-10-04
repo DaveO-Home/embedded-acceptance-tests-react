@@ -37,7 +37,7 @@ module.exports = {
     },
     target: "web",
     resolve: {
-        extensions: [".js", ".json"],
+        extensions: [".js", ".json", ".jsx"],
         alias: {
             "@": resolve("appl"),
             app: resolve("appl/js/app.js"),
@@ -60,7 +60,18 @@ module.exports = {
             logintests: resolve("tests/logintest"),
             routertests: resolve("tests/routertest"),
             toolstests: resolve("tests/toolstest"),
-            handlebars: "handlebars/dist/handlebars.js"
+            dodextests: resolve("tests/dodextest"),
+            inputtests: resolve("tests/inputtest"),
+            handlebars: "handlebars/dist/handlebars.js",
+            StartC: resolve("appl/components/StartC"),
+            PdfC: resolve("appl/components/PdfC"),
+            ToolsC: resolve("appl/components/ToolsC"),
+            LoginC: resolve("appl/components/LoginC"),
+            HelloWorldC: resolve("appl/components/HelloWorldC"),
+            ContactC: resolve("appl/components/ContactC"),
+            DodexC: resolve("appl/components/DodexC"),
+            Menulinks: resolve("appl/Menulinks"),
+            entry: resolve("appl/entry")
         }
     },
     module: {
@@ -94,7 +105,7 @@ module.exports = {
                 use: "raw-loader"
             },
             {
-                test: /\.js$/,
+                test: /\.js|jsx$/,
                 loader: "babel-loader",
                 include: [resolve("appl"), resolve("test"), resolve("node_modules/webpack-dev-server/client")]
             },
