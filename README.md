@@ -146,7 +146,7 @@ A test result might look like;
     ✔ Is Tools Table Loaded
     ✔ Re-load Start Page
     ✔ Is Pdf Loaded
-    ✔ Is Angular Welcome Loaded
+    ✔ Is React Welcome Loaded
     Load new tools page
       ✔ setup and click events executed.
       ✔ did Redux set default value.
