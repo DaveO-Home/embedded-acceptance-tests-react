@@ -1,14 +1,50 @@
 # Embedded React Acceptance Testing with Karma and Jasmine
 
-This demo is comprised of seven javascript bundlers each configured to run the tests.  The Bootstrap single page application retains functionality among the bundlers with only minor code change.  The javascript framework used is React and instrumentation is done with Gulp and Karma.  So you can pick your poison, Stealjs, Webpack, Browserify, Fusebox, Rollup, Parcel or Brunch. The demo was orginally developed using the Canjs framework which can be found at https://github.com/DaveO-Home/embedded-acceptance-tests, a Vue version can be found at https://github.com/DaveO-Home/embedded-acceptance-tests-vue and an Angular version at https://github.com/DaveO-Home/embedded-acceptance-tests-ng.
+The basic idea is to build a production application ensuring consistent and stable code using JavaScript, CSS and bootstrap linting and automated unit and e2e testing. This will be in part, assisted by the development tools, detailed in the [Development Overview](#development) and bundle sections.
 
-__Note__; the demo was not developed to compare software, rather simply to demonstrate how one might embed test code as part of the build process.  And the configuration also shows how to develop using hot module reload and test driven development.
+[Production Build](#production-build)
 
-**Warning**: If the application fails to install with your current node/npm versions, execute ```npm clean cache --force```, and use at least ```node``` version 9 and ```npm``` version 6 to install and build.
+[Test Build](#test-build)
+
+[Development Overview](#development)
+
+## Bundle Tools
+
+> 1. [Browserify](#i-browserify)
+> 1. [Brunch](#ii-brunch)
+> 1. [Fusebox](#iii-fusebox)
+> 1. [Parcel](#iv-parcel)
+> 1. [Rollup](#v-rollup)
+> 1. [Steal](#vi-stealjs)
+> 1. [Webpack](#vii-webpack)
+
+[Installation](#installation)
+
+[Docker](#viii-dockerfile)
+
+**Dodex**: Added for testing and demo. <https://github.com/DaveO-Home/dodex>
+
+## Other Framworks
+
+  1. **Canjs** - <https://github.com/DaveO-Home/embedded-acceptance-tests>
+  1. **Vue** - <https://github.com/DaveO-Home/embedded-acceptance-tests-vue>
+  1. **React** - <https://github.com/DaveO-Home/embedded-acceptance-tests-react>
 
 **Dockerfile**: See instructions at bottom of README.
 
+## Main Tools
+
+  1. Gulp
+  1. Karma
+  1. Jasmine
+  1. Any Browser with a karma launcher
+  1. Code bundling tools
+  1. See `public/package.json` for details
+  1. Node, npm - node v10 or greater works best
+
 ## Installation
+
+[Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
 
 **Desktop:**
 
@@ -38,7 +74,7 @@ __Note__; the demo was not developed to compare software, rather simply to demon
   npm install
 ```
 
-  To install all required dependencies. Also install the global package for Brunch, `npm install brunch -g`.
+  To install all required dependencies. If trying Brunch, install the global package for Brunch, `npm install brunch -g`.
 
 **Client:**
 
@@ -46,12 +82,16 @@ Test builds will generate bundles in 'dist_test' and production in the 'dist' di
 
 ## Production Build
 
+[Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
+
 To generate a build "cd to `public/<bundler>/build` and type `gulp`, e.g.
 
 ```bash
   cd public/fusebox/build
-  gulp - or NODE_ENV='production'; gulp (for Stealjs)
+  gulp
 ```
+
+or `gulp prod`
 
 If the tests succeed then the build should complete.
 
@@ -62,11 +102,13 @@ To run the production application:
   1. Start a browser and enter `localhost:3080/dist/<bundler>/appl/testapp.html`
   1. For Parcel the Production Url is `localhost:3080/dist/parcel/testapp.html`
 
-You can repeat the procedure with "webpack", "browserify", "stealjs", "brunch", "parcel" or "rollup". Output from the build can be logged by setting the environment variable `USE_LOGFILE=true`.
+You can repeat the procedure with any of the supported bundlers. Output from the build can be logged by setting the environment variable `USE_LOGFILE=true`.
 
-Normally you can also run the test bundles(dist_test) from the node express server. However, when switching between development karma testing and running the test(dist_test) application, some resources are not found because of the "base/dist_test" URL. To fix this run `gulp rebuild` from the `<bundler>/build` directory.
+You can run `gulp prd` from the `<bundler>/build` directory as a stand-alone build.
 
 ## Test Build
+
+[Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
 
 The test build simply runs the tests in headless mode. The default browsers are ChromeHeadless and FirefoxHeadless.  To change the default you can set an environment variable; e.g.
 
@@ -80,20 +122,19 @@ To run the tests "cd to `public/<bundler>/build` and type `gulp test`, e.g.
 
 ```bash
   cd public/webpack/build
+  export USE_BROWSERS=FirefoxHeadless,ChromeHeadless,Opera
   gulp test
 ```
 
 A test result might look like;
 
 ```text
-...[INFO] launcher - Starting browser Firefox
-...[INFO] launcher - Starting browser ChromeHeadless
-...[INFO] launcher - Starting browser Opera
-
-  Suite for Unit Tests
+[2019-09-05T14:21:30.265] [INFO] launcher - Starting browser Firefox
+[2019-09-05T14:21:30.310] [INFO] launcher - Starting browser ChromeHeadless
+[2019-09-05T14:21:30.352] [INFO] launcher - Starting browser Opera
+  Unit Tests - Suite 1
     ✔ Verify that browser supports Promises
     ✔ ES6 Support
-    ✔ blockStrip to remove block of code
   Unit Tests - Suite 2
     ✔ Is Karma active
     ✔ Verify NaN
@@ -101,12 +142,11 @@ A test result might look like;
     ✔ is JQuery defined
     ✔ is Popper defined
   Application Unit test suite - AppTest
-    ✔ Is Welcome Page Loaded
+    ✔ Is Default Page Loaded(Start)
     ✔ Is Tools Table Loaded
+    ✔ Re-load Start Page
     ✔ Is Pdf Loaded
-    Testing Menulinks Router
-      ✔ is table loaded from router component
-      ✔ is pdf loaded from router component
+    ✔ Is Angular Welcome Loaded
     Load new tools page
       ✔ setup and click events executed.
       ✔ did Redux set default value.
@@ -121,14 +161,29 @@ A test result might look like;
     Popup Login Form
       ✔ Login form - verify modal with login loaded
       ✔ Login form - verify cancel and removed from DOM
+    Dodex Operation Validation
+      ✔ Dodex - loaded and toggle on icon mousedown
+      ✔ Dodex - Check that card A is current and flipped on mousedown
+      ✔ Dodex - Check that card B is current and flipped on mousedown
+      ✔ Dodex - Flip cards A & B back to original positions
+      ✔ Dodex - Flip multiple cards on tab mousedown
+      ✔ Dodex - Add additional app/personal cards
+      ✔ Dodex - Load Login Popup from card1(A)
+    Dodex Input Operation Validation
+      ✔ Dodex Input - popup on mouse double click
+      ✔ Dodex Input - Verify that form elements exist
+      ✔ Dodex Input - verify that uploaded file is processed
+      ✔ Dodex Input - close popup on button click
 
-Finished in 19.399 secs / 12.571 secs @ 08:50:49 GMT-0700 (PDT)
+Finished in 32.012 secs / 26.381 secs @ 14:21:51 GMT-0700 (Pacific Daylight Time)
 
 SUMMARY:
-✔ 69 tests completed
+✔ 105 tests completed
 ```
 
 ## Development
+
+[Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
 
 __Note__; When modifying project assets(.handlebars, .html, etc.) you can execute `gulp copy` from the `public/<bundler>/build` directory to preview changes. This is not required for __StealJs__.
 
@@ -139,9 +194,13 @@ __A word on developing tests__; You can write and execute tests quicker by using
 * Develop or modify a test.
 * In another window execute `gulp acceptance` from the `build` directory to view the modified or new test results.
 
-__Also Note__; All of the development tasks(`hmr, server, watch`) etc, can be run from one window using the `gulp development` task.
+**Both Chrome and Firefox are the default browsers.**
 
-### I.  **Browserify**
+__Also Note__; With a few of the bundle tools, execute the `gulp development` task to run from one window.
+
+### I. **Browserify**
+
+[Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Development Server Window*** -
 
@@ -164,7 +223,9 @@ __Also Note__; All of the development tasks(`hmr, server, watch`) etc, can be ru
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.  Note, you do not need `hmr` active for `tdd`. Also, `tdd` can be run with a headless browser.
 
-### II.  **Brunch**
+### II. **Brunch**
+
+[Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Watch, Recompile and Reload Window*** -
 
@@ -191,7 +252,9 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
       * `npm install eslint@latest`
       * `cd <install>/public` and edit the `brunch-config.js` file and uncomment the eslint section.
 
-### III.  **Fusebox**
+### III. **Fusebox**
+
+[Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Hot Module Reload(HMR) Server Window*** -
 
@@ -207,7 +270,9 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
 
    The HMR Server must be running if you want tests to rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`. A warning is issued under `tdd`(404: /dist_test/fusebox/resources) since `hmr` requires a non-karma build, this can be ignored.
 
-### IV.  **Parcel**
+### IV. **Parcel**
+
+[Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Watch, Recompile and Reload Window*** -
 
@@ -229,7 +294,9 @@ __Note__; You may need to remove cache `..../public/parcel/build/.cache` during 
 
   __Note__; tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### V.  **Rollup**
+### V. **Rollup**
+
+[Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Development Server Window*** -
 
@@ -246,6 +313,8 @@ __Note__; You may need to remove cache `..../public/parcel/build/.cache` during 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
 ### VI. **Stealjs**
+
+[Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
 
 1\. ***Development Server Window*** -
 
@@ -272,6 +341,8 @@ __Note__; You may need to remove cache `..../public/parcel/build/.cache` during 
 
 ### VII. **Webpack**
 
+[Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
+
 1\. ***Development HMR Server Window*** -
 
 * `cd public/webpack/build`
@@ -291,7 +362,9 @@ __Note__; You may need to remove cache `..../public/parcel/build/.cache` during 
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### IX.  **Dockerfile**
+### VIII. **Dockerfile**
+
+[Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
 
 You can build a complete test/develpment environment on a Docker vm with the supplied Dockerfile.
 
