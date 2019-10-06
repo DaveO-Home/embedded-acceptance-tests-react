@@ -17,6 +17,13 @@ let browsers = process.env.USE_BROWSERS;
 let useBundler = process.env.USE_BUNDLER !== "false";
 let useFtl = true;
 
+process.argv.forEach(function (val, index, array) {
+    useFtl = val === "--noftl" && useFtl ? false : useFtl;
+    if(index > 2) {
+        process.argv[index] = "";
+    }
+});
+
 if (browsers) {
     global.whichBrowser = browsers.split(",");
 }

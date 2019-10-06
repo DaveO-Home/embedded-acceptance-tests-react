@@ -42,7 +42,7 @@ module.exports = function (config) {
             {pattern: "dist_test/" + bundler + "/*dev.js", included: false, watched: false},
             {pattern: "dist_test/" + bundler + "/*entry.js", included: false, watched: false},
             // Looking for changes to the client bundle
-            {pattern: "dist_test/" + bundler + "/*app.js", included: false, watched: false, served: true},
+            {pattern: "dist_test/" + bundler + "/*app.js", included: false, watched: true, served: true},
             {pattern: bundler + "/images/favicon.ico", included: false, watched: false},
             {pattern: "node_modules/bootstrap/dist/css/bootstrap.min.css", watched: false, included: true, served: true},
             {pattern: "node_modules/tablesorter/dist/css/theme.blue.min.css", watched: false, included: true, served: true},
