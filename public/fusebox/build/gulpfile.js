@@ -344,7 +344,8 @@ function fuseboxConfig(mode, props) {
         resources: {
             resourceFolder: "./appl/resources",
             resourcePublicRoot: isProduction ? "appl/resources" : "./resources",
-        }
+        },
+        plugins: []
     };
     return configure;
 }

@@ -3,7 +3,7 @@
 /*eslint-env es6*/
 const path = require("path");
 const { fusebox, sparky } = require("fuse-box");
-// const { pluginStripCode } = require("../appl/js/plugin/StripCode");
+const { pluginStripCode } = require("../appl/js/plugin/StripCode");
 let isProduction = process.env.NODE_ENV === "production";
 let distDir;
 let copyDir;
@@ -172,7 +172,7 @@ function addStripCodePlugin(config) {
     const startComment = "develblock:start";
     const endComment = "develblock:end";
     try {
-        // config.plugins = [pluginStripCode(whichFiles, { "start": startComment, "end": endComment })];
+        config.plugins.push(pluginStripCode(whichFiles, { "start": startComment, "end": endComment }));
     } catch (e) {
         console.error(e);
         process.exit(-1);
