@@ -175,8 +175,7 @@ class ToolsSelect extends React.Component {
                     id="dropdown0"
                     data-toggle="dropdown"
                     aria-haspopup="true"
-                    aria-expanded="false"
-                >
+                    aria-expanded="false">
                     Select Job Type
                 </button>
                 <div className="dropdown-menu" aria-labelledby="dropdown0">

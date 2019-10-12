@@ -269,7 +269,7 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
 * `cd public/fusebox/build`
 * `gulp tdd`
 
-   The HMR Server must be running if you want tests to rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`. A warning is issued under `tdd`(404: /dist_test/fusebox/resources) since `hmr` requires a non-karma build, this can be ignored.
+   The HMR Server must be running if you want tests to rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
 ### IV. **Parcel**
 
@@ -371,9 +371,9 @@ You can build a complete test/develpment environment on a Docker vm with the sup
 
 **Linux as Parent Host**(assumes docker is installed and daemon is running)-
 
-In directory containing the Dockerfile execute the following commands;
+In the top parent directory, usually `..../embedded-acceptance-tests-vue/` execute the following commands;
 
-1\. ```docker build -t embedded .```
+1\. ```docker build -t embedded fedora``` or ```docker build -t embedded centos```
 
 2\. ```docker run -ti --privileged  -p 3080:3080 -e DISPLAY=$DISPLAY  -v /tmp/.X11-unix:/tmp/.X11-unix --name test_env embedded bash```
 
@@ -385,7 +385,7 @@ You should be logged into the test container(test_env). There will be 4 embedded
 
 For Pro and Enterpise OS's, follow the Docker instructions on installation.  For the Home OS version you can use the legacy **Docker Desktop** client. It is best to have a Pro or Enterpise Windows OS to use a WSL(Windows bash) install. Use following commands with Windows;
 
-1\. ```docker build -t embedded .```
+1\. ```docker build -t embedded fedora``` or ```docker build -t embedded centos```
 
 2\. ```docker run -ti --privileged  -p 3080:3080 --name test_env embedded bash```
 
