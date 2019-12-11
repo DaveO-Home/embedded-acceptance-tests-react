@@ -10,7 +10,7 @@ export default function (type) {
                         setTimeout(function () {
                             expect($("tbody > tr[role=\"row\"]").length > 65).toBe(true);  // default page size
                             done();
-                        }, 500);
+                        }, 750);
                         break;
                     case "pdf":
                         $(".fa-file-pdf-o").click();
