@@ -306,7 +306,6 @@ function fuseboxConfig(mode, props) {
     if (typeof props === "undefined") {
         props = {};
     }
-    // const appSrc = path.join(__dirname, "../appl");
     let toDist = "";
     let isProduction = mode !== "test";
     let distDir = isProduction ? path.join(__dirname, "../../dist/fusebox") : path.join(__dirname, "../../dist_test/fusebox");
@@ -323,9 +322,7 @@ function fuseboxConfig(mode, props) {
         distRoot: path.join("/", `${distDir}${toDist}`),
         target: "browser",
         env: { NODE_ENV: isProduction ? "production" : "development" },
-        // homeDir: appSrc,
         entry: path.join(__dirname, "../appl/main.js"),
-        // output: `${distDir}${toDist}`,
         cache: {
             root: path.join(__dirname, ".cache"),
             enabled: !isProduction,
@@ -337,7 +334,6 @@ function fuseboxConfig(mode, props) {
             publicPath: "../",
             template: isProduction ? path.join(__dirname, "../../fusebox/appl/testapp.html") : path.join(__dirname, "../../fusebox/appl/testapp_dev.html")
         },
-        // tsConfig: path.join(__dirname, "tsconfig.json"),
         watch: props.isWatch && !isProduction,
         hmr: props.isHmr && !isProduction,
         devServer: defaultServer ? devServe : false,
@@ -346,7 +342,7 @@ function fuseboxConfig(mode, props) {
         exclude: isProduction ? "**/*test.js" : "",
         resources: {
             resourceFolder: "./appl/resources",
-            resourcePublicRoot: isProduction ? ".appl/resources" : "./resources",
+            resourcePublicRoot: isProduction ? "../appl/resources" : "./resources",
         },
         codeSplitting: {
             useHash: isProduction ? true : false

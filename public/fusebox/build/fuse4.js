@@ -153,7 +153,10 @@ const run = function (mode, configure, debug, cb) {
         const fuse = context.getConfig();
         await fuse.runProd({ 
             uglify: true,
-            bundles: { distRoot: path.join(__dirname,"../../dist/fusebox"), /*app: "app.js"*/ }
+            bundles: { distRoot: path.join(__dirname,"../../dist/fusebox"),
+                app: { path: "app.$hash.js"},
+                vendor: { path: "vendor.$hash.js" }
+            }
         }).then(handler => {
             handler.onComplete(output => {
                 if (typeof cb === "function") {
