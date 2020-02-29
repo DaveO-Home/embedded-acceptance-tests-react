@@ -1,4 +1,4 @@
-// eslint-disable-next-line import/first
+// eslint-disable-next-line
 import "./config";
 import Setup from "./utils/setup";
 import popper from "popper.js";

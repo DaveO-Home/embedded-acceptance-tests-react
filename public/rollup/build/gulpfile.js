@@ -3,17 +3,17 @@
  * Tasks are run serially, 'pat'(run acceptance tests) -> 'build-development' -> ('eslint', 'csslint', 'bootlint') -> 'build'
  */
 const { src, dest, series, parallel, task } = require("gulp");
-const alias = require("rollup-plugin-alias");
+const alias = require("@rollup/plugin-alias");
 const babel = require("rollup-plugin-babel");
 const buble = require("rollup-plugin-buble");
-const commonjs = require("rollup-plugin-commonjs");
+const commonjs = require("@rollup/plugin-commonjs");
 const copy = require("gulp-copy");
 const csslint = require("gulp-csslint");
 const eslint = require("gulp-eslint");
 const exec = require("child_process").exec;
 const livereload = require("rollup-plugin-livereload");
 const log = require("fancy-log");
-const nodeResolve = require("rollup-plugin-node-resolve");
+const nodeResolve = require("@rollup/plugin-node-resolve");
 const noop = require("gulp-noop");
 const path = require("path");
 const postcss = require("rollup-plugin-postcss");
@@ -448,33 +448,38 @@ function rollup2Build(done) {
 function modResolve(dir) {
     return path.join(__dirname, "..", dir);
 }
-
+/*
+entries: [
+            {find: "setglobal", replacement: "./js/utils/set.global"},
+*/
 function aliases() {
     return {
-        app: modResolve("appl/js/app.js"),
-        basecontrol: modResolve("appl/js/utils/base.control"),
-        config: modResolve("appl/js/config"),
-        default: modResolve("appl/js/utils/default"),
-        helpers: modResolve("appl/js/utils/helpers"),
-        menu: modResolve("appl/js/utils/menu.js"),
-        pdf: modResolve("appl/js/controller/pdf"),
-        router: modResolve("appl/router"),
-        start: modResolve("appl/js/controller/start"),
-        setup: modResolve("appl/js/utils/setup"),
-        setglobals: modResolve("appl/js/utils/set.globals"),
-        setimports: modResolve("appl/js/utils/set.imports"),
-        table: modResolve("appl/js/controller/table"),
-        pager: "../../node_modules/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js",
-        popper: "../../node_modules/popper.js/dist/esm/popper.js",
-        handlebars: "../../node_modules/handlebars/dist/handlebars.min.js",
-        bootstrap: "../../node_modules/bootstrap/dist/js/bootstrap.min.js",
-        "apptest": "../appl/jasmine/apptest.js",
-        "contacttest": "./contacttest.js",
-        "domtest": "./domtest.js",
-        "logintest": "./logintest.js",
-        "routertest": "./routertest.js",
-        "toolstest": "./toolstest.js",
-        "@": modResolve("appl"),
+        entries: [
+            {find: "app", replacement: modResolve("appl/js/app.js")},
+            {find: "basecontrol", replacement: modResolve("appl/js/utils/base.control")},
+            {find: "config", replacement: modResolve("appl/js/config")},
+            {find: "default", replacement: modResolve("appl/js/utils/default")},
+            {find: "helpers", replacement: modResolve("appl/js/utils/helpers")},
+            {find: "menu", replacement: modResolve("appl/js/utils/menu.js")},
+            {find: "pdf", replacement: modResolve("appl/js/controller/pdf")},
+            {find: "router", replacement: modResolve("appl/router")},
+            {find: "start", replacement: modResolve("appl/js/controller/start")},
+            {find: "setup", replacement: modResolve("appl/js/utils/setup")},
+            {find: "setglobals", replacement: modResolve("appl/js/utils/set.globals")},
+            {find: "setimports", replacement: modResolve("appl/js/utils/set.imports")},
+            {find: "table", replacement: modResolve("appl/js/controller/table")},
+            {find: "pager", replacement: "../../node_modules/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js"},
+            {find: "popper", replacement: "../../node_modules/popper.js/dist/esm/popper.js"},
+            {find: "handlebars", replacement: "../../node_modules/handlebars/dist/handlebars.min.js"},
+            {find: "bootstrap", replacement: "../../node_modules/bootstrap/dist/js/bootstrap.min.js"},
+            {find: "apptest", replacement: "../appl/jasmine/apptest.js"},
+            {find: "contacttest", replacement: "./contacttest.js"},
+            {find: "domtest", replacement: "./domtest.js"},
+            {find: "logintest", replacement: "./logintest.js"},
+            {find: "routertest", replacement: "./routertest.js"},
+            {find: "toolstest", replacement: "./toolstest.js"},
+            {find: "@", replacement: modResolve("appl")},
+        ]
     };
 }
 

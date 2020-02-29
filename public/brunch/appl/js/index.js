@@ -4,7 +4,6 @@ import App from "./app";
 import Default from "./utils/default";
 import "pager";
 import "../entry";
-/* eslint "import/first": [ "warn", "DISABLE-absolute-first" ] */
 /* develblock:start */
 import apptest from "../../jasmine/apptest";
 /* develblock:end */

@@ -2,7 +2,7 @@
  * Successful acceptance tests & lints start the production build.
  * Tasks are run serially, 'accept' -> 'pat' -> ('eslint', 'csslint', 'bootlint') -> 'build'
  */
-const { src, dest, series, parallel, task } = require("gulp");
+const { src, /*dest,*/ series, parallel, task } = require("gulp");
 const runFusebox = require("./fuse4.js");
 const chalk = require("chalk");
 const csslint = require("gulp-csslint");
@@ -69,6 +69,7 @@ const esLint = function (cb) {
 
     return stream.on("end", function () {
         log(chalk.blue.bold("# javascript & jsx files linted: " + lintCount));
+        cb();
     });
 };
 /*
@@ -119,7 +120,7 @@ const testBuild = function (cb) {
     let mode = "test";
     const debug = true;
     try {
-        log(fuseboxConfig(mode, props))
+        log(fuseboxConfig(mode, props));
         return runFusebox(mode, fuseboxConfig(mode, props), debug, cb);
     } catch (e) {
         log("Error", e);
@@ -144,9 +145,9 @@ const build = function (cb) {
     let mode = "prod";
     const debug = true;
     try {
-        return runFusebox(mode, fuseboxConfig(mode, props), debug, cb);
+       return runFusebox(mode, fuseboxConfig(mode, props), debug, cb);
     } catch (e) {
-        console.log("Error", e);
+        log("Error", e);
     }
 };
 /*
@@ -167,7 +168,7 @@ const preview = function (cb) {
     try {
         return runFusebox(mode, fuseboxConfig(mode, props), debug, cb);
     } catch (e) {
-        console.log("Error", e);
+        log("Error", e);
     }
 };
 /*
@@ -188,7 +189,7 @@ const fuseboxHmr = function (cb) {
     try {
         runFusebox(mode, fuseboxConfig(mode, props), debug, cb);
     } catch (e) {
-        console.log("Error", e);
+        log("Error", e);
     }
 };
 const setNoftl = function (cb) {
@@ -213,7 +214,7 @@ const fuseboxRebuild = function (cb) {
     try {
         return runFusebox(mode, fuseboxConfig(mode, props), debug, cb);
     } catch (e) {
-        console.log("Error", e);
+        log("Error", e);
     }
 };
 /*
@@ -233,7 +234,7 @@ const copy = async function (cb) {
     try {
         runFusebox(mode, fuseboxConfig(mode, props), debug);
     } catch (e) {
-        console.log("Error", e);
+        log("Error", e);
     }
     cb();
 };
@@ -305,7 +306,7 @@ function fuseboxConfig(mode, props) {
     if (typeof props === "undefined") {
         props = {};
     }
-    const appSrc = path.join(__dirname, "../appl");
+    // const appSrc = path.join(__dirname, "../appl");
     let toDist = "";
     let isProduction = mode !== "test";
     let distDir = isProduction ? path.join(__dirname, "../../dist/fusebox") : path.join(__dirname, "../../dist_test/fusebox");
@@ -318,11 +319,13 @@ function fuseboxConfig(mode, props) {
         },
     };
     const configure = {
+        root: path.join(__dirname, "../.."),
+        distRoot: path.join("/", `${distDir}${toDist}`),
         target: "browser",
         env: { NODE_ENV: isProduction ? "production" : "development" },
-        homeDir: appSrc,
+        // homeDir: appSrc,
         entry: path.join(__dirname, "../appl/main.js"),
-        output: `${distDir}${toDist}`,
+        // output: `${distDir}${toDist}`,
         cache: {
             root: path.join(__dirname, ".cache"),
             enabled: !isProduction,
@@ -343,7 +346,10 @@ function fuseboxConfig(mode, props) {
         exclude: isProduction ? "**/*test.js" : "",
         resources: {
             resourceFolder: "./appl/resources",
-            resourcePublicRoot: isProduction ? "appl/resources" : "./resources",
+            resourcePublicRoot: isProduction ? ".appl/resources" : "./resources",
+        },
+        codeSplitting: {
+            useHash: isProduction ? true : false
         },
         plugins: []
     };
