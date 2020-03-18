@@ -106,18 +106,23 @@ const run = function (mode, configure, debug, cb) {
         await exec("copyhello");
         const fuse = context.getConfig();
         
-        await fuse.runDev({ bundles: { distRoot: path.join(__dirname,"../../dist_test/fusebox"), app: "app.js" } }).then(handler => {
-            handler.onComplete(output => {
-                if (typeof cb === "function") {
-                    if (!config.cache.FTL) { // We may be doing tdd (gulp development)
-                        setTimeout(function () { // The build finishes before resources are completed.
-                            cb();
-                        }, 500);
-                    } else {
-                        cb(); // restart gulp task, tests will start
-                    }
+        const { onComplete } = await fuse.runDev(
+            { bundles: { 
+                distRoot: path.join(__dirname,"../../dist_test/fusebox"),
+                app: "app.js" 
+            } 
+        });
+
+        onComplete(output => {
+            if (typeof cb === "function") {
+                if (!config.cache.FTL) { // We may be doing tdd (gulp development)
+                    setTimeout(function () { // The build finishes before resources are completed.
+                        cb();
+                    }, 500);
+                } else {
+                    cb(); // restart gulp task, tests will start
                 }
-            });
+            }
         });
     });
 
@@ -128,20 +133,25 @@ const run = function (mode, configure, debug, cb) {
         await exec("copytable");
         await exec("copyhello");
         const fuse = context.getConfig();
-        await fuse.runProd({ 
+        
+        const { onComplete } = await fuse.runProd({ 
             uglify: false,
-            bundles: { distRoot: path.join(__dirname,"../../dist/fusebox"), app: "app.js" }}).then(handler => {
-                handler.onComplete(output => {
-                    if (typeof cb === "function") {
-                        if (!config.cache.FTL) { // We may be doing tdd (gulp development)
-                            setTimeout(function () { // The build finishes before resources are completed.
-                                cb();
-                            }, 500);
-                        } else {
-                            cb(); // restart gulp task, tests will start
-                        }
-                    }
-                });
+            bundles: { 
+                    distRoot: path.join(__dirname,"../../dist/fusebox"),
+                    app: "app.js" 
+                }
+            });
+
+        onComplete(output => {
+            if (typeof cb === "function") {
+                if (!config.cache.FTL) { // We may be doing tdd (gulp development)
+                    setTimeout(function () { // The build finishes before resources are completed.
+                        cb();
+                    }, 500);
+                } else {
+                    cb(); // restart gulp task, tests will start
+                }
+            }
         });
     });
 
@@ -151,25 +161,26 @@ const run = function (mode, configure, debug, cb) {
         await exec("copytable");
         await exec("copyhello");
         const fuse = context.getConfig();
-        await fuse.runProd({ 
+        
+        const { onComplete } = await fuse.runProd({ 
             uglify: true,
             bundles: { distRoot: path.join(__dirname,"../../dist/fusebox"),
                 app: { path: "app.$hash.js"},
                 vendor: { path: "vendor.$hash.js" }
             }
-        }).then(handler => {
-            handler.onComplete(output => {
-                if (typeof cb === "function") {
-                    if (!config.cache.FTL) { // We may be doing tdd (gulp development)
-                        setTimeout(function () { // The build finishes before resources are completed.
-                            cb();
-                        }, 500);
-                    } else {
-                        cb(); // restart gulp task, tests will start
-                    }
+        });
+        
+        onComplete(output => {
+            if (typeof cb === "function") {
+                if (!config.cache.FTL) { // We may be doing tdd (gulp development)
+                    setTimeout(function () { // The build finishes before resources are completed.
+                        cb();
+                    }, 500);
+                } else {
+                    cb(); // restart gulp task, tests will start
                 }
-            });
-        });    
+            }
+        });
     });
 
     task("default", context => {

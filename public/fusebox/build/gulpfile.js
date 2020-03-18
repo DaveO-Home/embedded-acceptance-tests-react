@@ -269,6 +269,19 @@ const fuseboxTdd = function (done) {
     }, done).start();
 };
 /**
+ * Continuous testing - test driven development.  
+ */
+const fuseboxTddWait = function (done) {
+    if (!browsers) {
+        global.whichBrowser = ["Chrome", "Firefox"];
+    }
+    setTimeout(function() {
+        new Server({
+            configFile: __dirname + "/karma.conf.js",
+        }, done).start();
+    }, 7000);
+};
+/**
  * Karma testing under Opera. -- needs configuation  
  */
 const tddo = function (done) {
@@ -294,7 +307,7 @@ exports.rebuild = fuseboxRebuild;
 exports.copy = copy;
 exports.acceptance = fuseboxAcceptance;
 exports.e2e = fuseboxAcceptance;
-exports.development = series(setNoftl, fuseboxHmr, fuseboxTdd);
+exports.development = series(setNoftl, parallel(fuseboxHmr, fuseboxTddWait));
 exports.lint = parallel(esLint, cssLint, bootLint);
 exports.opera = tddo;
 
