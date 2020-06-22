@@ -38,12 +38,12 @@ module.exports = function (config) {
             {pattern: "dist_test/" + bundler + "/appl/resources/*", included: false, watched: false},
             // {pattern: bundler + "/appl/assets/*", included: false, watched: false},
             // Looking for changes via HMR - tdd should run with Fusebox Hot Moudule Reload.
-            {pattern: "dist_test/" + bundler + "/*vendor.js", included: false, watched: false},
-            {pattern: "dist_test/" + bundler + "/*dev.js", included: false, watched: false},
-            {pattern: "dist_test/" + bundler + "/*entry.js", included: false, watched: false},
+            // {pattern: "dist_test/" + bundler + "/*vendor.js", included: false, watched: false},
+            // {pattern: "dist_test/" + bundler + "/*dev.js", included: false, watched: false},
+            // {pattern: "dist_test/" + bundler + "/*entry.js", included: false, watched: false},
             // Looking for changes to the client bundle
             {pattern: "dist_test/" + bundler + "/*app.js", included: false, watched: true, served: true},
-            {pattern: bundler + "/images/favicon.ico", included: false, watched: false},
+            {pattern: bundler + "/images/*", included: false, watched: false},
             {pattern: "node_modules/bootstrap/dist/css/bootstrap.min.css", watched: false, included: true, served: true},
             {pattern: "node_modules/tablesorter/dist/css/theme.blue.min.css", watched: false, included: true, served: true},
             {pattern: "node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css", watched: false, included: true, served: true},
@@ -82,7 +82,7 @@ module.exports = function (config) {
         port: 9876,
         colors: true,
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_ERROR,
+        logLevel: config.LOG_WARN,
         autoWatch: true,
         // Continuous Integration mode
         singleRun: false,

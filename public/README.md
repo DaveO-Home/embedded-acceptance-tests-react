@@ -28,7 +28,7 @@ The basic idea is to build a production application ensuring consistent and stab
 
   1. **Canjs** - <https://github.com/DaveO-Home/embedded-acceptance-tests>
   1. **Vue** - <https://github.com/DaveO-Home/embedded-acceptance-tests-vue>
-  1. **React** - <https://github.com/DaveO-Home/embedded-acceptance-tests-react>
+  1. **Angular** - <https://github.com/DaveO-Home/embedded-acceptance-tests-ng>
 
 **Dockerfile**: See instructions at bottom of README.
 
