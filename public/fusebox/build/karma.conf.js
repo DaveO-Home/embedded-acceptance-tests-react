@@ -38,9 +38,6 @@ module.exports = function (config) {
             {pattern: "dist_test/" + bundler + "/appl/resources/*", included: false, watched: false},
             // {pattern: bundler + "/appl/assets/*", included: false, watched: false},
             // Looking for changes via HMR - tdd should run with Fusebox Hot Moudule Reload.
-            // {pattern: "dist_test/" + bundler + "/*vendor.js", included: false, watched: false},
-            // {pattern: "dist_test/" + bundler + "/*dev.js", included: false, watched: false},
-            // {pattern: "dist_test/" + bundler + "/*entry.js", included: false, watched: false},
             // Looking for changes to the client bundle
             {pattern: "dist_test/" + bundler + "/*app.js", included: false, watched: true, served: true},
             {pattern: bundler + "/images/*", included: false, watched: false},
