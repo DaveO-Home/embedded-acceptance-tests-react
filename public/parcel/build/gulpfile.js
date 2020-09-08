@@ -227,6 +227,13 @@ exports.lint = parallel(esLint, cssLint, bootLint);
 // exports.development = parallel(series(delCache, runTestCopy, watch_parcel/*, sync, watcher*/), series(delCache, runTestCopy, build_development, tdd_parcel))
 
 function parcelBuild(watch, cb) {
+
+    /* Run to fix browserslist issues */
+    console.log("");
+    console.log("*------------------------(Run to fix browserslist)-----------------------");
+    console.log("        npx browserslist@latest --update-db");
+    console.log("");
+
     if (bundleTest && bundleTest === "false") {
         return cb();
     }
