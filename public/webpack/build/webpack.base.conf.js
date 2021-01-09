@@ -2,7 +2,6 @@
 const path = require("path");
 const utils = require("./utils");
 const config = require("../config");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const packageDep = require("../../package.json");
 const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0]);
@@ -19,7 +18,8 @@ const createLintingRule = () => ({
     options: {
         formatter: require("eslint-friendly-formatter"),
         emitWarning: !config.dev.showEslintErrorsInOverlay
-    }
+    },
+    type: "javascript/auto"
 });
 
 module.exports = {
@@ -33,7 +33,7 @@ module.exports = {
         chunkFilename: "app[name]-[chunkhash].js",
         publicPath: process.env.NODE_ENV === "production"
             ? config.build.assetsPublicPath
-            : config.dev.assetsPublicPath
+            : config.dev.assetsPublicPath,
     },
     target: "web",
     resolve: {
@@ -98,71 +98,57 @@ module.exports = {
                         {
                             loader: "sass-loader"
                         }
-                    ]
-                },
-            {
+                    ],
+                    type: "javascript/auto"
+                }
+            ,{
                 test: /\.stache$/,
-                use: "raw-loader"
+                type: "asset/source"
             },
             {
                 test: /\.js|jsx$/,
-                loader: "babel-loader",
-                include: [resolve("appl"), resolve("test"), resolve("node_modules/webpack-dev-server/client")]
+                use: [ {
+                        loader: "babel-loader",
+                        options: {
+                            presets: ["@babel/preset-react"]
+                          }
+                    }
+                ],
+                include: [resolve("appl"), resolve("test"), resolve("node_modules/webpack-dev-server/client")],
+                type: "javascript/auto"
             },
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-                loader: "url-loader",
-                options: {
-                    limit: 10000,
-                    name: utils.assetsPath("img/[name].[hash:7].[ext]")
-                }
+                type: "asset"
             },
             {
                 test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
-                loader: "url-loader",
-                options: {
-                    limit: 10000,
-                    name: utils.assetsPath("media/[name].[hash:7].[ext]")
-                }
+                type: "asset"
             },
             {
                 test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-                loader: "url-loader",
-                options: {
-                    limit: 10000,
-                    name: utils.assetsPath("fonts/[name].[hash:7].[ext]")
-                }
+                generator: {
+                    filename: utils.assetsPath("fonts/[name][hash:7][ext]")
+                },
+                type: "asset"
             },
             setJsonLoader(version)
         ]
     },
-    node: {
-        setImmediate: false,
-        // prevent webpack from injecting mocks to Node native modules
-        // that does not make sense for the client
-        dgram: "empty",
-        fs: "empty",
-        net: "empty",
-        tls: "empty",
-        child_process: "empty"
-    }
+    experiments: {
+        asset: true
+    },
+    node: false,
 };
 
-if (version < 4) {
-    module.exports.plugins = (module.exports.plugins || []).concat([
-        new ExtractTextPlugin({
-            filename: "[name].bundle.css",
-            disable: false,
-            allChunks: true
-        })
-    ]);
-}
-else {
-    module.exports.plugins = (module.exports.plugins || []).concat([new MiniCssExtractPlugin({
-        filename: process.env.NODE_ENV === "development" ? "[name].css" : "[name].[contenthash].css",
-        chunkFilename: process.env.NODE_ENV === "development" ? "[name].[id].css" : "[name].[id].[contenthash].css"
-    })]);
-}
+module.exports.plugins = (module.exports.plugins || []).concat([
+    new MiniCssExtractPlugin({
+        filename: process.env.NODE_ENV === "development" 
+            ? "[name].css" : "[name].[contenthash].css",
+        chunkFilename: process.env.NODE_ENV === "development" 
+            ? "[name].[id].css" : "[name].[id].[contenthash].css"
+})]);
+
 function setJsonLoader(version) {
     let rules = {};
 
@@ -176,17 +162,17 @@ function setJsonLoader(version) {
     return rules;
 }
 
-function setSideEffects(version) {
-    if (version >= 4) {
-        module.exports.module.rules.push(
-            {
-                include: /node_modules/,
-                sideEffects: true
-            });
-        module.exports.module.rules.push(
-            {
-                include: /appl\/css/,
-                sideEffects: true
-            });
-    }
-}
+// function setSideEffects(version) {
+//     if (version >= 4) {
+//         module.exports.module.rules.push(
+//             {
+//                 include: /node_modules/,
+//                 sideEffects: true
+//             });
+//         module.exports.module.rules.push(
+//             {
+//                 include: /appl\/css/,
+//                 sideEffects: true
+//             });
+//     }
+// }

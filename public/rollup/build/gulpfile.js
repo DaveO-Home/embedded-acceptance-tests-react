@@ -2,10 +2,11 @@
  * Successful acceptance tests & lints start the production build.
  * Tasks are run serially, 'pat'(run acceptance tests) -> 'build-development' -> ('eslint', 'csslint', 'bootlint') -> 'build'
  */
+const { nodeResolve } = require("@rollup/plugin-node-resolve");
 const { src, dest, series, parallel, task } = require("gulp");
 const alias = require("@rollup/plugin-alias");
-const babel = require("rollup-plugin-babel");
-const buble = require("rollup-plugin-buble");
+const { babel } = require("@rollup/plugin-babel");
+const buble = require("@rollup/plugin-buble");
 const commonjs = require("@rollup/plugin-commonjs");
 const copy = require("gulp-copy");
 const csslint = require("gulp-csslint");
@@ -13,7 +14,6 @@ const eslint = require("gulp-eslint");
 const exec = require("child_process").exec;
 const livereload = require("rollup-plugin-livereload");
 const log = require("fancy-log");
-const nodeResolve = require("@rollup/plugin-node-resolve");
 const noop = require("gulp-noop");
 const path = require("path");
 const postcss = require("rollup-plugin-postcss");
@@ -232,10 +232,10 @@ const rollup_watch = function (cb) {
             }),
             alias(aliases()),
             postcss(),
-            nodeResolve({
+            nodeResolve({/*
                 browser: true,
                 jsnext: true,
-                main: true,
+                main: true, */
                 extensions: [".js", ".jsx"]
             }),
             babel({
@@ -246,6 +246,7 @@ const rollup_watch = function (cb) {
                         modules: false
                     }
                 }]],
+                babelHelpers: "bundled",
                 plugins: ["@babel/plugin-transform-react-jsx"]
             }),
             commonjs(),
@@ -342,13 +343,14 @@ const inputOptions = {
                     modules: false
                 }
             }]],
+            babelHelpers: "bundled",
             plugins: ["@babel/plugin-transform-react-jsx"]
         }),
         commonjs({
-            namedExports: {
+            /* namedExports: {
                 "../../node_modules/react/index.js": ["createElement", "Component"],
                 "../../node_modules/react-is/index.js": ["isValidElementType"]
-            },
+            }, */
         })
     ],
     onwarn: function (warning) {
@@ -374,7 +376,7 @@ const inputOptionsProd = {
         }),
         alias(aliases()),
         postcss(),
-        buble(),
+        buble({ exclude: "../../node_modules/**" }),
         nodeResolve({ /* browser: true, jsnext: true, main: true,*/ extensions: [".js", ".jsx"] }),
         babel({
             babelrc: false,
@@ -384,13 +386,14 @@ const inputOptionsProd = {
                     modules: false
                 }
             }]],
+            babelHelpers: "bundled",
             plugins: ["@babel/plugin-transform-react-jsx"]
         }),
         commonjs({
-            namedExports: {
+            /* namedExports: {
                 "../../node_modules/react/index.js": ["createElement", "Component"],
                 "../../node_modules/react-is/index.js": ["isValidElementType"]
-            },
+            },*/
         })
     ],
     onwarn: function (warning) {
@@ -472,6 +475,7 @@ function aliases() {
             {find: "popper", replacement: "../../node_modules/popper.js/dist/esm/popper.js"},
             {find: "handlebars", replacement: "../../node_modules/handlebars/dist/handlebars.min.js"},
             {find: "bootstrap", replacement: "../../node_modules/bootstrap/dist/js/bootstrap.min.js"},
+            {find: "marked", replacement: "../../node_modules/marked/marked.min.js"},
             {find: "apptest", replacement: "../appl/jasmine/apptest.js"},
             {find: "contacttest", replacement: "./contacttest.js"},
             {find: "domtest", replacement: "./domtest.js"},

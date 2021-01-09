@@ -2,8 +2,8 @@
 const path = require("path");
 const config = require("../config");
 const packageConfig = require("../../package.json");
-const version = Number(/\d/.exec(packageConfig.devDependencies.webpack)[0]);
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+// const version = Number(/\d/.exec(packageConfig.devDependencies.webpack)[0]);
+// const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 exports.assetsPath = function (_path) {
   const assetsSubDirectory = process.env.NODE_ENV === "production"
@@ -45,12 +45,12 @@ exports.cssLoaders = function (options) {
 
     // Extract CSS when that option is specified
     // (which is the case during production build)
-    if (options.extract && version < 4) {
-      return ExtractTextPlugin.extract({
-        use: loaders // ,
-        // fallback: 'vue-style-loader'
-      });
-    } 
+    // if (options.extract && version < 4) {
+    //   return ExtractTextPlugin.extract({
+    //     use: loaders // ,
+    //     // fallback: 'vue-style-loader'
+    //   });
+    // } 
     // else {
     //   return ['vue-style-loader'].concat(loaders)
     // }
@@ -89,7 +89,7 @@ exports.createNotifierCallback = () => {
   return (severity, errors) => {
     if (severity !== "error") return;
     if(errors[0].webpackError) {
-        console.log(errors[0].webpackError);
+        console.error(errors[0].webpackError);
     }
     const error = errors[0];
     const filename = error.file && error.file.split("!").pop();

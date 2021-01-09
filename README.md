@@ -76,6 +76,8 @@ The basic idea is to build a production application ensuring consistent and stab
 
   To install all required dependencies. If trying Brunch, install the global package for Brunch, `npm install brunch -g`.
 
+  __Note;__ The install will produce a few vulnerabilities, run `npm audit fix` to remove some of these and then `npm audit` to review the remaining.
+
 **Client:**
 
 Test builds will generate bundles in 'dist_test' and production in the 'dist' directory at the root level, 'public'.

@@ -9,7 +9,9 @@ import Setup from "b/setup";
 import "tablesorter";
 import "b/pager";
 import "./entry";
+import JSONEditor from "jsoneditor/dist/jsoneditor.min.js";
 
+window.JSONEditor = JSONEditor;
 App.init(Default);
 Setup.init();
 //removeIf(production)

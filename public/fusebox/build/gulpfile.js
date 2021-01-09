@@ -31,21 +31,12 @@ if (browsers) {
 /**
  * Default: Production Acceptance Tests 
  */
-const pat = function (done) {
+const pat = (done) => {
     if (!browsers) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
 
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-        singleRun: true
-    }, function (result) {
-        var exitCode = !result ? 0 : result;
-        done();
-        if (exitCode > 0) {
-            process.exit(exitCode);
-        }
-    }).start();
+    return runKarma(done, true);
 };
 /*
  * javascript linter
@@ -245,16 +236,7 @@ const fuseboxAcceptance = function (done) {
     if (!browsers) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-        singleRun: true
-    }, function (result) {
-        var exitCode = !result ? 0 : result;
-        done();
-        if (exitCode > 0) {
-            process.exit(exitCode);
-        }
-    }).start();
+    return runKarma(done, true);
 };
 /**
  * Continuous testing - test driven development.  
@@ -264,9 +246,7 @@ const fuseboxTdd = function (done) {
         global.whichBrowser = ["Chrome", "Firefox"];
     }
 
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-    }, done).start();
+    return runKarma(done, false);
 };
 /**
  * Continuous testing - test driven development.  
@@ -276,9 +256,7 @@ const fuseboxTddWait = function (done) {
         global.whichBrowser = ["Chrome", "Firefox"];
     }
     setTimeout(function() {
-        new Server({
-            configFile: __dirname + "/karma.conf.js",
-        }, done).start();
+        return runKarma(done, false);
     }, 7000);
 };
 /**
@@ -288,27 +266,27 @@ const tddo = function (done) {
     if (!browsers) {
         global.whichBrowser = ["Opera"];
     }
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-    }, done).start();
+    
+    return runKarma(done, false);
 };
 
-const runProd = series(testBuild, pat, parallel(esLint, cssLint, bootLint), build);
+const finished = (done) => { done(); return process.exit(0); };
+const runProd = series(testBuild, pat, parallel(esLint, cssLint, bootLint), build, finished);
 runProd.displayName = "prod";
 
 task(runProd);
 exports.default = runProd;
-exports.prd = series(parallel(esLint, cssLint, bootLint), build);
+exports.prd = series(parallel(esLint, cssLint, bootLint), build, finished);
 exports.preview = preview;
-exports.test = series(testBuild, pat);
+exports.test = series(testBuild, pat, finished);
 exports.tdd = fuseboxTdd;
 exports.hmr = fuseboxHmr;
-exports.rebuild = fuseboxRebuild;
+exports.rebuild = series(fuseboxRebuild, finished);
 exports.copy = copy;
 exports.acceptance = fuseboxAcceptance;
 exports.e2e = fuseboxAcceptance;
 exports.development = series(setNoftl, parallel(fuseboxHmr, fuseboxTddWait));
-exports.lint = parallel(esLint, cssLint, bootLint);
+exports.lint = series(parallel(esLint, cssLint, bootLint), finished);
 exports.opera = tddo;
 
 function fuseboxConfig(mode, props) {
@@ -365,6 +343,20 @@ function fuseboxConfig(mode, props) {
     return configure;
 }
 
+function runKarma(done, singleRun = true) {
+    new Server({
+        configFile: __dirname + "/karma.conf.js",
+        singleRun: singleRun
+    }, (result) => {
+        var exitCode = !result ? 0 : result;
+        if (typeof done === "function") {
+            done();
+        }
+        if (exitCode > 0) {
+            process.exit(exitCode);
+        }
+    }).start();
+}
 //From Stack Overflow - Node (Gulp) process.stdout.write to file
 if (process.env.USE_LOGFILE == "true") {
     var fs = require("fs");

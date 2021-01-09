@@ -2,7 +2,7 @@
  * Successful acceptance tests & lints start the production build.
  * Tasks are run serially, 'pat'(run acceptance tests) -> 'build-development' -> ('eslint', 'csslint', 'bootlint') -> 'build'
  */
-
+const Parcel = require("@parcel/core").default;
 const { src, dest, series, parallel, task } = require("gulp");
 const Server = require("karma").Server;
 const eslint = require("gulp-eslint");
@@ -11,7 +11,6 @@ const exec = require("child_process").exec;
 const copy = require("gulp-copy");
 const del = require("del");
 const log = require("fancy-log");
-const Bundler = require("parcel-bundler");
 const flatten = require("gulp-flatten");
 const chalk = require("chalk");
 const browserSync = require("browser-sync");
@@ -218,22 +217,16 @@ runProd.displayName = "prod";
 exports.build = series(clean, runProdCopy, build);
 task(runProd);
 exports.default = runProd;
+exports.prd = series(clean, runProdCopy, build);
 exports.test = series(runTest, pat);
 exports.tdd = series(runTest, tdd_parcel);
-exports.watch = series(runTestCopy, delCache, watch_parcel/* , sync, watcher*/);
+exports.watch = series(runTestCopy, delCache, watch_parcel/*, sync, watcher*/);
 exports.acceptance = r_test;
 exports.rebuild = series(runTestCopy, runTest);
 exports.lint = parallel(esLint, cssLint, bootLint);
 // exports.development = parallel(series(delCache, runTestCopy, watch_parcel/*, sync, watcher*/), series(delCache, runTestCopy, build_development, tdd_parcel))
 
 function parcelBuild(watch, cb) {
-
-    /* Run to fix browserslist issues */
-    console.log("");
-    console.log("*------------------------(Run to fix browserslist)-----------------------");
-    console.log("        npx browserslist@latest --update-db");
-    console.log("");
-
     if (bundleTest && bundleTest === "false") {
         return cb();
     }
@@ -241,45 +234,30 @@ function parcelBuild(watch, cb) {
     const port = 3080;
     // Bundler options
     const options = {
-        production: isProduction,
-        outDir: "../../" + dist,
-        outFile: isProduction ? "testapp.html" : "testapp_dev.html",
-        publicUrl: watch ? "/" : "./",
+        entries: file,
+        publicUrl: watch ? "/dist_test/parcel" : "./",
         watch: watch,
+        hot: watch? {port: 3080}: {},
+        serve: watch? {port: 3080, publicUrl: "/dist_test/parcel"}: {},
         cache: !isProduction,
         cacheDir: ".cache",
         minify: isProduction,
         target: "browser",
         https: false,
-        logLevel: 3, // 3 = log everything, 2 = log warnings & errors, 1 = log errors
+        logLevel: 1, // 3 = log everything, 2 = log warnings & errors, 1 = log errors
         sourceMaps: !isProduction,
-        detailedReport: isProduction
+        detailedReport: isProduction,
+        defaultConfig: require.resolve("@parcel/config-default"),
+        // mode: isProduction? "production": "development",  // prod mode corrupts bundle, I suspect mangle??
+        distDir: "../../" + dist,
+        patchConsole: false,
+        autoinstall: true,
     };
 
-    // Initializes a bundler using the entrypoint location and options provided
-    const bundler = new Bundler(file, options);
-    let isBundled = false;
-
-    bundler.on("bundled", (bundle) => {
-        isBundled = true;
-    });
-    bundler.on("buildEnd", () => {
-        if (isBundled) {
-            if (watch) {
-                log(chalk.cyan("Watching on localhost:3080"));
-            }
-            log(chalk.green("Build Successful"));
-        }
-        else {
-            log(chalk.red("Build Failed"));
-            process.exit(1);
-        }
-    });
-    if (watch) {
-        bundler.serve(port);
-    }
-    // Run the bundler, this returns the main bundle
-    return bundler.bundle();
+    return ( async () => {
+        const parcel = new Parcel(options);
+        await parcel.run();
+    })();
 }
 
 function copySrc() {

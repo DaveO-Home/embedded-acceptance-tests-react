@@ -37,7 +37,12 @@ let pluginsObject = {
     start: "develblock:start",
     end: "develblock:end"
   },
-  babel: { presets: ["env"] },
+  babel: { presets: ["@babel/env", "@babel/react"],
+    ignore: [
+      /^node_modules/
+    ],
+    pattern: /\.(js|jsx)$/
+  }, 
   // See README.md for implementation
   // eslint: {
   //   pattern: /^brunch\/appl\/.*\.js?$/,
@@ -76,9 +81,10 @@ exports.npm = {
     "font-awesome": ["css/font-awesome.css"],
     "tablesorter": [
       "dist/css/jquery.tablesorter.pager.min.css",
-      "dist/css/theme.blue.min.css"
+      "dist/css/theme.blue.min.css",
     ],
-    dodex: ["dist/dodex.min.css"]
+    dodex: ["dist/dodex.min.css"],
+    jsoneditor: ["dist/jsoneditor.min.css"]
   },
   aliases: {
     "handlebars": "handlebars/dist/handlebars.min.js",

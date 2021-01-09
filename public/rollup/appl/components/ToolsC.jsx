@@ -170,7 +170,7 @@ class ToolsSelect extends React.Component {
 
     render() {
         return (
-            <div id="dropdown1" className="dropdown">
+            <div id="dropdown1" className="dropdown pull-left">
                 <button className="dropdown-toggle smallerfont"
                     type="button"
                     id="dropdown0"

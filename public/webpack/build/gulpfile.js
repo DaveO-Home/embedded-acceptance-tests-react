@@ -163,13 +163,17 @@ const webpack_rebuild = function (cb) {
             log(err);
         }
     });
+
     return src("../appl/main.js")
         .pipe(envs)
-        .pipe(webpackStream(require("./webpack.dev.conf.js")))
+        .pipe(webpackStream(require("./webpack.dev.conf.js"), webpack))
         .pipe(envs.reset)
         .pipe(dest("../../dist_test/webpack"))
         .on("end", function () {
             cb();
+        })
+        .on("error", (err) => {
+            console.error("Error Rebuild: ", err);
         });
 };
 /*
@@ -196,13 +200,17 @@ const test_build = function (cb) {
             log(err);
         }
     });
+    
     return src("../appl/main.js")
         .pipe(envs)
-        .pipe(webpackStream(require("./webpack.dev.conf.js")))
+        .pipe(webpackStream(require("./webpack.dev.conf.js"), webpack))
         .pipe(envs.reset)
         .pipe(dest("../../dist_test/webpack"))
         .on("end", function () {
             cb();
+        })
+        .on("error", (err) => {
+            console.log("Error TestBuild: ",err);
         });
 };
 /**
@@ -237,7 +245,7 @@ const webpack_watch = function (cb) {
     });
     return src("../appl/**/*")
         .pipe(envs)
-        .pipe(webpackStream(require("./webpack.dev.conf.js")))
+        .pipe(webpackStream(require("./webpack.dev.conf.js"), webpack))
         .pipe(dest("../../dist_test/webpack"))
         .on("end", function () {
             cb();
@@ -296,6 +304,7 @@ const webpack_server = function (cb) {
     webpackConfig.plugins.push(new HtmlWebpackPlugin({
         filename: "testapp_dev.html",
         template: "appl/testapp_dev.html",
+        // alwaysWriteToDisk: true,
         inject: true
     }));
 
@@ -361,6 +370,7 @@ exports.watch = webpack_watch;
 exports.hmr = webpack_server;
 exports.development = parallel(webpack_watch, webpack_server, webpack_tdd);
 exports.lint = lintRun;
+exports.prd = build;
 
 function karmaServer(done) {
     if (!browsers) {
@@ -447,3 +457,4 @@ function takeSnapShot(snapshot) {
 
     snap(url, puppeteer, snapshot);
 }
+

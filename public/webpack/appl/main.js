@@ -9,7 +9,10 @@ import "tablepager";
 /* develblock:start */
 import apptest from "apptests";
 /* develblock:end */
+import JSONEditor from "jsoneditor/dist/jsoneditor.min.js";
 import "entry";
+
+window.JSONEditor = JSONEditor;
 
 App.init(Default);
 Setup.init();

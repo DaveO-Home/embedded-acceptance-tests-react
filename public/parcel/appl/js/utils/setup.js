@@ -1,6 +1,5 @@
 import Menu from "./menu";
 import Handlebars from "handlebars";
-// import 'handlebars-react'
 
 window.Stache = Handlebars;
 

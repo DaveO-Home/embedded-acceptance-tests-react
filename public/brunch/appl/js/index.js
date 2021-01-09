@@ -6,6 +6,9 @@ import "pager";
 import "../entry";
 /* develblock:start */
 import apptest from "../../jasmine/apptest";
+import JSONEditor from "jsoneditor/dist/jsoneditor.min.js";
+
+window.JSONEditor = JSONEditor;
 /* develblock:end */
 App.init(Default);
 Setup.init();

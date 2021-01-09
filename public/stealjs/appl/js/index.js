@@ -5,11 +5,14 @@ import App from "app";
 import Default from "default";
 import Setup from "setup";
 import "tablepager";
+import JSONEditor from "jsoneditor";
 //!steal-remove-start
 import apptest from "apptest";
 //!steal-remove-end
 window.Popper = popper;
 import "entry";
+
+window.JSONEditor = JSONEditor;
 //
 App.init(Default);
 Setup.init();

@@ -1,15 +1,13 @@
 
-
 const path = require("path");
-const merge = require("webpack-merge");
+const { merge } = require("webpack-merge");
 const utils = require("./utils");
 const config = require("../config");
 const webpack = require("webpack");
 const baseWebpackConfig = require("./webpack.base.conf");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const packageDep = require("../../package.json");
-
-const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0]);
+// const packageDep = require("../../package.json");
+// const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0]);
 const isWatch = process.env.USE_WATCH === "true";
 const devPublicPath = process.env.PUBLIC_PATH ? process.env.PUBLIC_PATH : "/dist_test/webpack/";
 
@@ -63,40 +61,43 @@ const devWebpackConfig = merge(baseWebpackConfig, {
             "window.jQuery": "jquery",
             Popper: ["popper.js", "default"]
         }),
-        // copy custom static assets
-        new CopyWebpackPlugin([
+        // // copy custom static assets
+        new CopyWebpackPlugin({ patterns: [
             {
                 from: path.resolve(__dirname, "../static"),
+                globOptions: {
+                    dot: true,
+                    ignore: [".*"],
+                  },
                 to: config.dev.assetsSubDirectory,
-                ignore: [".*"]
             },
             { from: "./images/**/*", to: "" },
             { from: "./appl/testapp_dev.html", to: config.dev.assetsSubDirectory },
             { from: "./appl/index.html", to: config.dev.assetsSubDirectory },
             { from: "../README.md", to: "../" },
             {
-                from: {
-                    glob: "./appl/views/**/*",
-                    dot: false
-                },
+                from: "./appl/views/**/*",
+                    globOptions: {
+                        dot: false,
+                      },
                 to: ""
             },
             {
-                from: {
-                    glob: "./appl/templates/**/*",
-                    dot: false
-                },
+                from: "./appl/templates/**/*",
+                    globOptions: {
+                        dot: false,
+                      },
                 to: ""
             },
             {
-                from: {
-                    glob: "./appl/dodex/**/*",
-                    dot: false
-                },
+                from: "./appl/dodex/**/*",
+                globOptions: {
+                    dot: false,
+                  },
                 to: ""
             },
             { from: "./appl/assets/*.*", to: "" }
-        ])
+        ]})
     ],
     watch: isWatch,
     watchOptions: {
@@ -131,3 +132,4 @@ module.exports = devWebpackConfig;
 //    }
 //  })
 // })
+

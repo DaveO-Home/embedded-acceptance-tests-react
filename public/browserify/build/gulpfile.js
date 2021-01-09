@@ -323,7 +323,7 @@ function applicationBuild(cb) {
         noParse: ["jquery"],
         cache: {},
         packageCache: {}
-    });
+    }).transform("babelify", {presets: ["@babel/preset-env", "@babel/preset-react"]});
 
     let modules = [];
     var mods = getNPMPackageIds();

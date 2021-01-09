@@ -1,3 +1,15 @@
 { 
-  "presets":[ "es2015", "react" ] 
+  "presets": ["@parcel/babel-preset-env", "@babel/preset-react", [
+    "@babel/preset-env", {
+      "targets": {
+           "ie": 11,
+          "browsers": ["> 0.2%, not dead, not op_mini all"]
+      },
+      "modules": false,
+      "debug": false,
+      "useBuiltIns": "usage",
+      "corejs" : "3"
+  }
+  ]],
+  "plugins": ["@parcel/babel-plugin-transform-runtime"]
 }

@@ -4,14 +4,17 @@ import "./config";
 
 /* develblock:start */
 // Load before app.js since app.js has embedded test
-import apptest from "../jasmine/apptest";
+import apptest from "../jasmine/apptest.js";
 /* develblock:end */
 import App from "./app";
 import Default from "./utils/default";
 import Setup from "./utils/setup";
 import "tablesorter";
 import "tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js";
+import JSONEditor from "jsoneditor/dist/jsoneditor.min.js";
 import "./entry";
+
+window.JSONEditor = JSONEditor;
 App.init(Default);
 Setup.init();
 /* develblock:start */

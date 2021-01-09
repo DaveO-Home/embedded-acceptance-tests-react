@@ -1,16 +1,19 @@
-{
-  "presets": [
-    [
-      "latest", "@babel/preset-react",
-      {
-        "es2015": {
-          "modules": false
-        }
-      }
-    ]
-  ],
+{ 
+  "presets": ["@babel/preset-react", [
+    "@babel/preset-env", {
+      "targets": {
+           "ie": 11,
+          "browsers": ["> 0.2%, not dead, not op_mini all"]
+      },
+      "modules": "auto",
+      "debug": false,
+      "useBuiltIns": "usage",
+      "corejs": "3"
+  }
+  ]],
   "plugins": [
-    "external-helpers",
-    "transform-react-jsx"
+    "@babel/plugin-transform-react-jsx",
+    "@babel/plugin-transform-runtime",
+    "external-helpers"
   ]
 }

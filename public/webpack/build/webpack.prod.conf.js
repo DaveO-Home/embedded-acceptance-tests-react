@@ -1,21 +1,18 @@
 
 const path = require("path");
-const merge = require("webpack-merge");
+const { merge } = require("webpack-merge");
 const utils = require("./utils");
 const config = require("../config");
 const webpack = require("webpack");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const baseWebpackConfig = require("./webpack.base.conf");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const OptimizeCSSPlugin = require("optimize-css-assets-webpack-plugin");
-const packageDep = require("../../package.json");
-const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0]);
+// const packageDep = require("../../package.json");
+// const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0]);
 
 const env = process.env.NODE_ENV === "testing"
-  ? require("../config/test.env")
-  : require("../config/prod.env");
+  ? require("../config/test.env") : require("../config/prod.env");
 
 const webpackConfig = merge(baseWebpackConfig, {
   mode: "production",
@@ -26,6 +23,13 @@ const webpackConfig = merge(baseWebpackConfig, {
     chunkFilename: utils.assetsPath("js/[id].[chunkhash].js")
   },
   optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        extractComments: "some",
+        parallel: true,
+      }),
+    ],
     splitChunks: {
       chunks: "all"
     }
@@ -33,15 +37,6 @@ const webpackConfig = merge(baseWebpackConfig, {
   plugins: [
     new webpack.DefinePlugin({
       "process.env": env
-    }),
-    new UglifyJsPlugin({
-      uglifyOptions: {
-        compress: {
-        },
-        warnings: false
-      },
-      sourceMap: config.build.productionSourceMap,
-      parallel: true
     }),
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
@@ -58,96 +53,53 @@ const webpackConfig = merge(baseWebpackConfig, {
         // https://github.com/kangax/html-minifier#options-quick-reference
       },
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: "dependency"
+      chunksSortMode: "auto" //"dependency"
     }),
     // keep module.id stable when vendor modules does not change
-    new webpack.HashedModuleIdsPlugin(),
+    // new webpack.HashedModuleIdsPlugin(),
     // enable scope hoisting
     new webpack.optimize.ModuleConcatenationPlugin(),
     // copy custom static assets
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, "../static"),
-        to: config.build.assetsSubDirectory,
-        ignore: [".*"]
-      },
-      { from: "./images/**/*", to: "" },
-      { from: "./appl/testapp.html", to: config.build.assetsSubDirectory },
-      { from: "./appl/index.html", to: config.build.assetsSubDirectory },
-      { from: "./index.html", to: "./" },
-      { from: "../README.md", to: "../" },
-      {
-        from: {
-          glob: "./appl/views/**/*",
-          dot: false
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "../static"),
+          globOptions: {
+            dot: true,
+            ignore: [".*"],
+          },
+          to: config.dev.assetsSubDirectory,
         },
-        to: ""
-      },
-      {
-        from: {
-          glob: "./appl/templates/**/*",
-          dot: false
+        { from: "./images/**/*", to: "" },
+        { from: "./appl/testapp_dev.html", to: config.dev.assetsSubDirectory },
+        { from: "./appl/index.html", to: config.dev.assetsSubDirectory },
+        { from: "../README.md", to: "../" },
+        {
+          from: "./appl/views/**/*",
+          globOptions: {
+            dot: false,
+          },
+          to: ""
         },
-        to: ""
-      },
-      {
-        from: {
-          glob: "./appl/dodex/**/*",
-          dot: false
+        {
+          from: "./appl/templates/**/*",
+          globOptions: {
+            dot: false,
+          },
+          to: ""
         },
-        to: ""
-      },
-      { from: "./appl/assets/*.*", to: "" }
-    ])
+        {
+          from: "./appl/dodex/**/*",
+          globOptions: {
+            dot: false,
+          },
+          to: ""
+        },
+        { from: "./appl/assets/*.*", to: "" }
+      ]
+    })
   ]
 });
-
-if (version < 4) {
-  // split vendor js into its own file
-  webpackConfig.plugins.push(new webpack.optimize.CommonsChunkPlugin({
-    name: "vendor",
-    minChunks(module) {
-      // any required modules inside node_modules are extracted to vendor
-      return (
-        module.resource &&
-        /\.js$/.test(module.resource) &&
-        module.resource.indexOf(
-          path.join(__dirname, "../node_modules")
-        ) === 0
-      );
-    }
-  }));
-  // extract webpack runtime and module manifest to its own file in order to
-  // prevent vendor hash from being updated whenever app bundle is updated
-  webpackConfig.plugins.push(new webpack.optimize.CommonsChunkPlugin({
-    name: "manifest",
-    minChunks: Infinity
-  }));
-  // This instance extracts shared chunks from code splitted chunks and bundles them
-  // in a separate chunk, similar to the vendor chunk
-  // see: https://webpack.js.org/plugins/commons-chunk-plugin/#extra-async-commons-chunk
-  webpackConfig.plugins.push(new webpack.optimize.CommonsChunkPlugin({
-    name: "app",
-    async: "vendor-async",
-    children: true,
-    minChunks: 3
-  }));
-  // Compress extracted CSS. We are using this plugin so that possible
-  // duplicated CSS from different components can be deduped.
-  webpackConfig.plugins.push(new OptimizeCSSPlugin({
-    cssProcessorOptions: config.build.productionSourceMap
-      ? { safe: true, map: { inline: false } }
-      : { safe: true }
-  }));
-  // extract css into its own file
-  webpackConfig.plugins.push(new ExtractTextPlugin({
-    filename: utils.assetsPath("css/[name].[contenthash].css"),
-    // Setting the following option to `false` will not extract CSS from codesplit chunks.
-    // Their CSS will instead be inserted dynamically with style-loader when the codesplit chunk has been loaded by webpack.
-    // It's currently set to `true` because we are seeing that sourcemaps are included in the codesplit bundle as well when it's `false`, 
-    allChunks: true,
-  }));
-}
 
 if (config.build.productionGzip) {
   const CompressionWebpackPlugin = require("compression-webpack-plugin");
@@ -175,3 +127,4 @@ if (config.build.bundleAnalyzerReport) {
 webpackConfig.module.rules.push(utils.stripBlock());
 
 module.exports = webpackConfig;
+

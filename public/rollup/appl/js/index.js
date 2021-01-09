@@ -9,7 +9,10 @@ import apptest from "apptest";
 /* develblock:end */
 import "tablesorter";
 import "pager";
+import JSONEditor from "jsoneditor/dist/jsoneditor.min.js";
 import "./entry";
+
+window.JSONEditor = JSONEditor;
 App.init(Default);
 Setup.init();
 /* develblock:start */

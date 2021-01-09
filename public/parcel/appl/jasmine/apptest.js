@@ -118,7 +118,7 @@ export default function (App) {
 function karmaDisplay() {
     // Building a link url for css file so Karma can display the page properly
     $.get("/base/dist_test/parcel/testapp_dev.html", function (data) {
-        const maincss = /main.(.*).css/.exec(data);  // Parcel builds a unique file name
+        const maincss = /testapp_dev.(.*).css/.exec(data);  // Parcel builds a unique file name
         // Load of test page(without html, head & body) to append to the Karma iframe
         $("body").load("/base/parcel/appl/app_bootstrap.html", function () {
             $("<link/>", {

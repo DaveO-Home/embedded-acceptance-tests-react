@@ -1,4 +1,18 @@
-{
-    "presets":[[ "es2015", "@babel/preset-react" ]],
-    "plugins": ["transform-react-jsx"]
-}
+{ 
+    "presets": ["@parcel/babel-preset-env", "@babel/preset-react", [
+      "@babel/preset-env", {
+        "targets": {
+             "ie": 11,
+            "browsers": ["> 0.2%, not dead, not op_mini all"]
+        },
+        "modules": "auto",
+        "debug": false,
+        "useBuiltIns": "usage",
+        "corejs": "3"
+    }
+    ]],
+    "plugins": [
+      "@babel/plugin-transform-react-jsx",
+      "@babel/plugin-transform-runtime"
+  ]
+  }

@@ -7,7 +7,7 @@ module.exports = function (config) {
     }
     config.set({
         basePath: "../../",
-        frameworks: ["jasmine-jquery", "jasmine"],
+        frameworks: ["jasmine-jquery"],
         proxies: {
             "/views/": "/base/" + bundler + "/appl/views/",
             "/templates": "/base/" + bundler + "/appl/templates",
@@ -36,6 +36,7 @@ module.exports = function (config) {
             {pattern: "node_modules/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js", watched: false, served: true, included: false},
             {pattern: "node_modules/bootstrap/dist/js/bootstrap.js", watched: false, included: false},
             {pattern: "node_modules/tablesorter/dist/js/jquery.tablesorter.widgets.min.js", watched: false, included: false},
+            {pattern: "node_modules/jsoneditor/dist/jsoneditor.min.js", watched: false, included: false},
             {pattern: "node_modules/popper.js/dist/umd/*", watched: false, included: false},
             {pattern: "node_modules/jquery/dist/jquery.js", watched: false, included: false},
             {pattern: "node_modules/lodash-es/capitalize.js", watched: false, included: false},
@@ -82,6 +83,7 @@ module.exports = function (config) {
             {pattern: "node_modules/bootstrap/dist/css/bootstrap.min.css", watched: false, included: false},
             {pattern: "node_modules/tablesorter/dist/css/theme.blue.min.css", watched: false, included: false},
             {pattern: "node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css", watched: false, included: false},
+            {pattern: "node_modules/jsoneditor/dist/jsoneditor.min.css", watched: false, included: false},
             {pattern: "node_modules/font-awesome/css/font-awesome.css", watched: false, included: false},
             {pattern: "node_modules/font-awesome/fonts/fontawesome-webfont.woff2", watched: false, included: false},
             {pattern: "node_modules/hoist-non-react-statics/**", watched: false, included: false},
@@ -99,12 +101,8 @@ module.exports = function (config) {
         bowerPackages: [
         ],
         plugins: [
-            "karma-chrome-launcher",
-            "karma-firefox-launcher",
-            "karma-opera-launcher",
-            "karma-jasmine",
-            "karma-jasmine-jquery",
-            "karma-mocha-reporter"
+            "karma-*",
+            "@metahub/karma-jasmine-jquery",
         ],
         /* Karma uses <link href="/base/appl/testapp_dev.html" rel="import"> -- you will need webcomponents polyfill to use browsers other than Chrome.
          * This test demo will work with Chrome/ChromeHeadless by default - Webcomponents included above, so FirefoxHeadless should work also. 

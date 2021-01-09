@@ -210,6 +210,7 @@ const runLint = parallel(esLint, cssLint, bootLint);
 
 exports.default = series(pat, runLint, build);
 exports.prod = series(pat, runLint, build);
+exports.prd = build;
 exports.test = steal_test;
 exports.tdd = steal_tdd;
 exports.firefox = steal_firefox;

@@ -6,6 +6,9 @@ import App from "./app";
 import Default from "./utils/default";
 import "tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js";
 import "../entry";
+import JSONEditor from "jsoneditor/dist/jsoneditor.min.js";
+
+window.JSONEditor = JSONEditor;
 /* develblock:start */
 import apptest from "../jasmine/apptest";
 window._bundler = "fusebox";

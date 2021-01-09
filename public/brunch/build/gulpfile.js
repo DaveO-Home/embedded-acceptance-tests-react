@@ -42,7 +42,7 @@ const pat = function (done) {
             if (data && data.length > 0)
                 log(data.trim());
         });
-        return cmd.on("exit", (code) => {
+        return cmd.on("end", (code) => {
             done();
             log(`Child exited with code ${code}`);
         });
