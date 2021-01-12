@@ -2,7 +2,7 @@
  * Successful acceptance tests & lints start the production build.
  * Tasks are run serially, 'pat'(run acceptance tests) -> 'build-development' -> ('eslint', 'csslint', 'bootlint') -> 'build'
  */
-const Parcel = require("@parcel/core").default;
+const esbuild = require("esbuild");
 const { src, dest, series, parallel, task } = require("gulp");
 const Server = require("karma").Server;
 const eslint = require("gulp-eslint");
@@ -14,13 +14,14 @@ const log = require("fancy-log");
 const flatten = require("gulp-flatten");
 const chalk = require("chalk");
 const browserSync = require("browser-sync");
+const path = require("path");
 
 let lintCount = 0;
 let isProduction = process.env.NODE_ENV == "production";
 let browsers = process.env.USE_BROWSERS;
 let bundleTest = process.env.USE_BUNDLER;
-let testDist = "dist_test/parcel";
-let prodDist = "dist/parcel";
+let testDist = "dist_test/esbuild";
+let prodDist = "dist/esbuild";
 let dist = isProduction ? prodDist : testDist;
 
 if (browsers) {
@@ -30,15 +31,15 @@ if (browsers) {
  * Build Development bundle from package.json 
  */
 const build_development = function (cb) {
-    return parcelBuild(false, cb); // setting watch = false
+    return esbuildBuild(cb);
 };
 /**
- * Production Parcel 
+ * Production Esbuild
  */
 const build = function (cb) {
     process.env.NODE_ENV = "production";
     isProduction = true;
-    parcelBuild(false, cb).then(function () {
+    esbuildBuild(cb).then(function () {
         cb();
     });
 };
@@ -59,7 +60,7 @@ const esLint = function (cb) {
     var stream = src(["../appl/**/*.js"])
         .pipe(eslint({}))
         .pipe(eslint.format())
-        .pipe(eslint.result(result => {
+        .pipe(eslint.result(() => {
             // Keeping track of # of javascript files linted.
             lintCount++;
         }))
@@ -121,12 +122,6 @@ const cleant = function (done) {
         "../../" + testDist + "/**/*"
     ], { dryRun: dryRun, force: true }, done);
 };
-
-const delCache = function (cb) {
-    return del([
-        ".cache/**/*"
-    ], { dryRun: false, force: true }, cb);
-};
 /**
  * Resources and content copied to dist directory - for production
  */
@@ -154,7 +149,7 @@ const copy_images = function () {
 /**
  * Run karma/jasmine tests once and exit without rebuilding(requires a previous build)
  */
-const r_test = function (done) {
+const e_test = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"];
     }
@@ -163,11 +158,11 @@ const r_test = function (done) {
 /**
  * Continuous testing - test driven development.  
  */
-// gulp.task('tdd-parcel', ['build-development'], done => {
-const tdd_parcel = function (done) {
+const tdd_esbuild = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["Chrome", "Firefox"];
     }
+
     new Server({
         configFile: __dirname + "/karma.conf.js",
     }, done).start();
@@ -185,31 +180,43 @@ const tddo = function (done) {
 };
 /**
  * Using BrowserSync Middleware for HMR  
- * You can change the tasks setup to use browserSync....defaulting to parcel internal server/watcher
  */
 const sync = function () {
     const server = browserSync.create("devl");
     dist = testDist;
-    server.init({ server: "../../", index: "index_p.html", port: 3080/* , browser: ['google-chrome']*/ });
-    server.watch("../../" + dist + "/appl.*.*").on("change",
-        function (bundle) {
-            log("Starting reload", bundle);
-            server.reload;  // change any file in appl/ to reload app - triggered on watchify results
-        });
+    const dir = path.join("../../", dist, "/");
+
+    server.init({
+        server: {
+            baseDir: dir,
+            index: "appl/testapp_dev.html",
+        },
+        serveStatic: [path.join(".", dir, "/appl")],
+        port: 3080,
+        // browser: ["google-chrome"] 
+    });
+
+    server.watch(path.join(dir, "**/*.*")).on("change", (file) => {
+        log("Starting reload: " + file);
+        server.reload();  // change any file in dist_test/esbuild/ to reload app - triggered on watchify results
+    });
     return server;
 };
 
-const watcher = function (done) {
-    log(chalk.green("Watcher & BrowserSync Started - Waiting...."));
-    return done();
-};
+const watch = function () {
+    const server = browserSync.create("esbuild");
+    dist = testDist;
 
-const watch_parcel = function (cb) {
-    return parcelBuild(true, cb);
+    server.watch(["../appl/**/*.js", "../appl/**/*.jsx"]).on("change", (file) => {
+        log("Building bundle with: " + file);
+        build_development();
+    });
+    return server;
 };
 
 const runTestCopy = parallel(copy_test, copy_images);
 const runTest = series(cleant, runTestCopy, build_development);
+const runTestNoBuild = series(cleant, runTestCopy);
 const runProdCopy = parallel(copyprod, copyprod_images);
 const runProd = series(runTest, pat, esLint, parallel(cssLint, bootLint), clean, runProdCopy, build);
 runProd.displayName = "prod";
@@ -219,51 +226,106 @@ task(runProd);
 exports.default = runProd;
 exports.prd = series(clean, runProdCopy, build);
 exports.test = series(runTest, pat);
-exports.tdd = series(runTest, tdd_parcel);
-exports.watch = series(runTestCopy, delCache, watch_parcel/*, sync, watcher*/);
-exports.acceptance = r_test;
-exports.rebuild = series(runTest);
+exports.tdd = series(runTest, tdd_esbuild);
+exports.hmr = series(runTestCopy, parallel(sync, watch));
+exports.acceptance = e_test;
+exports.rebuild = parallel(runTestNoBuild, build_development);
+exports.build = parallel(runTestCopy, build_development);
 exports.lint = parallel(esLint, cssLint, bootLint);
-// exports.development = parallel(series(delCache, runTestCopy, watch_parcel/*, sync, watcher*/), series(delCache, runTestCopy, build_development, tdd_parcel))
+exports.copy = runTestCopy;
+exports.tddo = tddo;
+exports.devlserver = devlServer;
 
-function parcelBuild(watch, cb) {
+// this is basically worthless - use the hmr task
+function devlServer() {
+    const port = 3080;
+    return esbuild.serve({ port: port }, {
+        entryPoints: ["../appl/main"],
+        bundle: true,
+        outfile: path.join("../../", dist, "/appl/main.js"),
+        define: {
+            "process.env.NODE_ENV": isProduction ? "\"production\"" : "\"development\"",
+        },
+        loader: {
+            ".png": "file",
+            ".svg": "file",
+            ".jpg": "file"
+        },
+        external: ["fsevents", "fs"],
+    }).then(server => {
+        log("On port: " + port);
+        // Call "stop" on the web server when you're done
+        server.wait;
+    });
+}
+
+const startComment = "develblock:start",
+    endComment = "develblock:end",
+    regexPattern = new RegExp("[\\t ]*(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" +
+        startComment + " ?[\\*\\/]?[\\s\\S]*?(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)" +
+        endComment + " ?(\\*\\/)?[\\t ]*\\n?", "g");
+
+let stripCodePlugin = {
+    name: "strip",
+    setup(build) {
+        let fs = require("fs");
+
+        build.onLoad({ filter: /^.*esbuild.*\.(js|jsx)$/ }, async (args) => {
+            let module = await fs.promises.readFile(args.path, "utf8");
+
+            return {
+                contents: module.replace(regexPattern, ""),
+                loader: "jsx"
+            };
+        });
+    },
+};
+
+async function esbuildBuild(cb) {
     if (bundleTest && bundleTest === "false") {
         return cb();
     }
-    const file = isProduction ? "../appl/testapp.html" : "../appl/testapp_dev.html";
-    const port = 3080;
-    // Bundler options
+    dist = isProduction ? prodDist : testDist;
     const options = {
-        entries: file,
-        publicUrl: watch ? "/dist_test/parcel" : "./",
-        watch: watch,
-        hot: watch? {port: 3080}: {},
-        serve: watch? {port: 3080, publicUrl: "/dist_test/parcel"}: {},
-        cache: !isProduction,
-        cacheDir: ".cache",
-        minify: isProduction,
-        target: "browser",
-        https: false,
-        logLevel: 1, // 3 = log everything, 2 = log warnings & errors, 1 = log errors
-        sourceMaps: !isProduction,
-        detailedReport: isProduction,
-        defaultConfig: require.resolve("@parcel/config-default"),
-        // mode: isProduction? "production": "development",  // prod mode corrupts bundle, I suspect mangle??
-        distDir: "../../" + dist,
-        patchConsole: false,
-        autoinstall: true,
+        entryPoints: ["../appl/main"],
+        resolveExtensions: [".jsx", ".js", ".css", ".json"],
+        bundle: true,
+        outfile: path.join("../../", dist, "/main.js"),
+        platform: "browser",
+        format: "iife",
+        splitting: false,
+        loader: {
+            ".png": "file",
+            ".svg": "file",
+            ".jpg": "file"
+        },
+        define: {
+            "process.env.NODE_ENV": isProduction ? "\"production\"" : "\"development\"",
+        },
+        external: ["fsevents", "fs"],
+        sourcemap: isProduction? true: false,
+        minify: isProduction ? true : false,
     };
+    if (isProduction) {
+        options.plugins = [stripCodePlugin];
+    }
 
-    return ( async () => {
-        const parcel = new Parcel(options);
-        await parcel.run();
-    })();
+    await esbuild.build(options)
+        .catch((e) => console.error(e));
+
+    if (typeof cb === "function") {
+        cb();
+    }
 }
 
 function copySrc() {
-    return src(["../appl/view*/**/*", "../appl/temp*/**/*", "../appl/assets/**/*"/* , isProduction ? '../appl/testapp.html' : '../appl/testapp_dev.html'*/])
+    return src(["../appl/view*/**/*",
+        "../appl/temp*/**/*",
+        "../appl/assets/**/*",
+        "../appl/css/site.css",
+        isProduction ? "../appl/testapp.html" : "../appl/testapp_dev.html"])
         .pipe(flatten({ includeParents: -2 })
-            .pipe(dest("../../" + dist + "/")));
+            .pipe(dest("../../" + dist + "/appl")));
 }
 
 function copyImages() {
@@ -287,7 +349,7 @@ function runKarma(done) {
             done();
         }
         if (exitCode > 0) {
-            log("You may need to remove the ../parcel/build/.cache directory");
+            log("Karma Error: ", exitCode);
             process.exit(exitCode);
         }
     }).start();

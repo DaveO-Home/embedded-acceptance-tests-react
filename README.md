@@ -12,11 +12,12 @@ The basic idea is to build a production application ensuring consistent and stab
 
 > 1. [Browserify](#i-browserify)
 > 1. [Brunch](#ii-brunch)
-> 1. [Fusebox](#iii-fusebox)
-> 1. [Parcel](#iv-parcel)
-> 1. [Rollup](#v-rollup)
-> 1. [Steal](#vi-stealjs)
-> 1. [Webpack](#vii-webpack)
+> 1. [esbuild](#iii-esbuild)
+> 1. [Fusebox](#iv-fusebox)
+> 1. [Parcel](#v-parcel)
+> 1. [Rollup](#vi-rollup)
+> 1. [Steal](#vii-stealjs)
+> 1. [Webpack](#viii-webpack)
 
 [Installation](#installation)
 
@@ -250,11 +251,35 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
 3\. ***Special Considerations***
   
 * Brunch plugin eslint-brunch uses eslint 3. The demo/react uses version 4.  The `gulp`(production build) command uses a gulp linter, so javascript linting is executed. However, if you wish to use the Brunch eslint-brunch plugin, do the following;
-      * `cd <install>/public/node_modules/eslint-brunch`
-      * `npm install eslint@latest`
-      * `cd <install>/public` and edit the `brunch-config.js` file and uncomment the eslint section.
+    * `cd <install>/public/node_modules/eslint-brunch`
+    * `npm install eslint@latest`
+    * `cd <install>/public` and edit the `brunch-config.js` file and uncomment the eslint section.
 
-### III. **Fusebox**
+### III. **esbuild**
+
+[Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
+
+1\. ***Hot Module Reload(HMR) Server Window*** -
+
+* `cd public/esbuild/build`
+* `gulp hmr`
+* HMR will start a web server with port 3080, a watcher will also start that rebuilds the bundle on code change.
+
+  HMR is using `browser-sync` so a web page will start at: `localhost:3080/dist_test/esbuild/appl/testapp_dev.html`.  Any changes to the source code(\*.js|*.jsx) files should be reflected in the browser auto reload. Also, the browser will reload when changing static content by executing `gulp copy`.
+
+  For development and testing, the normal tasks; `gulp test`, `gulp acceptance`, `gulp rebuild` can be executed when needed.
+
+2\. ***Test Driven Development(tdd) Window*** -
+
+* `cd public/esbuild/build`
+* `gulp tdd`
+
+  You must use `gulp build` and not gulp rebuild with `gulp tdd` running. Tdd will fail with gulp rebuild because it cleans the test directory.
+
+  The HMR Server must be running if you want tests to rerun as source code(*.js) are changed. Note, tests can be added or 
+  removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
+
+### IV. **Fusebox**
 
 [Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
 
@@ -273,7 +298,7 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
 
    The HMR Server must be running if you want tests to rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### IV. **Parcel**
+### V. **Parcel**
 
 [Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
 
@@ -297,7 +322,7 @@ __Note__; You may need to remove cache `..../public/parcel/build/.cache` during 
 
   __Note__; tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### V. **Rollup**
+### VI. **Rollup**
 
 [Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
 
@@ -315,7 +340,7 @@ __Note__; You may need to remove cache `..../public/parcel/build/.cache` during 
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### VI. **Stealjs**
+### VII. **Stealjs**
 
 [Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
 
@@ -342,7 +367,7 @@ __Note__; You may need to remove cache `..../public/parcel/build/.cache` during 
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
 
-### VII. **Webpack**
+### VIII. **Webpack**
 
 [Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
 
