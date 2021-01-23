@@ -13,16 +13,7 @@
     "test": "./node_modules/.bin/eslint index.js && ./node_modules/.bin/mocha"
   },
   "dependencies": {
-    "karma": "~5.2.3",
-    "karma-mocha": "~2.0.1",
-    "karma-jasmine": "~4.0.1",
-    "karma-coverage": "~2.0.3",
-    "karma-coveralls": "~2.1.0",
-    "karma-chai-plugins": "~0.9.0"
   },
   "devDependencies": {
-    "chai": "~4.2.0",
-    "eslint": "^7.17.0",
-    "mocha": "~8.2.1"
   }
 }

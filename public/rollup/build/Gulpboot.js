@@ -1,5 +1,6 @@
-const { src } = require("gulp");
+const { src} = require("gulp");
 const bootlint = require("gulp-bootlint");
+const log = require("fancy-log");
 
 const bootLint = function () {
     var fileIssues = [],
@@ -20,9 +21,9 @@ const bootLint = function () {
                 },
                 summaryReportFn: function (file, errorCount, warningCount) {
                     if (errorCount > 0 || warningCount > 0) {
-                        console.log("please fix the " + errorCount + " errors and " + warningCount + " warnings in " + file.path);
+                        log("please fix the " + errorCount + " errors and " + warningCount + " warnings in " + file.path);
                     } else {
-                        console.log("No problems found in " + file.path);
+                        log("No problems found in " + file.path);
                     }
                 }
             };
@@ -35,6 +36,7 @@ const bootLint = function () {
     });
     
     return stream;
+    
 };
 
 exports.default = bootLint;
