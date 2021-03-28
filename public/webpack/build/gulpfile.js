@@ -296,7 +296,6 @@ const webpack_server = function (cb) {
     webpackConfig.devtool = "eval";
     webpackConfig.output.path = path.resolve(config.dev.assetsRoot);
     webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
-    webpackConfig.plugins.push(new webpack.NamedModulesPlugin()); // HMR shows correct file names in console on update.
     webpackConfig.plugins.push(new HtmlWebpackPlugin({
         filename: "testapp_dev.html",
         template: "appl/testapp_dev.html",
