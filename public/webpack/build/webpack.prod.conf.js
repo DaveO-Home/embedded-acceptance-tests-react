@@ -8,6 +8,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const baseWebpackConfig = require("./webpack.base.conf");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 // const packageDep = require("../../package.json");
 // const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0]);
 
@@ -22,6 +23,9 @@ const webpackConfig = merge(baseWebpackConfig, {
     filename: utils.assetsPath("js/[name].[chunkhash].js"),
     chunkFilename: utils.assetsPath("js/[id].[chunkhash].js")
   },
+  module: {
+    exprContextCritical: false
+  },
   optimization: {
     minimize: true,
     minimizer: [
@@ -30,14 +34,12 @@ const webpackConfig = merge(baseWebpackConfig, {
         parallel: true,
       }),
     ],
-    splitChunks: {
-      chunks: "all"
-    }
   },
   plugins: [
     new webpack.DefinePlugin({
       "process.env": env
     }),
+    new FriendlyErrorsWebpackPlugin(),
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
@@ -53,7 +55,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         // https://github.com/kangax/html-minifier#options-quick-reference
       },
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: "auto" //"dependency"
+      chunksSortMode: "auto" // "dependency"
     }),
     // keep module.id stable when vendor modules does not change
     // new webpack.HashedModuleIdsPlugin(),
@@ -97,7 +99,8 @@ const webpackConfig = merge(baseWebpackConfig, {
         },
         { from: "./appl/assets/*.*", to: "" }
       ]
-    })
+    }),
+    new webpack.ProgressPlugin()
   ]
 });
 

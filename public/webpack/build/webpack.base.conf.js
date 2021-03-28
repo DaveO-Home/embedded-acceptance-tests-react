@@ -35,6 +35,12 @@ module.exports = {
             ? config.build.assetsPublicPath
             : config.dev.assetsPublicPath,
     },
+    stats: {        // "normal", minimal, none, normal, verbose, errors-only
+        errorDetails: true,
+        warnings: false,
+        children: false,
+        colors: true
+    },
     target: "web",
     resolve: {
         extensions: [".js", ".json", ".jsx"],

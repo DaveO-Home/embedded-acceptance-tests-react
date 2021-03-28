@@ -19,7 +19,8 @@ module.exports = function (config) {
             "/node_modules": "/base/node_modules",
             "/dodex": "/base/" + bundler + "/appl/dodex",
             "/images": "/base/" + bundler + "/images",
-            "/appl/assets": "/base/" + bundler + "/appl/assets" 
+            "/appl/assets": "/base/" + bundler + "/appl/assets", 
+            "dist_test/webpack": "/base/dist_test/" + bundler 
         },
         // list of files / patterns to load in the browser
         files: [

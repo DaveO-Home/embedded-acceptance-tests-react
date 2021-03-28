@@ -14,6 +14,7 @@ const log = require("fancy-log");
 const flatten = require("gulp-flatten");
 const chalk = require("chalk");
 const browserSync = require("browser-sync");
+const path = require("path");
 
 let lintCount = 0;
 let isProduction = process.env.NODE_ENV == "production";
@@ -30,7 +31,7 @@ if (browsers) {
  * Build Development bundle from package.json 
  */
 const build_development = function (cb) {
-    return parcelBuild(false, cb); // setting watch = false
+    return parcelBuild(false, false, cb); // setting watch = false
 };
 /**
  * Production Parcel 
@@ -38,7 +39,7 @@ const build_development = function (cb) {
 const build = function (cb) {
     process.env.NODE_ENV = "production";
     isProduction = true;
-    parcelBuild(false, cb).then(function () {
+    parcelBuild(false, false, cb).then(function () {
         cb();
     });
 };
@@ -190,8 +191,8 @@ const tddo = function (done) {
 const sync = function () {
     const server = browserSync.create("devl");
     dist = testDist;
-    server.init({ server: "../../", index: "index_p.html", port: 3080/* , browser: ['google-chrome']*/ });
-    server.watch("../../" + dist + "/appl.*.*").on("change",
+    server.init({ server: "../../", index: "dist_test/parcel/testapp_dev.html", port: 3080, open: false /* , browser: ['google-chrome']*/ });
+    server.watch(["../../" + dist + "/*.js", "../../" + dist + "/*.html"]).on("change",
         function (bundle) {
             log("Starting reload", bundle);
             server.reload;  // change any file in appl/ to reload app - triggered on watchify results
@@ -205,7 +206,11 @@ const watcher = function (done) {
 };
 
 const watch_parcel = function (cb) {
-    return parcelBuild(true, cb);
+    return parcelBuild(true, false, cb);
+};
+
+const serve_parcel = function (cb) {
+    return parcelBuild(false, true, cb);
 };
 
 const runTestCopy = parallel(copy_test, copy_images);
@@ -220,13 +225,15 @@ exports.default = runProd;
 exports.prd = series(clean, runProdCopy, build);
 exports.test = series(runTest, pat);
 exports.tdd = series(runTest, tdd_parcel);
-exports.watch = series(runTestCopy, delCache, watch_parcel/*, sync, watcher*/);
+// exports.watch = series(runTestCopy, delCache, watch_parcel);
+exports.watch = series(runTestCopy, watch_parcel, sync, watcher);
+exports.serve = series(runTestCopy, delCache, serve_parcel, sync);
 exports.acceptance = r_test;
 exports.rebuild = series(runTest);
 exports.lint = parallel(esLint, cssLint, bootLint);
 // exports.development = parallel(series(delCache, runTestCopy, watch_parcel/*, sync, watcher*/), series(delCache, runTestCopy, build_development, tdd_parcel))
 
-function parcelBuild(watch, cb) {
+function parcelBuild(watch, serve = false, cb) {
     if (bundleTest && bundleTest === "false") {
         return cb();
     }
@@ -234,29 +241,49 @@ function parcelBuild(watch, cb) {
     const port = 3080;
     // Bundler options
     const options = {
+        mode: isProduction? "production": "development",
+        entryRoot: "../appl",
         entries: file,
         publicUrl: watch ? "/dist_test/parcel" : "./",
-        watch: watch,
-        hot: watch? {port: 3080}: {},
-        serve: watch? {port: 3080, publicUrl: "/dist_test/parcel"}: {},
-        cache: !isProduction,
+        shouldDisableCache: !isProduction,
+        shouldAutoInstall: true,
+        shouldProfile: false,
         cacheDir: ".cache",
-        minify: isProduction,
-        target: "browser",
-        https: false,
-        logLevel: 1, // 3 = log everything, 2 = log warnings & errors, 1 = log errors
-        sourceMaps: !isProduction,
+        shouldContentHash: isProduction,
+        logLevel: "info",
         detailedReport: isProduction,
         defaultConfig: require.resolve("@parcel/config-default"),
-        // mode: isProduction? "production": "development",  // prod mode corrupts bundle, I suspect mangle??
         distDir: "../../" + dist,
-        patchConsole: false,
-        autoinstall: true,
+        shouldPatchConsole: false,
+        defaultTargetOptions: {
+            shouldOptimize: isProduction,
+            shouldScopeHoist: false,
+            sourceMaps: isProduction,
+            publicUrl: "./",
+            distDir: "../../" + dist,
+            engines: {
+                browsers: ["> 0.2%, not dead, not op_mini all"]
+            }
+          },
     };
 
     return ( async () => {
         const parcel = new Parcel(options);
-        await parcel.run();
+        if(watch) {
+            await parcel.watch();
+        } else if(serve) {
+            options.hmrOptions = {
+                port: port, host: "localhost"
+            };
+            options.serveOptions = { 
+                host: "localhost",
+                port: port,
+                https: false
+            };
+            await parcel.watch();
+        } else {
+            await parcel.run();
+        }
     })();
 }
 
@@ -293,14 +320,14 @@ function runKarma(done) {
     }).start();
 }
 
-//From Stack Overflow - Node (Gulp) process.stdout.write to file
+// From Stack Overflow - Node (Gulp) process.stdout.write to file
 if (process.env.USE_LOGFILE == "true") {
     var fs = require("fs");
     var util = require("util");
     var logFile = fs.createWriteStream("log.txt", { flags: "w" });
     // Or "w" to truncate the file every time the process starts.
     var logStdout = process.stdout;
-    /*eslint no-console: 0 */
+    /* eslint no-console: 0 */
     console.log = function () {
         logFile.write(util.format.apply(null, arguments) + "\n");
         logStdout.write(util.format.apply(null, arguments) + "\n");

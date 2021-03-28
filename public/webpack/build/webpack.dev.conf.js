@@ -6,6 +6,7 @@ const config = require("../config");
 const webpack = require("webpack");
 const baseWebpackConfig = require("./webpack.base.conf");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 // const packageDep = require("../../package.json");
 // const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0]);
 const isWatch = process.env.USE_WATCH === "true";
@@ -17,11 +18,10 @@ const PORT = process.env.PORT && Number(process.env.PORT);
 baseWebpackConfig.output.publicPath = devPublicPath;
 
 const devWebpackConfig = merge(baseWebpackConfig, {
-    stats: "normal", // minimal, none, normal, verbose, errors-only
     mode: "development",
     cache: false,
     module: {
-        rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
+        rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true }),
     },
     // cheap-module-eval-source-map is faster for development
     devtool: config.dev.devtool,
@@ -54,6 +54,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         new webpack.DefinePlugin({
             "process.env": require("../config/dev.env")
         }),
+        new FriendlyErrorsWebpackPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.ProvidePlugin({
             $: "jquery",
@@ -97,7 +98,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
                 to: ""
             },
             { from: "./appl/assets/*.*", to: "" }
-        ]})
+        ]}),
+        new webpack.ProgressPlugin()
     ],
     watch: isWatch,
     watchOptions: {

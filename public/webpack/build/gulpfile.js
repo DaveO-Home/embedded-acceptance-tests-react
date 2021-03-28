@@ -62,7 +62,7 @@ const esLint = function (cb) {
         }))
         .pipe(eslint.format())
         .pipe(eslint.result(result => {
-            //Keeping track of # of javascript files linted.
+            // Keeping track of # of javascript files linted.
             lintCount++;
             // log(chalk.cyan.bold(result.filePath));
         }))
@@ -135,7 +135,6 @@ const test_env = function (cb) {
         USE_KARMA: "true",
         USE_HMR: "false",
         USE_BUILD: false,
-        PUBLIC_PATH: "/base/dist_test/webpack/"   // This sets config to run under Karma
     });
 
     return src("../appl/main.js")
@@ -187,7 +186,6 @@ const test_build = function (cb) {
         USE_KARMA: "true",
         USE_HMR: "false",
         USE_BUILD: useBuild,
-        PUBLIC_PATH: "/base/dist_test/webpack/"   // This sets config to run under Karma
     });
 
     if (process.env.USE_BUILD == "false") {  // Let Webpack do the build if only doing unit-tests
@@ -235,7 +233,6 @@ const webpack_watch = function (cb) {
         USE_WATCH: "true",
         USE_KARMA: "false",
         USE_HMR: "false",
-        PUBLIC_PATH: "/base/dist_test/webpack/"
     });
 
     rmf("../../dist_test/webpack", [], (err) => {
@@ -258,7 +255,6 @@ const set_watch_env = function (cb) {
         USE_WATCH: "true",
         USE_KARMA: "false",
         USE_HMR: "false",
-        PUBLIC_PATH: "/base/dist_test/webpack/"
     });
 
     return src("./appl/index.js")
