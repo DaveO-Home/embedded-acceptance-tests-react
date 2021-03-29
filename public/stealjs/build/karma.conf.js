@@ -60,7 +60,7 @@ module.exports = function (config) {
             {pattern: "node_modules/history/*.js", watched: false, included: false},
             {pattern: "node_modules/tiny-warning/dist/tiny-warning.cjs.js", watched: false, included: false},
             {pattern: "node_modules/tiny-invariant/dist/tiny-invariant.cjs.js", watched: false, included: false},
-            {pattern: "node_modules/tiny-inflate/index.js", watched: false, included: false},
+            // {pattern: "node_modules/tiny-inflate/index.js", watched: false, included: false},
             {pattern: "node_modules/resolve*/**/*.js", watched: false, included: false},
             {pattern: "node_modules/value-equal/index.js", watched: false, included: false},
             {pattern: "node_modules/value-equal/cjs/value-equal.min.js", watched: false, included: false},

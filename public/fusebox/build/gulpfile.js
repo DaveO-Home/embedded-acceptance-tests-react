@@ -2,7 +2,7 @@
  * Successful acceptance tests & lints start the production build.
  * Tasks are run serially, 'accept' -> 'pat' -> ('eslint', 'csslint', 'bootlint') -> 'build'
  */
-const { src, /*dest,*/ series, parallel, task } = require("gulp");
+const { src, /* dest,*/ series, parallel, task } = require("gulp");
 const runFusebox = require("./fuse4.js");
 const chalk = require("chalk");
 const csslint = require("gulp-csslint");
@@ -10,7 +10,7 @@ const eslint = require("gulp-eslint");
 const exec = require("child_process").exec;
 const log = require("fancy-log");
 const path = require("path");
-const Server = require("karma").Server;
+const karma = require("karma");
 
 let lintCount = 0;
 let browsers = process.env.USE_BROWSERS;
@@ -36,7 +36,7 @@ const pat = (done) => {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
 
-    return runKarma(done, true);
+    return karmaServer(done, true, false);
 };
 /*
  * javascript linter
@@ -48,7 +48,7 @@ const esLint = function (cb) {
             quiet: 1,
         }))
         .pipe(eslint.format())
-        .pipe(eslint.result(result => {
+        .pipe(eslint.result(() => {
             // Keeping track of # of javascript files linted.
             lintCount++;
         }))
@@ -236,7 +236,7 @@ const fuseboxAcceptance = function (done) {
     if (!browsers) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
-    return runKarma(done, true);
+    return karmaServer(done, true, false);
 };
 /**
  * Continuous testing - test driven development.  
@@ -246,7 +246,7 @@ const fuseboxTdd = function (done) {
         global.whichBrowser = ["Chrome", "Firefox"];
     }
 
-    return runKarma(done, false);
+    return karmaServer(done, false, true);
 };
 /**
  * Continuous testing - test driven development.  
@@ -256,7 +256,7 @@ const fuseboxTddWait = function (done) {
         global.whichBrowser = ["Chrome", "Firefox"];
     }
     setTimeout(function() {
-        return runKarma(done, false);
+        return karmaServer(done, false, true);
     }, 7000);
 };
 /**
@@ -267,7 +267,7 @@ const tddo = function (done) {
         global.whichBrowser = ["Opera"];
     }
     
-    return runKarma(done, false);
+    return karmaServer(done, false, true);
 };
 
 const finished = (done) => { done(); return process.exit(0); };
@@ -343,28 +343,41 @@ function fuseboxConfig(mode, props) {
     return configure;
 }
 
-function runKarma(done, singleRun = true) {
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-        singleRun: singleRun
-    }, (result) => {
-        var exitCode = !result ? 0 : result;
-        if (typeof done === "function") {
-            done();
-        }
-        if (exitCode > 0) {
-            process.exit(exitCode);
-        }
-    }).start();
+function karmaServer(done, singleRun = false, watch = true) {
+    const parseConfig = karma.config.parseConfig;
+    const Server = karma.Server;
+
+    parseConfig(
+        path.resolve("./karma.conf.js"),
+        { port: 9876, singleRun: singleRun, watch: watch },
+        { promiseConfig: true, throwErrors: true },
+    ).then(
+        (karmaConfig) => {
+            if(!singleRun) {
+                done();
+            }
+            new Server(karmaConfig, function doneCallback(exitCode) {
+                console.log("Karma has exited with " + exitCode);
+                if(singleRun) {
+                    done();
+                }
+                if(exitCode > 0) {
+                    process.exit(exitCode);
+                }
+            }).start();
+        },
+        (rejectReason) => { console.err(rejectReason); }
+    );
 }
-//From Stack Overflow - Node (Gulp) process.stdout.write to file
+
+// From Stack Overflow - Node (Gulp) process.stdout.write to file
 if (process.env.USE_LOGFILE == "true") {
     var fs = require("fs");
     var util = require("util");
     var logFile = fs.createWriteStream("log.txt", { flags: "w" });
     // Or "w" to truncate the file every time the process starts.
     var logStdout = process.stdout;
-    /*eslint no-console: 0 */
+    /* eslint no-console: 0 */
     console.log = function () {
         logFile.write(util.format.apply(null, arguments) + "\n");
         logStdout.write(util.format.apply(null, arguments) + "\n");

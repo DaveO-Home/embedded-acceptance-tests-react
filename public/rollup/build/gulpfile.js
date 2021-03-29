@@ -24,7 +24,7 @@ const rmf = require("rimraf");
 const rollup = require("rollup");
 const serve = require("rollup-plugin-serve");
 const stripCode = require("gulp-strip-code");
-const Server = require("karma").Server;
+const karma = require("karma");
 const uglify = require("gulp-uglify");
 const chalk = require("chalk");
 
@@ -63,7 +63,7 @@ const pat = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"];
     }
-    runKarma(done);
+    return karmaServer(done, true, false);
 };
 /*
  * javascript linter
@@ -76,7 +76,7 @@ const esLint = function (cb) {
             quiet: 1
         }))
         .pipe(eslint.format())
-        .pipe(eslint.result(result => {
+        .pipe(eslint.result(() => {
             // Keeping track of # of javascript files linted.
             lintCount++;
         }))
@@ -194,7 +194,7 @@ const r_test = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["ChromeHeadless", "FirefoxHeadless"];
     }
-    runKarma(done);
+    karmaServer(done, true, false);
 };
 /**
  * Continuous testing - test driven development.  
@@ -203,9 +203,7 @@ const rollup_tdd = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["Chrome", "Firefox"];
     }
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-    }, done).start();
+    karmaServer(done, false, true);
 };
 /**
  * Karma testing under Opera. -- needs configuation  
@@ -214,9 +212,7 @@ const tddo = function (done) {
     if (!browsers) {
         global.whichBrowsers = ["Opera"];
     }
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-    }, done).start();
+    karmaServer(done, false, true);
 };
 
 const rollup_watch = function (cb) {
@@ -334,7 +330,7 @@ const inputOptions = {
         }),
         alias(aliases()),
         postcss(),
-        nodeResolve({ /* browser: true, jsnext: true, main: true, */ extensions: [".js", ".jsx"] }),
+        nodeResolve({ extensions: [".js", ".jsx"] }),
         babel({
             babelrc: false,
             exclude: ["node_modules/**"],
@@ -346,12 +342,7 @@ const inputOptions = {
             babelHelpers: "bundled",
             plugins: ["@babel/plugin-transform-react-jsx"]
         }),
-        commonjs({
-            /* namedExports: {
-                "../../node_modules/react/index.js": ["createElement", "Component"],
-                "../../node_modules/react-is/index.js": ["isValidElementType"]
-            }, */
-        })
+        commonjs({})
     ],
     onwarn: function (warning) {
         if (warning.code === "THIS_IS_UNDEFINED" ||
@@ -377,7 +368,7 @@ const inputOptionsProd = {
         alias(aliases()),
         postcss(),
         buble({ exclude: "../../node_modules/**" }),
-        nodeResolve({ /* browser: true, jsnext: true, main: true,*/ extensions: [".js", ".jsx"] }),
+        nodeResolve({extensions: [".js", ".jsx"] }),
         babel({
             babelrc: false,
             exclude: ["node_modules/**"],
@@ -389,12 +380,7 @@ const inputOptionsProd = {
             babelHelpers: "bundled",
             plugins: ["@babel/plugin-transform-react-jsx"]
         }),
-        commonjs({
-            /* namedExports: {
-                "../../node_modules/react/index.js": ["createElement", "Component"],
-                "../../node_modules/react-is/index.js": ["isValidElementType"]
-            },*/
-        })
+        commonjs({})
     ],
     onwarn: function (warning) {
         if (// warning.code === 'THIS_IS_UNDEFINED' ||
@@ -523,20 +509,31 @@ function copySrcMaps() {
         .pipe(dest("../../" + dist));
 }
 
-function runKarma(done) {
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-        singleRun: true
-    }, function (result) {
-        var exitCode = !result ? 0 : result;
-        if (typeof done === "function") {
-            done();
-        }
-        if (exitCode > 0) {
-            process.exit(exitCode);
-        }
-    }).start();
+function karmaServer(done, singleRun = false, watch = true) {
+    const parseConfig = karma.config.parseConfig;
+    const Server = karma.Server;
 
+    parseConfig(
+        path.resolve("./karma.conf.js"),
+        { port: 9876, singleRun: singleRun, watch: watch },
+        { promiseConfig: true, throwErrors: true },
+    ).then(
+        (karmaConfig) => {
+            if(!singleRun) {
+                done();
+            }
+            new Server(karmaConfig, function doneCallback(exitCode) {
+                console.log("Karma has exited with " + exitCode);
+                if(singleRun) {
+                    done();
+                }
+                if(exitCode > 0) {
+                    process.exit(exitCode);
+                }
+            }).start();
+        },
+        (rejectReason) => { console.err(rejectReason); }
+    );
 }
 // per stackoverflow - Converting milliseconds to minutes and seconds with Javascript
 function millisToMinutesAndSeconds(millis) {

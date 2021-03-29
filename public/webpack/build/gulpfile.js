@@ -12,7 +12,7 @@ const path = require("path");
 const chalk = require("chalk");
 const eslint = require("gulp-eslint");
 const config = require("../config");
-const Server = require("karma").Server;
+const karma = require("karma");
 const csslint = require("gulp-csslint");
 const webpack = require("webpack");
 const webpackStream = require("webpack-stream");
@@ -45,7 +45,7 @@ const build = function (cb) {
         if (data && data.length > 0)
             log(data.trim());
     });
-    return cmd.on("exit", (code) => {
+    return cmd.on("exit", () => {
         cb();
     });
 };
@@ -61,7 +61,7 @@ const esLint = function (cb) {
             quiet: 1
         }))
         .pipe(eslint.format())
-        .pipe(eslint.result(result => {
+        .pipe(eslint.result(() => {
             // Keeping track of # of javascript files linted.
             lintCount++;
             // log(chalk.cyan.bold(result.filePath));
@@ -90,7 +90,7 @@ const cssLint = function (cb) {
         process.exit(1);
     });
     return stream.on("end", function (err) {
-        log(chalk.cyan(`css linting finished - ${err?err:0}`));
+        log(chalk.cyan(`css linting finished - ${err ? err : 0}`));
         cb();
     });
 };
@@ -119,13 +119,13 @@ const bootLint = function (cb) {
  * Set environment variable USE_BUILD=false to bypass the build
  */
 const acceptance_tests = function (done) {
-    karmaServer(done);
+    karmaServer(done, true, false);
 };
 /**
  * Run karma/jasmine tests once and exit
  */
 const jasmine_tests = function (done) {
-    karmaServer(done);
+    karmaServer(done, true, false);
 };
 
 const test_env = function (cb) {
@@ -198,7 +198,7 @@ const test_build = function (cb) {
             log(err);
         }
     });
-    
+
     return src("../appl/main.js")
         .pipe(envs)
         .pipe(webpackStream(require("./webpack.dev.conf.js"), webpack))
@@ -208,7 +208,7 @@ const test_build = function (cb) {
             cb();
         })
         .on("error", (err) => {
-            console.log("Error TestBuild: ",err);
+            console.log("Error TestBuild: ", err);
         });
 };
 /**
@@ -219,9 +219,11 @@ const webpack_tdd = function (done) {
         global.whichBrowser = ["Chrome", "Firefox"];
     }
 
-    new Server({
-        configFile: __dirname + "/karma.conf.js"
-    }, done).start();
+    karmaServer(done, false, true);
+
+    // new Server({
+    //     configFile: __dirname + "/karma.conf.js"
+    // }, done).start();
 };
 /*
  * Webpack recompile to 'dist_test' on code change
@@ -367,21 +369,31 @@ exports.development = parallel(webpack_watch, webpack_server, webpack_tdd);
 exports.lint = lintRun;
 exports.prd = build;
 
-function karmaServer(done) {
-    if (!browsers) {
-        global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
-    }
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-        singleRun: true,
-        watch: false
-    }, function (result) {
-        var exitCode = !result ? 0 : result;
-        done();
-        if (exitCode > 0) {
-            process.exit(exitCode);
-        }
-    }).start();
+function karmaServer(done, singleRun = false, watch = true) {
+    const parseConfig = karma.config.parseConfig;
+    const Server = karma.Server;
+
+    parseConfig(
+        path.resolve("./karma.conf.js"),
+        { port: 9876, singleRun: singleRun, watch: watch },
+        { promiseConfig: true, throwErrors: true },
+    ).then(
+        (karmaConfig) => {
+            if(!singleRun) {
+                done();
+            }
+            new Server(karmaConfig, function doneCallback(exitCode) {
+                console.log("Karma has exited with " + exitCode);
+                if(singleRun) {
+                    done();
+                }
+                if(exitCode > 0) {
+                    process.exit(exitCode);
+                }
+            }).start();
+        },
+        (rejectReason) => { console.err(rejectReason); }
+    );
 }
 
 // From Stack Overflow - Node (Gulp) process.stdout.write to file
@@ -391,7 +403,7 @@ if (process.env.USE_LOGFILE == "true") {
     var logFile = fs.createWriteStream("log.txt", { flags: "w" });
     // Or "w" to truncate the file every time the process starts.
     var logStdout = process.stdout;
-/* eslint no-console: 0 */
+    /* eslint no-console: 0 */
     console.log = function () {
         logFile.write(util.format.apply(null, arguments) + "\n");
         logStdout.write(util.format.apply(null, arguments) + "\n");
@@ -401,27 +413,35 @@ if (process.env.USE_LOGFILE == "true") {
 /*
  * Taking a snapshot example - puppeteer - Not installed!
  */
-function karmaServerSnap(done) {
+function karmaServerSnap(done, singleRun = true, watch = false) {
     if (!browsers) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
     }
-    new Server({
-        configFile: __dirname + "/karma.conf.js",
-        singleRun: true,
-        watch: false
-    }, function (result) {
-        var exitCode = !result ? 0 : result;
-        done();
-        if (exitCode > 0) {
-            takeSnapShot(["", "start"]);
-            takeSnapShot(["contact", "contact"]);
-            takeSnapShot(["welcome", "react"]);
-            takeSnapShot(["table/tools", "tools"]);
-            // Not working with PDF-?
-            // takeSnapShot(['pdf/test', 'test'])       
-            process.exit(exitCode);
-        }
-    }).start();
+    const parseConfig = karma.config.parseConfig;
+    const Server = karma.Server;
+
+    parseConfig(
+        path.resolve("./karma.conf.js"),
+        { port: 9876, singleRun: singleRun, watch: watch },
+        { promiseConfig: true, throwErrors: true },
+    ).then(
+        (karmaConfig) => {
+            new Server(karmaConfig, function doneCallback(exitCode) {
+                console.log("Karma has exited with " + exitCode);
+                done();
+                if (exitCode > 0) {
+                    takeSnapShot(["", "start"]);
+                    takeSnapShot(["contact", "contact"]);
+                    takeSnapShot(["welcome", "react"]);
+                    takeSnapShot(["table/tools", "tools"]);
+                    // Not working with PDF-?
+                    // takeSnapShot(['pdf/test', 'test'])       
+                }
+                process.exit(exitCode);
+            }).start();
+        },
+        (rejectReason) => { console.err(rejectReason); }
+    );
 }
 
 function snap(url, puppeteer, snapshot) {

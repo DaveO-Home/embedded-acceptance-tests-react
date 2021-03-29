@@ -2,7 +2,7 @@
  * Successful acceptance tests & lints start the production build.
  * Tasks are run serially, 'pat' -> 'accept' -> ('eslint', 'csslint') -> 'boot' -> 'build'
  */
-const { src, dest, series, parallel, task } = require("gulp");
+const { src, /* dest, */ series, parallel, task } = require("gulp");
 const chalk = require("chalk");
 const csslint = require("gulp-csslint");
 const eslint = require("gulp-eslint");
