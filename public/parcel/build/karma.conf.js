@@ -1,5 +1,5 @@
 var bundler = "parcel";
-var startupHtml = "dist_test/" + bundler + "/testapp_dev.html";
+var startupHtml = "dist_test/" + bundler + "/appl/testapp_dev.html";
 // Karma configuration
 module.exports = function (config) {
     // whichBrowser to use from gulp task.
@@ -13,14 +13,15 @@ module.exports = function (config) {
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         frameworks: ["jasmine-jquery"],
         proxies: {
-            "/views/": "/base/" + bundler + "/appl/views/",
-            "/templates": "/base/" + bundler + "/appl/templates",
+            "/views/": "/base/dist_test/" + bundler + "/appl/views/",
+            "/templates": "/base/dist_test/" + bundler + "/appl/templates",
             "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
-            "/README.md": "/base/README.md",
-            "parcel/appl/": "/base/" + bundler + "/appl/",
+            "/README.md": "/base/dist_test/" + bundler + "/README.md",
+            "parcel/appl/": "/base/dist_test/" + bundler + "/appl/",
             "/base/dist_test/fonts/": "/base/node_modules/font-awesome/fonts/",
-            "/dodex/data/": "/base/dist_test/parcel/appl/dodex/data/",
-            "/images/": "/base/dist_test/parcel/images/"
+            "/dodex/data/": "/base/dist_test/" + bundler + "/appl/dodex/data/",
+            "/images/": "/base/dist_test/" + bundler + "/appl/images/",
+            "/base/dist_test/parcel/": "/base/dist_test/parcel/appl/"
         },
         // list of files / patterns to load in the browser
         files: [
@@ -35,11 +36,11 @@ module.exports = function (config) {
             {pattern: "node_modules/tablesorter/dist/css/theme.blue.min.css", included: false, watched: false},
             {pattern: "node_modules/dodex/dist/dodex.min.css", included: false, watched: false},
             {pattern: "node_modules/font-awesome/fonts/*", included: false, watched: false},
-            {pattern: bundler + "/appl/**/*.*", included: false, watched: false},
-            {pattern: "README.md", included: false},
+            {pattern: bundler + "/appl/app_bootstrap.html", included: false, watched: false},
+            // {pattern: "README.md", included: false},
             // Looking for changes via HMR - tdd should run with Sync Hot Moudule Reload.
             // Looking for changes to the client bundle
-            {pattern: "dist_test/" + bundler + "/**/*", included: false, watched: true}, // , served: true},
+            {pattern: "dist_test/" + bundler + "/**/*", included: false, watched: true},
             // Jasmine/Loader tests and starts Karma
             bundler + "/build/karma.bootstrap.js"
         ],
@@ -48,13 +49,6 @@ module.exports = function (config) {
         plugins: [
             "karma-*",
             "@metahub/karma-jasmine-jquery",
-            // "karma-chrome-launcher",
-            // "karma-firefox-launcher",
-            // "karma-opera-launcher",
-            // "karma-jasmine",
-            // // "karma-jasmine-jquery",
-            // "karma-mocha-reporter",
-            // "@metahub/karma-jasmine-jquery"
         ],
         /* Karma uses <link href="/base/appl/testapp_dev.html" rel="import"> -- you will need webcomponents polyfill to use browsers other than Chrome.
          * This test demo will work with Chrome/ChromeHeadless by default - Webcomponents included above, so FirefoxHeadless should work also. 
@@ -77,7 +71,7 @@ module.exports = function (config) {
         port: 9876,
         colors: true,
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_ERROR,
+        logLevel: config.LOG_WARN,
         autoWatch: true,
         // Continuous Integration mode
         singleRun: false,

@@ -28,7 +28,7 @@ export default App.controllers.Start ||
         index (options) {
             const indexUrl = "views/prod/index.html";
 
-            const markdownUrl = "../../README.md";
+            const markdownUrl = "../README.md";
             this.view({
                 url: indexUrl,
                 urlMd: markdownUrl,

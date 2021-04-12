@@ -118,7 +118,6 @@ class ToolsValue extends React.Component {
         if (index !== -1) {
             message = items[index].message;
         }
-
         return (
             <span>
                 {message} (using Redux)

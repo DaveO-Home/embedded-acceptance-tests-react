@@ -220,10 +220,6 @@ const webpack_tdd = function (done) {
     }
 
     karmaServer(done, false, true);
-
-    // new Server({
-    //     configFile: __dirname + "/karma.conf.js"
-    // }, done).start();
 };
 /*
  * Webpack recompile to 'dist_test' on code change
@@ -251,6 +247,7 @@ const webpack_watch = function (cb) {
         });
 };
 
+// eslint-disable-next-line no-unused-vars
 const set_watch_env = function (cb) {
     var envs = env.set({
         NODE_ENV: "development",
@@ -413,6 +410,7 @@ if (process.env.USE_LOGFILE == "true") {
 /*
  * Taking a snapshot example - puppeteer - Not installed!
  */
+// eslint-disable-next-line no-unused-vars
 function karmaServerSnap(done, singleRun = true, watch = false) {
     if (!browsers) {
         global.whichBrowser = ["ChromeHeadless", "FirefoxHeadless"];
@@ -448,6 +446,7 @@ function snap(url, puppeteer, snapshot) {
     puppeteer.launch().then((browser) => {
         console.log("SnapShot URL", `${url}${snapshot[0]}`);
         let name = snapshot[1];
+        // eslint-disable-next-line no-unused-vars
         let page = browser.newPage().then((page) => {
             page.goto(`${url}${snapshot[0]}`).then(() => {
                 page.screenshot({ path: `snapshots/${name}Acceptance.png` }).then(() => {

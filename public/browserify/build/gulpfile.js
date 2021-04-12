@@ -92,10 +92,9 @@ const esLint = function (cb) {
             quiet: 1
         }))
         .pipe(eslint.format())
-        .pipe(eslint.result(result => {
+        .pipe(eslint.result(() => {
             // Keeping track of # of javascript files linted.
             lintCount++;
-            // log(chalk.cyan.bold(result.filePath));
         }))
         .pipe(eslint.failAfterError());
 

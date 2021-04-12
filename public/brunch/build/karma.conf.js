@@ -47,7 +47,7 @@ module.exports = {
         { pattern: "dist_test/" + bundler + "/acceptance.js", included: false, watched: true, served: true },
         { pattern: "dist_test/" + bundler + "/*.css", included: false, watched: false },
         { pattern: "dist_test/" + bundler + "/*.map", included: false, watched: false },
-        { pattern: "dist_test/" + "/fonts/*", included: false, watched: false },
+        { pattern: "dist_test/" + "/fonts/*.*", included: false, watched: false },
         { pattern: bundler + "/images/*", included: false, watched: false },
         // Jasmine/Loader tests and starts Karma
         bundler + "/build/karma.bootstrap.js"

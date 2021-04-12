@@ -27,7 +27,7 @@ if (typeof testit !== "undefined" && testit) {
   );
   if (document.querySelector(".top--dodex") === null) {
     // Content for cards A-Z and static card
-    dodex.setContentFile("./appl/dodex/data/content.js");
+    dodex.setContentFile("./dodex/data/content.js");
     dodex.init({
       width: 375,
       height: 200,

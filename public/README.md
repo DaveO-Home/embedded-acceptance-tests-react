@@ -305,7 +305,7 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
 1\. ***Watch, Recompile and Reload Window*** -
 
 * `cd public/parcel/build`
-* `gulp watch`
+* `gulp watch` or  `gulp serve`
 
 At this point you can start a browser and enter `localhost:3080/dist_test/parcel/testapp_dev.html` (configured to auto open browser tab). Any changes to the source code(*.js and *.css files) should be reflected in the browser auto reload.
 
@@ -339,6 +339,8 @@ __Note__; You may need to remove cache `..../public/parcel/build/.cache` during 
 * `gulp tdd`
 
    Tests will rerun as source code(*.js) is changed. Note, tests can be added or removed as code is developed. Both Chrome and Firefox are the default browsers. This can be overridden with an environment variable, `export USE_BROWSERS=Opera`.
+
+<img src="images/noEnter.png" style="height:100px;width:100px;opacity:1;position:relative;top:70px;left:20px"/>
 
 ### VII. **Stealjs**
 
