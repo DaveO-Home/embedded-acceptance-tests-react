@@ -1,5 +1,6 @@
-.parcel*
+.metals
 .cache
+.parcel-*
 .DS_Store
 copyjs.sh
 public/rollup/build/build/*
