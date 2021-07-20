@@ -107,7 +107,6 @@ To run the production application:
   1. `cd <install>/acceptance_tests`
   1. `npm start`  -  This should start a Node Server with port 3080.
   1. Start a browser and enter `localhost:3080/dist/<bundler>/appl/testapp.html`
-  1. For Parcel the Production Url is `localhost:3080/dist/parcel/testapp.html`
 
 You can repeat the procedure with any of the supported bundlers. Output from the build can be logged by setting the environment variable `USE_LOGFILE=true`.
 
@@ -312,9 +311,9 @@ __Note__; The test url is `localhost:3080` since Brunch by default uses 'config.
 1\. ***Watch, Recompile and Reload Window*** -
 
 * `cd public/parcel/build`
-* `gulp watch` or  `gulp serve`
+* `gulp watch`
 
-At this point you can start a browser and enter `localhost:3080/dist_test/parcel/testapp_dev.html` (configured to auto open browser tab). Any changes to the source code(*.js and *.css files) should be reflected in the browser auto reload.
+At this point you can start a browser and enter `localhost:3080/dist_test/appl/parcel/testapp_dev.html` (configured to auto open browser tab). Any changes to the source code(*.js and *.css files) should be reflected in the browser auto reload.
 
 __Note__; You may need to remove cache `..../public/parcel/build/.cache` during development.
 
