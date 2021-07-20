@@ -65,7 +65,6 @@ function aliases() {
         setglobals: modResolve("appl/js/utils/set.globals"),
         table: modResolve("appl/js/controller/table"),
         pager: "../../node_modules/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js",
-        popper: "../../node_modules/popper.js/dist/esm/popper.js",
         "apptest": "../appl/jasmine/apptest.js",
         "contacttest": "./contacttest.js",
         "domtest": "./domtest.js",

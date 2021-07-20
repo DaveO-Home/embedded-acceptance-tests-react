@@ -19,7 +19,7 @@ const path = require("path");
 const postcss = require("rollup-plugin-postcss");
 const progress = require("rollup-plugin-progress");
 const rename = require("gulp-rename");
-const replaceEnv = require("rollup-plugin-replace");
+const replaceEnv = require("@rollup/plugin-replace");
 const rmf = require("rimraf");
 const rollup = require("rollup");
 const serve = require("rollup-plugin-serve");
@@ -156,12 +156,6 @@ const copyprod_node_css = function () {
 const copyprod_css = function () {
     return copyCss();
 };
-
-const copyprod_fonts = function () {
-    isProduction = true;
-    dist = prodDist;
-    return copyFonts();
-};
 /**
  * Resources and content copied to dist_test directory - for development
  */
@@ -180,12 +174,6 @@ const copy_node_css = function () {
 
 const copy_css = function () {
     return copyCss();
-};
-
-const copy_fonts = function () {
-    isProduction = false;
-    dist = testDist;
-    return copyFonts();
 };
 /**
  * Run karma/jasmine tests once and exit without rebuilding(requires a previous build)
@@ -224,7 +212,8 @@ const rollup_watch = function (cb) {
                 clearLine: isProduction ? false : true
             }),
             replaceEnv({
-                "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development")
+                "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development"),
+		preventAssignment: true	
             }),
             alias(aliases()),
             postcss(),
@@ -301,15 +290,16 @@ const rollup_watch = function (cb) {
     });
 };
 
-const testCopyRun = series(copy_fonts, parallel(copy_test, copy_images, copy_node_css, copy_css));
+const testCopyRun = parallel(copy_test, copy_images, copy_node_css, copy_css);
 const testRun = series(cleant, testCopyRun, build_development);
-const lintRun = parallel(esLint, cssLint, bootLint);
-const prodCopyRun = series(copyprod_fonts, parallel(copyprod, copyprod_images, copyprod_node_css, copyprod_css));
+const lintRun = parallel(esLint, cssLint /* , bootLint */);
+const prodCopyRun = parallel(copyprod, copyprod_images, copyprod_node_css, copyprod_css);
 const prodRun = series(cleant, testCopyRun, build_development, pat, lintRun, clean, prodCopyRun, build);
 prodRun.displayName = "prod";
 
 task(prodRun);
-exports.default = prodRun;
+
+task("default", prodRun);
 exports.prd = series(clean, prodCopyRun, build);
 exports.test = series(testRun, pat);
 exports.tdd = series(testRun, rollup_tdd);
@@ -363,11 +353,12 @@ const inputOptionsProd = {
             clearLine: true
         }),
         replaceEnv({
+            preventAssignment: true,
             "process.env.NODE_ENV": JSON.stringify("production")
         }),
         alias(aliases()),
         postcss(),
-        buble({ exclude: "../../node_modules/**" }),
+        // buble({ exclude: "../../node_modules/**" }),
         nodeResolve({extensions: [".js", ".jsx"] }),
         babel({
             babelrc: false,
@@ -458,9 +449,9 @@ function aliases() {
             {find: "setimports", replacement: modResolve("appl/js/utils/set.imports")},
             {find: "table", replacement: modResolve("appl/js/controller/table")},
             {find: "pager", replacement: "../../node_modules/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js"},
-            {find: "popper", replacement: "../../node_modules/popper.js/dist/esm/popper.js"},
             {find: "handlebars", replacement: "../../node_modules/handlebars/dist/handlebars.min.js"},
-            {find: "bootstrap", replacement: "../../node_modules/bootstrap/dist/js/bootstrap.min.js"},
+            {find: "bootstrap", replacement: "../../node_modules/bootstrap/dist/js/bootstrap.js"},
+            {find: "jsoneditor", replacement: "../../node_modules/jsoneditor/dist/jsoneditor.min.js"},
             {find: "marked", replacement: "../../node_modules/marked/marked.min.js"},
             {find: "apptest", replacement: "../appl/jasmine/apptest.js"},
             {find: "contacttest", replacement: "./contacttest.js"},
@@ -494,13 +485,8 @@ function copyCss() {
 }
 
 function copyNodeCss() {
-    return src(["../../node_modules/bootstrap/dist/css/bootstrap.min.css", "../../node_modules/font-awesome/css/font-awesome.css",
+    return src([
         "../../node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css", "../../node_modules/tablesorter/dist/css/theme.blue.min.css"])
-        .pipe(copy("../../" + dist + "/appl"));
-}
-
-function copyFonts() {
-    return src(["../../node_modules/font-awesome/fonts/*"])
         .pipe(copy("../../" + dist + "/appl"));
 }
 

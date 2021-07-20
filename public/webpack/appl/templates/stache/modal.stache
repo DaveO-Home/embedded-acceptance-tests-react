@@ -5,8 +5,8 @@
                 <div class="modal-title center">
                     <h5 id="modal_title">{{title}}</h5>
                 </div>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            </div>﻿
+                <button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
             <div class="modal-body">
                 {{{body}}}
             </div>
@@ -16,4 +16,6 @@
             {{{contactFooter}}}
         </div>
     </div>
+    <button type="button" id="openLogin" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTemplate" hidden>
+    </button>
 </div>

@@ -20,7 +20,8 @@ module.exports = function (config) {
             "esbuild/appl/": "/base/" + bundler + "/appl/",
             "/appl/assets": "/base/" + bundler + "/appl/assets",
             "/dodex/": "/base/" + bundler + "/appl/dodex/",
-            "/images/": "/base/" + bundler + "/images/"
+            "/images/": "/base/" + bundler + "/images/",
+            "/base/esbuild/appl/views/prod/Test.pdf": "/base/dist_test/" + bundler + "/appl/views/prod/Test.pdf"
         },
         // list of files / patterns to load in the browser
         files: [

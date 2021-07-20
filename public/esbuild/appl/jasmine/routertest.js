@@ -1,5 +1,5 @@
 // Note; Menulinks was loaded in entry.js
-export default function (type, timer, ReactDOM) {
+export default function (type, timer) {
     if (testit) {
         describe("Testing Menulinks Router", () => {
             let numbers = 0;
@@ -19,11 +19,8 @@ export default function (type, timer, ReactDOM) {
                         });
                         break;
                     case "pdf":
-                        ReactDOM.unmountComponentAtNode($("#main_container")[0]);
-
-                        $(".fa-file-pdf").trigger("click");
-
-                        numbers = timer(50, 50);
+                        $(".pdf-click").trigger("click");
+                        numbers = timer(100, 50);
                         observable = numbers.subscribe(timer => {
                             let pdf = $("#main_container > iframe[name=\"pdfDO\"]");
                             if (pdf.length > 0 || timer === 50) {

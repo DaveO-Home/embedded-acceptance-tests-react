@@ -90,7 +90,7 @@ export default function (App) {
         });
 
         routerTest("table", timer, ReactDOM);
-        // routerTest("pdf", timer, ReactDOM);   with esbuild this is failing
+        routerTest("pdf", timer, ReactDOM);   // with esbuild this is failing
 
         // Executing here makes sure the tests are run in sequence.
         // Spec to test if page data changes on select change event.

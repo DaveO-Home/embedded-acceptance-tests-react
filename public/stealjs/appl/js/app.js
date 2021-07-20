@@ -6,14 +6,14 @@ import "tablesorter";
 //!steal-remove-start
 // Specs can be inserted at initialization(before karma is started).
 if (typeof testit !== "undefined" && testit) {
-    describe("Popper Defined - required for Bootstrap", () => {
+    describe("JQuery Defined", () => {
         it("is JQuery defined", () => {
             expect(typeof $ === "function").toBe(true);
         });
 
-        it("is Popper defined", () => {
-            expect(typeof Popper === "function").toBe(true);
-        });
+//        it("is Popper defined", () => {
+//            expect(typeof Popper === "function").toBe(true);
+//        });
     });
 }
 //!steal-remove-end

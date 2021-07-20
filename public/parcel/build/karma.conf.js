@@ -18,10 +18,11 @@ module.exports = function (config) {
             "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
             "/README.md": "/base/dist_test/" + bundler + "/README.md",
             "parcel/appl/": "/base/dist_test/" + bundler + "/appl/",
-            "/base/dist_test/fonts/": "/base/node_modules/font-awesome/fonts/",
             "/dodex/data/": "/base/dist_test/" + bundler + "/appl/dodex/data/",
             "/images/": "/base/dist_test/" + bundler + "/appl/images/",
-            "/base/dist_test/parcel/": "/base/dist_test/parcel/appl/"
+            "/base/dist_test/parcel/": "/base/dist_test/parcel/appl/",
+            "/appl/assets/logo.svg": "/base/dist_test/" + bundler + "/appl/assets/logo.svg",
+            "/logo.": "/base/dist_test/" + bundler + "/appl/assets/logo."
         },
         // list of files / patterns to load in the browser
         files: [
@@ -35,7 +36,6 @@ module.exports = function (config) {
             {pattern: "node_modules/bootstrap/dist/css/bootstrap.css", included: false, watched: false},
             {pattern: "node_modules/tablesorter/dist/css/theme.blue.min.css", included: false, watched: false},
             {pattern: "node_modules/dodex/dist/dodex.min.css", included: false, watched: false},
-            {pattern: "node_modules/font-awesome/fonts/*", included: false, watched: false},
             {pattern: bundler + "/appl/app_bootstrap.html", included: false, watched: false},
             // {pattern: "README.md", included: false},
             // Looking for changes via HMR - tdd should run with Sync Hot Moudule Reload.

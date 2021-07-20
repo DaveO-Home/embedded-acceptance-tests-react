@@ -1,6 +1,6 @@
 # Embedded React Acceptance Testing with Karma and Jasmine
 
-The basic idea is to build a production application ensuring consistent and stable code using JavaScript, CSS and bootstrap linting and automated unit and e2e testing. This will be in part, assisted by the development tools, detailed in the [Development Overview](#development) and bundle sections.
+The basic idea is to build a production application ensuring consistent and stable code using JavaScript, CSS and ~~bootstrap~~ linting and automated unit and e2e testing. This will be in part, assisted by the development tools, detailed in the [Development Overview](#development) and bundle sections.
 
 [Production Build](#production-build)
 
@@ -16,7 +16,7 @@ The basic idea is to build a production application ensuring consistent and stab
 > 1. [Fusebox](#iv-fusebox)
 > 1. [Parcel](#v-parcel)
 > 1. [Rollup](#vi-rollup)
-> 1. [Steal](#vii-stealjs)
+> 1. ~~[Steal](#vii-stealjs)~~
 > 1. [Webpack](#viii-webpack)
 
 [Installation](#installation)
@@ -64,7 +64,7 @@ The basic idea is to build a production application ensuring consistent and stab
   `cd` to top level directory `<install>/embedded-acceptance-tests`
 
 ```bash
-  npm install
+  npm install or npm install --legacy-peer-deps 
 ```
 
   This will install a small Node/Express setup to view the results of a production build.
@@ -72,7 +72,7 @@ The basic idea is to build a production application ensuring consistent and stab
   `cd <install>/acceptance-tests/public`
 
 ```bash
-  npm install
+  npm install or npm install --legacy-peer-deps
 ```
 
   To install all required dependencies. If trying Brunch, install the global package for Brunch, `npm install brunch -g`.
@@ -95,6 +95,10 @@ To generate a build "cd to `public/<bundler>/build` and type `gulp`, e.g.
 ```
 
 or `gulp prod`
+
+You can also use the `bm` script located in the `public` directory with the __bundle__ and __gulp task__ as parameters;
+
+executing `bm esbuild prod` will build the bundle from the public directory.
 
 If the tests succeed then the build should complete.
 
@@ -128,6 +132,9 @@ To run the tests "cd to `public/<bundler>/build` and type `gulp test`, e.g.
   export USE_BROWSERS=FirefoxHeadless,ChromeHeadless,Opera
   gulp test
 ```
+You can also use the `bm` script located in the `public` directory with the __bundle__ and __gulp task__ as parameters;
+
+executing `bm esbuild test` will build and test the bundle from the public directory.
 
 A test result might look like;
 
@@ -188,7 +195,7 @@ SUMMARY:
 
 [Top](#embedded-react-acceptance-testing-with-karma-and-jasmine)
 
-__Note__; When modifying project assets(.handlebars, .html, etc.) you can execute `gulp copy` from the `public/<bundler>/build` directory to preview changes. This is not required for __StealJs__.
+__Note__; When modifying project assets(.handlebars, .html, etc.) you can execute `gulp copy` from the `public/<bundler>/build` directory to preview changes. This is not required for ~~__StealJs__~~. Also all of the gulp tasks can be run from the public directory with the `bm` script described above.
 
 __A word on developing tests__; You can write and execute tests quicker by using the rebuild process of a given bundler and running the `acceptance` gulp task after the auto-rebuild, e.g. with __Rollup__ you can;
 

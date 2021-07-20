@@ -163,7 +163,7 @@ class ToolsSelect extends React.Component {
             ToolsSM.replaceCategory(found.idx);
         }
 
-        $("#dropdown1 a i").each(function () { this.remove(); });
+        $("#dropdown1 a svg").each(function () { this.remove(); });
         $(e.target).fa({ icon: "check" });
     }
 
@@ -173,16 +173,16 @@ class ToolsSelect extends React.Component {
                 <button className="dropdown-toggle smallerfont"
                     type="button"
                     id="dropdown0"
-                    data-toggle="dropdown"
+                    data-bs-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false"
                 >
                     Select Job Type
                 </button>
                 <div className="dropdown-menu" aria-labelledby="dropdown0">
-                    <a className="dropdown-item smallerfont" onClick={this.onCompletedClick.bind(this)}>Combined</a>
-                    <a className="dropdown-item smallerfont" onClick={this.onCompletedClick.bind(this)}>Category1</a>
-                    <a className="dropdown-item smallerfont" onClick={this.onCompletedClick.bind(this)}>Category2</a>
+                    <a className="dropdown-item smallerfont pointer" onClick={this.onCompletedClick.bind(this)}>Combined</a>
+                    <a className="dropdown-item smallerfont pointer" onClick={this.onCompletedClick.bind(this)}>Category1</a>
+                    <a className="dropdown-item smallerfont pointer" onClick={this.onCompletedClick.bind(this)}>Category2</a>
                 </div>
             </div>
         );

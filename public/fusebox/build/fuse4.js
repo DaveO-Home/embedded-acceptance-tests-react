@@ -1,6 +1,6 @@
-/*eslint quotes: [2, "double", {"avoidEscape": true, "allowTemplateLiterals": true}]*/
-/*eslint no-unused-vars: 0 no-console: 0*/
-/*eslint-env es6*/
+/* eslint quotes: [2, "double", {"avoidEscape": true, "allowTemplateLiterals": true}]*/
+/* eslint no-unused-vars: 0 no-console: 0*/
+/* eslint-env es6*/
 const path = require("path");
 const { fusebox, sparky } = require("fuse-box");
 const { pluginStripCode } = require("../appl/js/plugin/StripCode");

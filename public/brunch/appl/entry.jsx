@@ -11,11 +11,14 @@ if (typeof testit === "undefined" || !testit) {
     document.getElementById("root")
   );
   ReactDOM.render(
+    <Menulinks />,
+    document.getElementById("root-collapse")
+  );
+  ReactDOM.render(
     <Dodexlink />,
     document.querySelector(".dodex--ico")
   );
   if (document.querySelector(".top--dodex") === null) {
-    // setTimeout(function () {
     // Content for cards A-Z and static card
     dodex.setContentFile("./dodex/data/content.js");
     dodex.init({
@@ -35,7 +38,6 @@ if (typeof testit === "undefined" || !testit) {
       /* Auto display of widget */
       // dodex.openDodex();
     });
-    // }, 1000); // Waiting for app_bootstrap.html to load
   }
 }
 

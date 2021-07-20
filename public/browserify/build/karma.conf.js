@@ -18,8 +18,8 @@ module.exports = function (config) {
             "browserify/appl/": "/base/" + bundler + "/appl/",
             "/dodex/": "/base/" + bundler + "/appl/dodex/",
             "/images/": "/base/" + bundler + "/images/",
-            "/dist_test/browserify": "/base/dist_test/browserify",
-            "/node_modules/font-awesome/fonts": "/base/node_modules/font-awesome/fonts"
+            "/appl/assets/": "/base/" + bundler + "/appl/assets/",
+            "/dist_test/browserify": "/base/dist_test/browserify"
         },
         files: [
             // Webcomponents for Firefox - used for link tag with import attribute.
@@ -34,7 +34,6 @@ module.exports = function (config) {
             {pattern: "dist_test/" + bundler + "/vendor.js", included: false, watched: false, served: true},
             {pattern: "dist_test/" + bundler + "/index.js", included: false, watched: true, served: true},  // watching bundle to get changes during tdd/test
             {pattern: "dist_test/" + bundler + "/**/*.*", included: false, watched: false},
-            {pattern: "node_modules/font-awesome/fonts/*", included: false, watched: false},
             {pattern: bundler + "/images/*", included: false, watched: false},
             // Karma/Jasmine/Loader
             bundler + "/build/karma.bootstrap.js"

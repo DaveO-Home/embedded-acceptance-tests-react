@@ -3,6 +3,7 @@
 import capitalize from "lodash-es/capitalize";
 import "bootstrap";
 import "tablesorter";
+
 /* develblock:start */
 // Specs can be inserted at initialization(before karma is started).
 if (typeof testit !== "undefined" && testit) {
@@ -11,9 +12,9 @@ if (typeof testit !== "undefined" && testit) {
             expect(typeof $ === "function").toBe(true);
         });
 
-        it("is Popper defined", () => {
-            expect(typeof Popper === "function").toBe(true);
-        });
+        // it("is Popper defined", () => {
+        //     expect(typeof Popper === "function").toBe(true);
+        // });
     });
 }
 /* develblock:end */
@@ -36,7 +37,7 @@ export default {
         };
     },
     initPage () {
-        $("[data-toggle=collapse]").click(function (e) {
+        $("[data-toggle=collapse]").on("click", (e) => {
             // Don't change the hash
             e.preventDefault();
             $(this).find("i").toggleClass("fa-chevron-right fa-chevron-down");

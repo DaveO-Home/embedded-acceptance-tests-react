@@ -350,12 +350,12 @@ const webpack_server = function (cb) {
     });
 };
 
-const lintRun = parallel(esLint, cssLint, bootLint);
+const lintRun = parallel(esLint, cssLint /* , bootLint */);
 const prodRun = series(test_build, acceptance_tests, lintRun, build);
 prodRun.displayName = "prod";
 
 task(prodRun);
-exports.default = prodRun;
+task("default", prodRun);
 exports.test = series(test_build, acceptance_tests);
 exports.tdd = series(test_build, webpack_tdd);
 exports.rebuild = webpack_rebuild;

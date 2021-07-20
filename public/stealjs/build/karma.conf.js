@@ -17,7 +17,8 @@ module.exports = function (config) {
             "/appl/assets/logo.svg": "/base/" + bundler + "/appl/assets/logo.svg",
             "/images/dodex_g.ico": "/base/" + bundler + "/images/dodex_g.ico",
             "/dodex/data/content.js": "/base/" + bundler + "/appl/dodex/data/content.js",
-            "stealjs/appl/": "/base/stealjs/appl/"
+            "stealjs/appl/": "/base/stealjs/appl/",
+            "/base/bootstrap.js": "/base/node_modules/bootstrap/dist/js/bootstrap.js"
         },
         // list of files / patterns to load in the browser
         files: [
@@ -37,7 +38,7 @@ module.exports = function (config) {
             {pattern: "node_modules/bootstrap/dist/js/bootstrap.js", watched: false, included: false},
             {pattern: "node_modules/tablesorter/dist/js/jquery.tablesorter.widgets.min.js", watched: false, included: false},
             {pattern: "node_modules/jsoneditor/dist/jsoneditor.min.js", watched: false, included: false},
-            {pattern: "node_modules/popper.js/dist/umd/*", watched: false, included: false},
+            {pattern: "node_modules/@popperjs/core/dist/cjs/**/*.js", watched: false, included: false},
             {pattern: "node_modules/jquery/dist/jquery.js", watched: false, included: false},
             {pattern: "node_modules/lodash-es/capitalize.js", watched: false, included: false},
             {pattern: "node_modules/lodash-es/trimStart.js", watched: false, included: false},
@@ -47,8 +48,9 @@ module.exports = function (config) {
             {pattern: "node_modules/moment/moment.js", watched: false, included: false},
             {pattern: "node_modules/moment/locale/*.js", watched: false, included: false},
             {pattern: "node_modules/marked/lib/marked.js", watched: false, included: false},
-            {pattern: "node_modules/rxjs/index.js", watched: false, included: false},
-            {pattern: "node_modules/rxjs/internal/**/*.js", watched: false, included: false},
+            // {pattern: "node_modules/rxjs/index.js", watched: false, included: false},
+            {pattern: "node_modules/rxjs/dist/cjs/**/*.js", watched: false, included: false},
+            // {pattern: "node_modules/rxjs/internal/**/*.js", watched: false, included: false},
             {pattern: "node_modules/redux/lib/redux.js", watched: false, included: false},
             {pattern: "node_modules/prop-types/**/*.js", watched: false, included: false},
             {pattern: "node_modules/object-assign/index.js", watched: false, included: false},
@@ -87,6 +89,8 @@ module.exports = function (config) {
             {pattern: "node_modules/font-awesome/css/font-awesome.css", watched: false, included: false},
             {pattern: "node_modules/font-awesome/fonts/fontawesome-webfont.woff2", watched: false, included: false},
             {pattern: "node_modules/hoist-non-react-statics/**", watched: false, included: false},
+            // {pattern: "node_modules/react-router/node_modules/path-to-regexp/node_modules/isarray/**/*", watched: false, included: false},
+            // {pattern: "node_modules/react-router/**/*", watched: false, included: false},
             {pattern: "node_modules/isarray/**", watched: false, included: false},
             {pattern: "node_modules/js-tokens/**", watched: false, included: false},
             {pattern: "node_modules/loose-envify/**", watched: false, included: false},
@@ -125,7 +129,7 @@ module.exports = function (config) {
         port: 9876,
         colors: true,
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_WARN,
+        logLevel: config.LOG_INFO,
         autoWatch: true,
         singleRun: false,
         loggers: [{

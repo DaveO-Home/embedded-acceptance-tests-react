@@ -30,7 +30,7 @@ if (browsers) {
  * Build Development bundle from package.json 
  */
 const build_development = function (cb) {
-    return parcelBuild(false, false, cb); // setting watch = false
+    return parcelBuild(false, cb, false); // setting watch = false
 };
 /**
  * Production Parcel 
@@ -38,7 +38,7 @@ const build_development = function (cb) {
 const build = function (cb) {
     process.env.NODE_ENV = "production";
     isProduction = true;
-    parcelBuild(false, false, cb).then(function () {
+    parcelBuild(false, cb, false).then(function () {
         cb();
     });
 };
@@ -182,34 +182,34 @@ const tddo = function (done) {
 };
 
 const watch_parcel = function (cb) {
-    return parcelBuild(true, false, cb);
+    return parcelBuild(true, cb, false);
 };
 
 const serve_parcel = function (cb) {
-    return parcelBuild(false, true, cb);
+    return parcelBuild(false, cb, false);
 };
 
 const runTestCopy = parallel(copy_test, copy_images);
 const runTest = series(cleant, runTestCopy, build_development);
 const runProdCopy = parallel(copyprod, copyprod_images);
-const runProd = series(runTest, pat, esLint, parallel(cssLint, bootLint), clean, runProdCopy, build);
+const runProd = series(runTest, pat, esLint, parallel(cssLint /* , bootLint */), clean, runProdCopy, build);
 runProd.displayName = "prod";
 
 exports.build = series(clean, runProdCopy, build);
 task(runProd);
-exports.default = runProd;
+task("default", runProd);
 exports.prd = series(clean, runProdCopy, build);
 exports.test = series(runTest, pat);
 exports.tdd = series(runTest, tdd_parcel);
-// exports.watch = series(runTestCopy, delCache, watch_parcel);
 exports.watch = series(runTestCopy, watch_parcel);
 exports.serve = series(runTestCopy, delCache, serve_parcel);
 exports.acceptance = r_test;
 exports.rebuild = series(runTest);
-exports.lint = parallel(esLint, cssLint, bootLint);
+exports.lint = parallel(esLint, cssLint /* , bootLint */);
+exports.copy = runTestCopy;
 // exports.development = parallel(series(delCache, runTestCopy, watch_parcel/*, sync, watcher*/), series(delCache, runTestCopy, build_development, tdd_parcel))
 
-function parcelBuild(watch, serve = false, cb) {
+function parcelBuild(watch, cb, serve = false) {
     if (bundleTest && bundleTest === "false") {
         return cb();
     }
@@ -230,8 +230,8 @@ function parcelBuild(watch, serve = false, cb) {
         defaultConfig: require.resolve("@parcel/config-default"),
         shouldPatchConsole: false,
         additionalReporters: [
-            { packageName: "@parcel/reporter-cli", resolveFrom: __filename },
-            { packageName: "@parcel/reporter-dev-server", resolveFrom: __filename }
+           { packageName: "@parcel/reporter-cli", resolveFrom: __filename },
+           // { packageName: "@parcel/reporter-dev-server", resolveFrom: __filename }
         ],
         defaultTargetOptions: {
             shouldOptimize: isProduction,
@@ -262,9 +262,14 @@ function parcelBuild(watch, serve = false, cb) {
             });
             cb();
         } else {
-            await parcel.run(err => {
-                console.error(err, err.diagnostics[0]? err.diagnostics[0].codeFrame: "");
-            });
+        try {
+                await parcel.run(err => {
+                    console.error(err, err.diagnostics[0]? err.diagnostics[0].codeFrame: "");
+                });
+        } catch(e) { 
+            console.error(e);
+            process.exit(1);	
+        }
             cb();
         }
     })();
@@ -283,6 +288,10 @@ function copyImages() {
     }
     src(["../images/*"])
         .pipe(copy("../../" + dist + "/appl", { prefix: 1 }));
+
+    src(["../images/more_horiz.png"])
+        .pipe(copy("../../" + dist, { prefix: 1 }));
+
     return src(["../../README.md"])
         .pipe(copy("../../" + dist, { prefix: 2 }));
 }

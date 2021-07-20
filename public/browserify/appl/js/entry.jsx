@@ -12,6 +12,10 @@ if (typeof testit === "undefined" || (typeof testit !== "undefined" && !testit))
 		document.getElementById("root")
 	);
 	ReactDOM.render(
+		<Menulinks />,
+		document.getElementById("root-collapse")
+	);
+	ReactDOM.render(
 		<Dodexlink />,
 		document.querySelector(".dodex--ico")
 	);

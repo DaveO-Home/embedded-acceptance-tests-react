@@ -110,8 +110,10 @@ const build = function (cb) { // ['boot'],
     if (isWindows) {
         osCommands = "cd ..\\ & set NODE_ENV=production & set USE_KARMA=false & set USE_HMR=false & ";
     }
+    log(chalk.red("\n /*******************"),"\n", chalk.red("/* uglify-js-brunch does now work with latest dependencies */"), "\n", chalk.red("/*******************"),"\n");
     log(chalk.cyan("Building Production - please wait......"));
-    return exec(osCommands + "npm run bp", function (err, stdout, stderr) {
+try {
+    exec(osCommands + "npm run bp", function (err, stdout, stderr) {
         log(stdout);
         log(stderr);
         if (err) {
@@ -121,6 +123,7 @@ const build = function (cb) { // ['boot'],
         }
         cb();
     });
+} catch(e) { console.error(e); }
 };
 /*
  * Bootstrap html linter 
@@ -162,7 +165,7 @@ const brunch_watch = function (cb) {
     });
 };
 /*
- * Build the application to run node express so font-awesome is resolved
+ * Build the application
  */
 const brunch_rebuild = function (cb) {
     var osCommands = "cd ../..; export NODE_ENV=development; unset USE_TDD; export USE_KARMA=false; export USE_HMR=false; ";
@@ -213,11 +216,11 @@ const brunch_tdd = function (done) {
     });
 };
 
-const runProd = series(pat, parallel(esLint, cssLint, bootLint), build);
+const runProd = series(pat, parallel(esLint, cssLint/* , bootLint */), build);
 runProd.displayName = "prod";
 
 task(runProd);
-exports.default = runProd;
+task("default", runProd);
 exports.prd = build;
 exports.test = pat;
 exports.tdd = brunch_tdd;

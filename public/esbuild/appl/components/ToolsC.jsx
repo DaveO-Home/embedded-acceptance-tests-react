@@ -152,7 +152,12 @@ class ToolsSelect extends React.Component {
     onCompletedClick(e) {
         e.preventDefault();
         const controller = App.controllers["Table"];
-        const message = e.target.text.trim();
+        let message = "";
+        try {
+            message = e.target.text.trim();
+        } catch(e) {
+            console.error(e);
+        }
         let store = ToolsSM.getStore();
         const found = ToolsSM.findEntry(message, store.getState().tools.items);
 
@@ -162,8 +167,7 @@ class ToolsSelect extends React.Component {
         } else {
             ToolsSM.replaceCategory(found.idx);
         }
-
-        $("#dropdown1 a i").each(function () { this.remove(); });
+        $("#dropdown1 a svg").each(function () { this.remove(); });
         $(e.target).fa({ icon: "check" });
     }
 
@@ -173,16 +177,16 @@ class ToolsSelect extends React.Component {
                 <button className="dropdown-toggle smallerfont"
                     type="button"
                     id="dropdown0"
-                    data-toggle="dropdown"
+                    data-bs-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false"
                 >
                     Select Job Type
                 </button>
                 <div className="dropdown-menu" aria-labelledby="dropdown0">
-                    <a className="dropdown-item smallerfont" onClick={this.onCompletedClick.bind(this)}>Combined</a>
-                    <a className="dropdown-item smallerfont" onClick={this.onCompletedClick.bind(this)}>Category1</a>
-                    <a className="dropdown-item smallerfont" onClick={this.onCompletedClick.bind(this)}>Category2</a>
+                    <a className="dropdown-item smallerfont pointer" onClick={this.onCompletedClick.bind(this)}>Combined</a>
+                    <a className="dropdown-item smallerfont pointer" onClick={this.onCompletedClick.bind(this)}>Category1</a>
+                    <a className="dropdown-item smallerfont pointer" onClick={this.onCompletedClick.bind(this)}>Category2</a>
                 </div>
             </div>
         );

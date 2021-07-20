@@ -4,16 +4,17 @@ import capitalize from "lodash/capitalize";
 import "bootstrap";
 import "tablesorter";
 /* develblock:start */
+import { createPopper } from "@popperjs/core";
 // Specs can be inserted at initialization(before karma is started).
 if (typeof testit !== "undefined" && testit) {
-    describe("Popper Defined - required for Bootstrap", () => {
+    describe("Popper Defined - required for Bootstrap/Tooltip", () => {
         it("is JQuery defined", () => {
             expect(typeof $ === "function").toBe(true);
         });
 
-        it("is Popper defined", () => {
-            expect(typeof Popper === "function").toBe(true);
-        });
+       it("is Popper defined", () => {
+           expect(typeof createPopper === "function").toBe(true);
+       });
     });
 }
 /* develblock:end */

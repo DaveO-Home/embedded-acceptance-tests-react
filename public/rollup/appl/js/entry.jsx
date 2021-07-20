@@ -10,7 +10,10 @@ if (typeof testit === "undefined" || !testit) {
     <Menulinks />,
     document.getElementById("root")
   );
-
+  ReactDOM.render(
+		<Menulinks />,
+		document.getElementById("root-collapse")
+	);
   ReactDOM.render(
     <Dodexlink />,
     document.querySelector(".dodex--ico")
@@ -29,7 +32,7 @@ if (typeof testit === "undefined" || !testit) {
       mess: mess
     }).then(function () {
       // Add in app/personal cards
-      for (let i = 0;i < 3;i++) {
+      for (let i = 0;i < 2;i++) {
         dodex.addCard(getAdditionalContent());
       }
       /* Auto display of widget */

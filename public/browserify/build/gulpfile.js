@@ -123,7 +123,7 @@ const cssLint = function (cb) {
     });
 };
 /*
- * Bootstrap html linter 
+ * Bootstrap html linter - does not work with bootstrap5
  */
 const bootLint = function (cb) {
     return exec("npx gulp --gulpfile Gulpboot.js", function (err, stdout, stderr) {
@@ -173,12 +173,6 @@ const copyprod = function () {
 const copyprod_images = function () {
     return copyImages();
 };
-
-const copyprod_fonts = function () {
-    isProduction = true;
-    dist = prodDist;
-    return copyFonts();
-};
 /**
  * Resources and content copied to dist_test directory - for development
  */
@@ -189,12 +183,6 @@ const copy_test = function () {
 
 const copy_images = function () {
     return copyImages();
-};
-
-const copy_fonts = function () {
-    isProduction = false;
-    dist = testDist;
-    return copyFonts();
 };
 /*
  * Setup development with reload of app on code change
@@ -246,17 +234,18 @@ const tddo = function (done) {
     karmaServer(done, false, true);
 };
 
-const runCopyProd = parallel(copyprod, copyprod_images, copyprod_fonts);
-const runCopyTest = parallel(copy_test, copy_images, copy_fonts);
+const runCopyProd = parallel(copyprod, copyprod_images);
+const runCopyTest = parallel(copy_test, copy_images);
 const runTest = series(parallel(application_development, build_development), pat);
-const runLint = parallel(esLint, cssLint, bootLint);
+const runLint = parallel(esLint, cssLint /* , bootLint*/);
 const runHmr = series(b_watchify, parallel(application_development, build_development), b_hmr);
 const runTdd = series(b_watchify, parallel(application_development, build_development), tdd_browserify);
 const runProd = series(cleant, runCopyTest, runTest, runLint, clean, runCopyProd, parallel(application, build));
 runProd.displayName = "prod";
 
-exports.default = runProd;
+task("default", runProd);
 exports.prod = task(runProd);
+exports.prd = series(runLint, clean, runCopyProd, parallel(application, build));
 exports.test = series(cleant, runCopyTest, runTest);
 exports.acceptance = b_test;
 exports.tdd = runTdd;
@@ -297,14 +286,14 @@ function browserifyBuild(cb) {
 
 function getNPMPackageIds() {
     var ids = JSON.parse("{" +
-        "\"aw\": \"font-awesome\"," +
+        "\"aw\": \"@fortawesome/fontawesome-free\"," +
         "\"bo\": \"bootstrap\"," +
         "\"jq\": \"jquery\"," +
         "\"lo\": \"lodash\"," +
         "\"hb\": \"handlebars\"," +
         "\"mo\": \"moment\"," +
         //        '"pd": "pdfjs-dist",' +
-        "\"po\": \"popper.js\"," +
+        "\"@po\": \"@popperjs/core\"," +
         "\"tb\": \"tablesorter\"}");
     return ids;
 }
@@ -384,11 +373,6 @@ function copyIndex() {
 
 function copyImages() {
     return src(["../images/*", "../../README.md", "../appl/assets/*"])
-        .pipe(copy("../../" + dist + "/appl"));
-}
-
-function copyFonts() {
-    return src(["../../node_modules/font-awesome/fonts/*"])
         .pipe(copy("../../" + dist + "/appl"));
 }
 

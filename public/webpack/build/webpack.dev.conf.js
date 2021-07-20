@@ -1,6 +1,6 @@
 
 const path = require("path");
-const { merge } = require("webpack-merge");
+const  { merge } = require("webpack-merge");
 const utils = require("./utils");
 const config = require("../config");
 const webpack = require("webpack");
@@ -59,8 +59,6 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
-            "window.jQuery": "jquery",
-            Popper: ["popper.js", "default"]
         }),
         // // copy custom static assets
         new CopyWebpackPlugin({ patterns: [

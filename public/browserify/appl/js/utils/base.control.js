@@ -5,7 +5,7 @@ import Helpers from "b/helpers";
 export default {
     defaults: {
     },
-    init () {
+    init () { //
     },
     view (options) {
         const loading = Helpers.getValueOrDefault(options.loading, false);
@@ -21,11 +21,8 @@ export default {
         const render = Helpers.renderer(this, options);
 
         if (options.template) {
-            switch (options.template.split(".")[0]) {
-                case "tools":
-                    App.renderTools(options, render);
-                    break;
-                default:
+            if(options.template.split(".")[0] === "tools") {
+                App.renderTools(options, render);
             }
         } else {
             App.loadView(options, frag => {
@@ -47,8 +44,7 @@ export default {
                 const el = $(document.body).append(template(options)).find("> .modal").last();
                 const css = {};
                 if (options.width) {
-                    css["width"] = typeof css.width === "number"
-                        ? `${options.width}%` : options.width;
+                    css["width"] = typeof css.width === "number" ? `${options.width}%` : options.width;
                     const width = css.width.substring(0, css.width.length - 1);
                     css["margin-left"] = `${(100 - width) / 2}%`;
                 }

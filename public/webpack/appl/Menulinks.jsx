@@ -17,7 +17,13 @@ const SideBar = () => (
                 <Link to="/"><i className="fa fa-fw fa-home"></i> Home</Link>
             </li>
             <li className="nav-item" >
-                <Link to={{ pathname: "/pdf/test" }}><i className="fa fa-fw fa-file-pdf-o"></i> PDF View</Link>
+                <Link to={{ pathname: "/pdf/test" }}><i className="far fa-fw fa-file-pdf"></i> PDF View</Link>
+            </li>
+             {/* 
+                Added in for testing: font-awesome5 pollutes the url
+            */}
+            <li className="hidden" >
+                <Link to={{ pathname: "/pdf/test" }}><i className="pdf-click"></i></Link>
             </li>
             <li className="nav-header nav-item">Statistics</li>
             <li className="nav-item">
@@ -25,7 +31,7 @@ const SideBar = () => (
             </li>
             <li className="nav-header nav-item">React</li>
             <li className="nav-item">
-                <Link to="/welcome"><i className="fa fa-fw fa-hand-paper-o"></i> React Welcome</Link>
+                <Link to="/welcome"><i className="far fa-fw fa-hand-paper"></i> React Welcome</Link>
             </li>
         </ul>
         <div className="content">

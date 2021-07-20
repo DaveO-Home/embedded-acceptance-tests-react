@@ -1,3 +1,5 @@
+const { config } = require("rxjs");
+
 var bundler = "brunch";
 var startupHtml = bundler + "/appl/testapp_karma.html";
 // Karma configuration
@@ -24,7 +26,7 @@ module.exports = {
         "/app_bootstrap.html": "/base/" + bundler + "/appl/app_bootstrap.html",
         "/README.md": "/base/README.md",
         "brunch/appl/": "/base/" + bundler + "/appl/",
-        "/assets/": "/base/" + bundler + "/appl/assets/",
+        "/appl/assets/": "/base/" + bundler + "/appl/assets/",
         "/dodex/": "/base/" + bundler + "/appl/dodex/",
         "/appl/dodex/": "/base/" + bundler + "/appl/dodex/",
         "/images/": "/base/" + bundler + "/images/"
@@ -47,7 +49,6 @@ module.exports = {
         { pattern: "dist_test/" + bundler + "/acceptance.js", included: false, watched: true, served: true },
         { pattern: "dist_test/" + bundler + "/*.css", included: false, watched: false },
         { pattern: "dist_test/" + bundler + "/*.map", included: false, watched: false },
-        { pattern: "dist_test/" + "/fonts/*.*", included: false, watched: false },
         { pattern: bundler + "/images/*", included: false, watched: false },
         // Jasmine/Loader tests and starts Karma
         bundler + "/build/karma.bootstrap.js"
@@ -82,7 +83,7 @@ module.exports = {
     port: 9876,
     colors: true,
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: "WARN",
+    logLevel: "ERROR",
     autoWatch: true,
     // Continuous Integration mode
     singleRun: true,

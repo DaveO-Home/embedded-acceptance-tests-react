@@ -29,7 +29,7 @@ if (browsers) {
 }
 
 /**
- * Default: Production Acceptance Tests 
+ * Default: Production Acceptance Tests
  */
 const pat = (done) => {
     if (!browsers) {
@@ -188,7 +188,7 @@ const setNoftl = function (cb) {
     cb();
 };
 /*
- * Build the application to run node express so font-awesome is resolved
+ * Build the application
  */
 const fuseboxRebuild = function (cb) {
     process.argv[2] = "";
@@ -271,12 +271,12 @@ const tddo = function (done) {
 };
 
 const finished = (done) => { done(); return process.exit(0); };
-const runProd = series(testBuild, pat, parallel(esLint, cssLint, bootLint), build, finished);
+const runProd = series(testBuild, pat, parallel(esLint, cssLint /* , bootLint*/), build, finished);
 runProd.displayName = "prod";
 
 task(runProd);
-exports.default = runProd;
-exports.prd = series(parallel(esLint, cssLint, bootLint), build, finished);
+task("default", runProd);
+exports.prd = series(parallel(esLint, cssLint /* , bootLint*/), build, finished);
 exports.preview = preview;
 exports.test = series(testBuild, pat, finished);
 exports.tdd = fuseboxTdd;
@@ -286,7 +286,7 @@ exports.copy = copy;
 exports.acceptance = fuseboxAcceptance;
 exports.e2e = fuseboxAcceptance;
 exports.development = series(setNoftl, parallel(fuseboxHmr, fuseboxTddWait));
-exports.lint = series(parallel(esLint, cssLint, bootLint), finished);
+exports.lint = series(parallel(esLint, cssLint /* , bootLint*/), finished);
 exports.opera = tddo;
 
 function fuseboxConfig(mode, props) {
@@ -325,7 +325,9 @@ function fuseboxConfig(mode, props) {
             publicPath: "../",
             template: isProduction ? path.join(__dirname, "../../fusebox/appl/testapp.html") : path.join(__dirname, "../../fusebox/appl/testapp_dev.html")
         },
-        watch: props.isWatch && !isProduction,
+        watcher: props.isWatch && !isProduction ? {
+            root: path.join(__dirname, "../appl")
+        }: false,
         hmr: props.isHmr && !isProduction,
         devServer: defaultServer ? devServe : false,
         logging: { level: "succinct" },

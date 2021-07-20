@@ -11,7 +11,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import StartC, { getStartComp } from "../components/StartC";
 import { getPdfComp } from "../components/PdfC";
-import ToolsC, { getToolsComp } from "../components/ToolsC";
+import ToolsC, { /* getToolsComp */ } from "../components/ToolsC";
 import Login from "../components/LoginC";
 import Menulinks, { Dodexlink } from "../Menulinks";
 import { timer } from "rxjs";
@@ -89,8 +89,8 @@ export default function (App) {
                 });
         });
 
-        routerTest("table", ReactDOM, null, getToolsComp);
-        routerTest("pdf", ReactDOM, getPdfComp);
+        routerTest("table", timer);
+        routerTest("pdf", timer);
 
         // Executing here makes sure the tests are run in sequence.
         // Spec to test if page data changes on select change event.

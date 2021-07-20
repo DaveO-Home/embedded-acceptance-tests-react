@@ -9,23 +9,23 @@ let me;
 export default App.controllers.Start ||
     (App.controllers.Start = Object.assign({
         name: "start",
-        init () {
+        init() {
             me = this;
             this.setLocation();
             Base.init();
         },
-        initMenu () {
+        initMenu() {
             me = this;
             this.setLocation();
             Menu.activate("#top-nav div ul li");
             Menu.activate("#side-nav nav ul li");
         },
-        setLocation () {
+        setLocation() {
             const hash = window.location.hash;
             this.location = hash === "#/contact" ? this.location : hash;
         },
         location: "#/",
-        index (options) {
+        index(options) {
             const indexUrl = "views/prod/index.html";
 
             const markdownUrl = "../../README.md";
@@ -36,11 +36,11 @@ export default App.controllers.Start ||
                 controller: "Start",
                 selector: "#main_container",
                 react: true,
-                fnLoad (el) {
+                fnLoad(el) { //
                 }
             });
         },
-        getHtml () {
+        getHtml() {
             return this.html;
         },
         "div .login click": function (sender, e) {
@@ -50,8 +50,8 @@ export default App.controllers.Start ||
                 title: "Account Log In",
                 submit: "Login",
                 submitCss: "submit-login",
-                widthClass: "modal-lg",
-                width: "30%",
+                widthClass: "modal-md",
+                width: "50%",
                 foot: me.footer,
                 close: "Close",
                 contactFooter: me.contactFooter
@@ -64,7 +64,7 @@ export default App.controllers.Start ||
         "div .modal-footer .contact click": function (sender, e) {
             $(sender.target).closest(".modal").modal("hide");
         },
-        contact (ev) {
+        contact(ev) {
             this.view({
                 url: "views/prod/contact.html",
                 selector: window.rmain_container || "#main_container",
@@ -72,7 +72,7 @@ export default App.controllers.Start ||
                 contactListener: me.contactListener
             });
         },
-        contactListener (el, me) {
+        contactListener(el, me) {
             const form = $("form", el);
 
             const formFunction = e => {
@@ -84,7 +84,7 @@ export default App.controllers.Start ||
                 const validateForm = isValid => {
                     const inputs = Array.prototype.slice.call(document.querySelectorAll("form input"));
                     inputs.push(document.querySelector("form textarea"));
-                    for (let i = 0; i < inputs.length; i++) {
+                    for (let i in inputs) {
                         isValid = !inputs[i].checkValidity() ? false : isValid;
                         inputs[i].setCustomValidity("");
                         if (inputs[i].validity.valueMissing && !isValid) {
@@ -121,29 +121,29 @@ export default App.controllers.Start ||
             form.find("input[type=submit]", el).on("click", formFunction);
         },
         footer: "<button class=\"btn btn-sm btn-primary submit-modal mr-auto raised submit-login\">{{submit}}</button>" +
-                     "<button class=\"btn btn-sm close-modal raised\" data-dismiss=\"modal\" aria-hidden=\"true\">{{close}}</button>",
+            "<button class=\"btn btn-sm close-modal raised\" data-bs-dismiss=\"modal\" aria-hidden=\"true\">{{close}}</button>",
         contactFooter: "<div class=\"modal-footer\">" +
-                            "<div class=\"mr-auto contact\" >" +
-                                "<a href=\"#/contact\" ><small class=\"grey\">Contact</small></a>" +
-                            "</div>" +
-                            "</div>",
+            "<div class=\"mr-auto contact\" >" +
+            "<a href=\"#/contact\" ><small class=\"grey\">Contact</small></a>" +
+            "</div>" +
+            "</div>",
         alert: "<div class=\"alert alert-info alert-dismissible fade show\" role=\"alert\">" +
-                    "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times</span></button>" +
-                    "<strong>Thank You!</strong> Your request is being processed." +
-                    "</div>",
-        showAlert (me) {
+            "<button type=\"button\" class=\"close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times</span></button>" +
+            "<strong>Thank You!</strong> Your request is being processed." +
+            "</div>",
+        showAlert(me) {
             $("form.form-horizontal").append(me.alert);
         },
-        finish (options) {
+        finish(options) {
             // const marked = require('../utils/marked')
             me = this;
             const mdFunction = data => {
                 me.html = `${App.html} ${Marked(data)}`;
             };
             $.get(options.urlMd, mdFunction, "text")
-            .fail(err => {
-                console.warn("IT FAILED", err);
-            });
+                .fail(err => {
+                    console.warn("IT FAILED", err);
+                });
         },
         html: ""
     }, Base));

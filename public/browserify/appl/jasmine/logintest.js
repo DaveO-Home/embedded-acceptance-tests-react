@@ -14,10 +14,10 @@ export default function (Start, Helpers, ReactDOM, React, StartC, timer) {
                 document.querySelector("#main_container"),
                 function () {
                     loginObject = $("div .login");
-                    loginObject.click(function (ev) {
+                    loginObject.on("click", ev => {
                         Start["div .login click"](ev);
                     });
-                    loginObject.click();
+                    loginObject.trigger("click");
                 }
             );
 
@@ -45,7 +45,11 @@ export default function (Start, Helpers, ReactDOM, React, StartC, timer) {
             closeButton = $(".close-modal");
             done();
         });
-
+        /*
+            This spec works because here bootstrap5 detected jQuery so using pre bootstrap 5 jQuery fn's.
+            See the webpack config (base.control.js) for new bootstrap 5 setup. In bootstap 5 mode
+            these tests fail because of the async design of bootstrap 5.
+        */
         it("Login form - verify cancel and removed from DOM", function (done) {
             expect(modal[0]).toExist();
             closeButton.click();

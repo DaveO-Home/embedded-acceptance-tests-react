@@ -47,8 +47,7 @@ export default {
                 const el = $(document.body).append(template(options)).find("> .modal").last();
                 const css = {};
                 if (options.width) {
-                    css["width"] = typeof css.width === "number"
-                        ? `${options.width}%` : options.width;
+                    css["width"] = typeof css.width === "number" ? `${options.width}%` : options.width;
                     const width = css.width.substring(0, css.width.length - 1);
                     css["margin-left"] = `${(100 - width) / 2}%`;
                 }

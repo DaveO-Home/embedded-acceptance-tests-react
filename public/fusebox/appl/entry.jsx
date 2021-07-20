@@ -4,10 +4,16 @@ import Menulinks, { Dodexlink } from "./Menulinks";
 import dodex from "dodex";
 import input from "dodex-input";
 import mess from "dodex-mess";
+
 if (typeof testit === "undefined" || !testit) {
   ReactDOM.render(
     <Menulinks />,
     document.getElementById("root")
+  );
+
+  ReactDOM.render(
+    <Menulinks />,
+    document.getElementById("root-collapse")
   );
 
   ReactDOM.render(

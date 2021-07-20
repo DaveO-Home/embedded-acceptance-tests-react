@@ -93,8 +93,8 @@ export default function (App) {
             });
         });
 
-        routerTest("table");
-        routerTest("pdf");
+        routerTest("table", timer);
+        routerTest("pdf", timer);
 
         // Executing here makes sure the tests are run in sequence.
         // Spec to test if page data changes on select change event.

@@ -5,14 +5,15 @@ import "bootstrap";
 
 /* develblock:start */
 // Specs can be inserted at initialization(before karma is started).
+import { createPopper } from "@popperjs/core";
 if (typeof testit !== "undefined" && testit) {
-    describe("Popper Defined - required for Bootstrap", () => {
+    describe("Popper defined for bootstrap/tooltip", () => {
         it("is JQuery defined", () => {
             expect(typeof $ === "function").toBe(true);
         });
 
         it("is Popper defined", () => {
-            expect(typeof Popper === "function").toBe(true);
+            expect(typeof createPopper === "function").toBe(true);
         });
     });
 }
@@ -20,7 +21,7 @@ if (typeof testit !== "undefined" && testit) {
 
 export default {
     controllers: [],
-    init (options) {
+    init(options) {
         options = options || {};
         this.initPage(options);
 
@@ -35,23 +36,23 @@ export default {
             });
         };
     },
-    initPage () {
-        $("[data-toggle=collapse]").click(function (e) {
+    initPage() {
+        $("[data-toggle=collapse]").on("click", (e) => {
             // Don't change the hash
             e.preventDefault();
             $(this).find("i").toggleClass("fa-chevron-right fa-chevron-down");
         });
     },
-    toUrl (url) {
+    toUrl(url) {
         return url;
     },
-    toScriptsUrl (url) {
+    toScriptsUrl(url) {
         return url;
     },
-    toViewsUrl (url) {
+    toViewsUrl(url) {
         return url;
     },
-    loadController (controllerName, controller, fnLoad, fnError) {
+    loadController(controllerName, controller, fnLoad, fnError) {
         const me = this;
 
         if (this.controllers[controllerName]) {
@@ -75,7 +76,7 @@ export default {
             }
         }
     },
-    loadView (options, fnLoad) {
+    loadView(options, fnLoad) {
         if (options && fnLoad) {
             const resolvedUrl = this.toViewsUrl(options.url);
             const currentController = this.controllers[capitalize(options.controller)];
@@ -99,7 +100,7 @@ export default {
         }
     },
     /* eslint no-unused-vars: ["error", { "args": "none" }] */
-    renderTools (options, render) {
+    renderTools(options, render) {
         const currentController = this.controllers[capitalize(options.controller)];
         let template;
         const jsonUrl = "templates/tools_ful.json";
@@ -132,7 +133,7 @@ export default {
                     }, "json").fail((data, err) => {
                         console.error(`Error fetching fixture data: ${err}`);
                     });
-                    function getValue (item, keys, values) {
+                    function getValue(item, keys, values) {
                         for (let idx = 0; idx < keys.length; idx++) {
                             if (keys[idx] === item) return values[idx];
                         }
@@ -148,7 +149,7 @@ export default {
                 console.warn(data);
             });
     },
-    getValue (item, keys, values) {
+    getValue(item, keys, values) {
         for (let idx = 0; idx < keys.length; idx++) {
             if (keys[idx] === item) return values[idx];
         }

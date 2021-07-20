@@ -5,7 +5,7 @@ class Login extends React.Component {
   render() {
     return (
       <small>
-        <a href="#" className="login" onClick={handleClick}>Log in</a>
+        <a href="#" className="login" onClick={handleClick}>Log In</a>
       </small>
     );
   }

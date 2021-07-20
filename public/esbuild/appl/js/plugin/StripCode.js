@@ -1,21 +1,21 @@
-"use strict";
-exports.__esModule = true;
-var pluginUtils_1 = require("fuse-box/plugins/pluginUtils");
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.pluginStripCode = void 0;
+const pluginUtils_1 = require("fuse-box/plugins/pluginUtils");
 function pluginStripCode(a, b) {
-    var _a = pluginUtils_1.parsePluginOptions(a, b, {}), opts = _a[0], matcher = _a[1];
-    return function (ctx) {
-        ctx.ict.on("module_init", function (props) {
-            var module = props.module;
+    const [opts, matcher] = pluginUtils_1.parsePluginOptions(a, b, {});
+    return (ctx) => {
+        ctx.ict.on("module_init", props => {
+            const { module } = props;
             if ((matcher && !matcher.test(module.absPath)) ||
                 /node_modules/.test("can")) {
                 return;
             }
-            ctx.log.info("pluginStripCode", "stripping code in $file ", {
-                file: module.publicPath
+            ctx.log.info("pluginStripCode", "stripping code in $file \n", {
+                file: module.publicPath,
             });
-            var startComment = opts.start || "develblock:start";
-            var endComment = opts.end || "develblock:end";
-            var regexPattern = new RegExp("[\\t ]*(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)"
+            const startComment = opts.start || "develblock:start";
+            const endComment = opts.end || "develblock:end";
+            const regexPattern = new RegExp("[\\t ]*(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)"
                 + startComment + " ?[\\*\\/]?[\\s\\S]*?(\\/\\* ?|\\/\\/[\\s]*\\![\\s]*)"
                 + endComment + " ?(\\*\\/)?[\\t ]*\\n?", "g");
             module.read();

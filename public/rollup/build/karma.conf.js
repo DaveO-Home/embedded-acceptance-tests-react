@@ -33,7 +33,6 @@ module.exports = function (config) {
             // 'node_modules/promise-polyfill/promise.js',
             {pattern: bundler + "/appl/**/*.*", included: false, watched: false},
             {pattern: "node_modules/bootstrap/package.json", watched: false, included: false},
-            // {pattern: 'node_modules/font-awesome/**/*', watched: false, included: false},
             {pattern: "node_modules/bootstrap/dist/css/bootstrap.css", included: false, watched: false},
             {pattern: "node_modules/tablesorter/dist/css/theme.blue.min.css", included: false, watched: false},
             {pattern: "node_modules/dodex/dist/dodex.min.css", included: false, watched: false},
@@ -43,7 +42,6 @@ module.exports = function (config) {
             // Looking for changes to the client bundle
             {pattern: "dist_test/" + bundler + "/bundle.js", included: false, watched: true, served: true},
             {pattern: bundler + "/images/*", included: false, watched: false},
-            {pattern: "dist_test/node_modules/font-awesome/**/*", included: false, watched: false},
             // Jasmine/Loader tests and starts Karma
             bundler + "/build/karma.bootstrap.js"
         ],

@@ -205,11 +205,11 @@ export default function (dodex, input, mess, content, Start, timer) {
                 if ((typeof modal[0] !== "undefined" && modal[0].length !== 0) || timer === 100) {
                     nameObject = document.querySelector("#inputUsername");
                     modal.on("shown.bs.modal", function (/* html */) {
-                        modal.modal("toggle");
+                        $("#openLogin").trigger("click");
                     });
                     expect(modal[0]).toHaveClass("modal");
                     expect(nameObject).toHaveClass("form-control");
-                    modal.modal("hide");
+                    $("#openLogin").trigger("click");
                     observable.unsubscribe();
                     done();
                 }

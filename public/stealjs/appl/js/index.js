@@ -1,6 +1,6 @@
 import "~/stealjs/appl/css/css.js";
 import "config";
-import popper from "popper.js";
+// import popper from "popper.js";
 import App from "app";
 import Default from "default";
 import Setup from "setup";
@@ -9,7 +9,7 @@ import JSONEditor from "jsoneditor";
 //!steal-remove-start
 import apptest from "apptest";
 //!steal-remove-end
-window.Popper = popper;
+// window.Popper = popper;
 import "entry";
 
 window.JSONEditor = JSONEditor;
