@@ -1,12 +1,11 @@
 
 const path = require("path");
-const  { merge } = require("webpack-merge");
+const { merge } = require("webpack-merge");
 const utils = require("./utils");
 const config = require("../config");
 const webpack = require("webpack");
 const baseWebpackConfig = require("./webpack.base.conf");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 // const packageDep = require("../../package.json");
 // const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0]);
 const isWatch = process.env.USE_WATCH === "true";
@@ -28,75 +27,91 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
     // these devServer options should be customized in /config/index.js
     devServer: {
-        clientLogLevel: "warning",
         historyApiFallback: {
             rewrites: [
                 { from: /.*/, to: path.join(config.dev.assetsPublicPath, "index.html") }
             ]
         },
-        hot: true,
-        contentBase: false, // since we use CopyWebpackPlugin.
-        compress: true,
+        compress: false, // true,
         host: HOST || config.dev.host,
         port: PORT || config.dev.port,
         open: config.dev.autoOpenBrowser,
-        overlay: config.dev.errorOverlay
-            ? { warnings: false, errors: true }
-            : false,
-        publicPath: config.dev.assetsPublicPath,
+        devMiddleware: {
+            index: true,
+            // mimeTypes: { "text/plain": ["md"] },
+            publicPath: config.dev.assetsPublicPath,
+            serverSideRender: false,
+            // writeToDisk: true,
+        },
+        client: {
+            logging: "info",
+            overlay: {
+                errors: true,
+                warnings: false,
+            },
+            // overlay: true,
+            progress: true,
+        },
+        static: {
+            // directory: path.resolve(__dirname, "static"),
+            staticOptions: {},
+            publicPath: ["/dist_test/"],
+            // serveIndex: true,
+            // watch: {} (options for the `watch` option you can find https://github.com/paulmillr/chokidar)
+            watch: true,
+        },
+        allowedHosts: "all",
         proxy: config.dev.proxyTable,
-        quiet: true, // necessary for FriendlyErrorsPlugin
-        watchOptions: {
-            poll: config.dev.poll
-        }
     },
     plugins: [
         new webpack.DefinePlugin({
             "process.env": require("../config/dev.env")
         }),
-        new FriendlyErrorsWebpackPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
         }),
         // // copy custom static assets
-        new CopyWebpackPlugin({ patterns: [
-            {
-                from: path.resolve(__dirname, "../static"),
-                globOptions: {
-                    dot: true,
-                    ignore: [".*"],
-                  },
-                to: config.dev.assetsSubDirectory,
-            },
-            { from: "./images/**/*", to: "" },
-            { from: "./appl/testapp_dev.html", to: config.dev.assetsSubDirectory },
-            { from: "./appl/index.html", to: config.dev.assetsSubDirectory },
-            { from: "../README.md", to: "../" },
-            {
-                from: "./appl/views/**/*",
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: path.resolve(__dirname, "../static"),
+                    globOptions: {
+                        dot: true,
+                        ignore: [".*"],
+                    },
+                    to: config.dev.assetsSubDirectory,
+                },
+                { from: "./images/**/*", to: "" },
+                { from: "./appl/testapp_dev.html", to: config.dev.assetsSubDirectory },
+                { from: "./appl/index.html", to: config.dev.assetsSubDirectory },
+                { from: "../README.md", to: "../" },
+                { from: "../README.md", to: "./" },
+                {
+                    from: "./appl/views/**/*",
                     globOptions: {
                         dot: false,
-                      },
-                to: ""
-            },
-            {
-                from: "./appl/templates/**/*",
+                    },
+                    to: ""
+                },
+                {
+                    from: "./appl/templates/**/*",
                     globOptions: {
                         dot: false,
-                      },
-                to: ""
-            },
-            {
-                from: "./appl/dodex/**/*",
-                globOptions: {
-                    dot: false,
-                  },
-                to: ""
-            },
-            { from: "./appl/assets/*.*", to: "" }
-        ]}),
+                    },
+                    to: ""
+                },
+                {
+                    from: "./appl/dodex/**/*",
+                    globOptions: {
+                        dot: false,
+                    },
+                    to: ""
+                },
+                { from: "./appl/assets/*.*", to: "" }
+            ]
+        }),
         new webpack.ProgressPlugin()
     ],
     watch: isWatch,
@@ -106,30 +121,3 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 });
 
 module.exports = devWebpackConfig;
-
-// module.exports = new Promise((resolve, reject) => {
-//  portfinder.basePort = process.env.PORT || config.dev.port
-//  portfinder.getPort((err, port) => {
-//    if (err) {
-//      reject(err)
-//    } else {
-//      // publish the new Port, necessary for e2e tests
-//      process.env.PORT = port
-//      // add port to devServer config
-//      devWebpackConfig.devServer.port = port
-//
-//      // Add FriendlyErrorsPlugin
-//      devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
-//        compilationSuccessInfo: {
-//          messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
-//        },
-//        onErrors: config.dev.notifyOnErrors
-//        ? utils.createNotifierCallback()
-//        : undefined
-//      }))
-//
-//      resolve(devWebpackConfig)
-//    }
-//  })
-// })
-

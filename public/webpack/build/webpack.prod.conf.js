@@ -8,7 +8,6 @@ const TerserPlugin = require("terser-webpack-plugin");
 const baseWebpackConfig = require("./webpack.base.conf");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 // const packageDep = require("../../package.json");
 // const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0]);
 
@@ -39,7 +38,6 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       "process.env": env
     }),
-    new FriendlyErrorsWebpackPlugin(),
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
@@ -76,6 +74,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         { from: "./appl/testapp_dev.html", to: config.dev.assetsSubDirectory },
         { from: "./appl/index.html", to: config.dev.assetsSubDirectory },
         { from: "../README.md", to: "../" },
+        { from: "../README.md", to: "./" },
         {
           from: "./appl/views/**/*",
           globOptions: {

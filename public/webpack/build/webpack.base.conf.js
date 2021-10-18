@@ -29,7 +29,7 @@ module.exports = {
     },
     output: {
         path: config.build.assetsRoot,
-        filename: "[name].js",
+        filename: process.env.NODE_ENV === "development"? "main.js": "[name].js",
         chunkFilename: "app[name]-[chunkhash].js",
         publicPath: process.env.NODE_ENV === "production"
             ? config.build.assetsPublicPath
@@ -88,7 +88,7 @@ module.exports = {
                     test: /.css$/,
                     use: [
                         { loader: "style-loader" },
-                        { loader: "css-loader" }
+                        { loader: "css-loader?sourceMap" }
                     ]
                 } :
                 {
@@ -98,9 +98,9 @@ module.exports = {
                         {
                             loader: "css-loader",
                         },
-                        {
-                            loader: "resolve-url-loader"
-                        },
+                        // {
+                        //     loader: "resolve-url-loader"
+                        // },
                         {
                             loader: "sass-loader"
                         }
@@ -150,7 +150,7 @@ module.exports = {
 module.exports.plugins = (module.exports.plugins || []).concat([
     new MiniCssExtractPlugin({
         filename: process.env.NODE_ENV === "development" 
-            ? "[name].css" : "[name].[contenthash].css",
+            ? "main.css" : "[name].[contenthash].css",
         chunkFilename: process.env.NODE_ENV === "development" 
             ? "[name].[id].css" : "[name].[id].[contenthash].css"
 })]);
@@ -167,18 +167,3 @@ function setJsonLoader(version) {
 
     return rules;
 }
-
-// function setSideEffects(version) {
-//     if (version >= 4) {
-//         module.exports.module.rules.push(
-//             {
-//                 include: /node_modules/,
-//                 sideEffects: true
-//             });
-//         module.exports.module.rules.push(
-//             {
-//                 include: /appl\/css/,
-//                 sideEffects: true
-//             });
-//     }
-// }

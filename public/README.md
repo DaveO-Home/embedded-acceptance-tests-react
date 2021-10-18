@@ -241,9 +241,9 @@ __Also Note__; With a few of the bundle tools, execute the `gulp development` ta
 * `cd public/brunch/build`
 * `gulp watch` or `./cook watch` (output formatted better)
 
-At this point you can start a browser and enter `localhost:3080/appl/testapp_dev.html`. Any changes to the source code(*.js files and other assets such as *.html) should be reflected in the browser auto reload.
+At this point you can start a browser and enter `localhost:3080/appl/testapp_dev.htm`. Any changes to the source code(*.js files and other assets such as *.html) should be reflected in the browser auto reload.
 
-__Note__; The test url is `localhost:3080` since Brunch by default uses 'config.paths.public' as the server context. Also, the reload may fail at times, I've noticed that making a second code mod re-rights the ship.
+__Note__; The test url is `localhost:3080` since Brunch by default uses 'config.paths.public' as the server context. Also, the reload module has been upgraded to v3, notice that the test file is `testapp.dev.htm` not `...html` for the new reload(watch).
 
 2\. ***Test Driven Development(tdd) Window*** -
 

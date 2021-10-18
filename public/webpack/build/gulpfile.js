@@ -19,7 +19,7 @@ const webpackStream = require("webpack-stream");
 const WebpackDevServer = require("webpack-dev-server");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-const PORT = process.env.PORT && Number(process.env.PORT);
+const PORT = process.env.PORT && Number(process.env.PORT) || "3080";
 const pack = require("../../package.json");
 const webpackVersion = Number(/\d/.exec(pack.devDependencies.webpack)[0]);
 
@@ -278,19 +278,6 @@ const webpack_server = function (cb) {
         USE_HMR: "true"
     });
 
-    const options = {
-        contentBase: "../../",
-        hot: true,
-        host: "localhost",
-        publicPath: config.dev.assetsPublicPath,
-        stats: { colors: true },
-        watchOptions: {
-            ignored: /node_modules/,
-            poll: config.dev.poll
-        },
-        quiet: false
-    };
-
     webpackConfig = require("./webpack.dev.conf.js");
     webpackConfig.devtool = "eval";
     webpackConfig.output.path = path.resolve(config.dev.assetsRoot);
@@ -302,52 +289,14 @@ const webpack_server = function (cb) {
         inject: true
     }));
 
-    // if (!isProduction && useHot) {
-    //     module.exports.plugins = (module.exports.plugins || []).concat([
-    //         new webpack.NamedModulesPlugin(),
-    //         new webpack.HotModuleReplacementPlugin()
-    //     ]);
-    // if (webpackVersion < 4) {
-    //     // module.exports.plugins = (module.exports.plugins || []).concat([
-    //         webpackConfig.plugins.push(new ReloadPlugin())
-    //     // ]);
-    // }
-    // }
-
-    WebpackDevServer.addDevServerEntrypoints(webpackConfig, options);
-
-    // This seems to be not working?
-    //    portfinder.basePort = process.env.PORT || config.dev.port;
-    //    portfinder.getPort((err, port) => {
-    //      if (err) {
-    //        reject(err);
-    //      } else {
-    //        // publish the new Port, necessary for e2e tests
-    //        process.env.PORT = port;
-    //        // add port to devServer config
-    //        webpackConfig.devServer.port = port;
-    //        // Add FriendlyErrorsPlugin
-    //        webpackConfig.plugins.push(new FriendlyErrorsPlugin({
-    //          compilationSuccessInfo: {
-    //            messages: [`Your application is running here: http://${webpackConfig.devServer.host}:${port}`]
-    //          },
-    //          onErrors: config.dev.notifyOnErrors
-    //            ? utils.createNotifierCallback()
-    //            : undefined
-    //        }));
-    //      }
-    //    });
-
+    webpackConfig.entry = getEntry();
     const compiler = webpack(webpackConfig);
-    const server = new WebpackDevServer(compiler, options);
-
-    server.listen(PORT || config.dev.port, webpackConfig.devServer.host, function (err) {
-        log("[webpack-server]", `http://${webpackConfig.devServer.host}:${PORT || config.dev.port}/webpack/appl/testapp_dev.html`);
-        if (err) {
-            log(err);
-        }
+    const devServerOptions = { ...webpackConfig.devServer, open: false};
+    const server = new WebpackDevServer(devServerOptions, compiler);
+    server.startCallback(() => {
+        log(chalk.blue(`\nSuccessfully started server on http://localhost:${PORT}`));
         cb();
-    });
+      });
 };
 
 const lintRun = parallel(esLint, cssLint /* , bootLint */);
@@ -472,3 +421,13 @@ function takeSnapShot(snapshot) {
     snap(url, puppeteer, snapshot);
 }
 
+function getEntry() {
+    return [
+        // Runtime code for hot module replacement
+        "webpack/hot/dev-server.js",
+        // Dev server client for web socket transport, hot and live reload logic
+        "webpack-dev-server/client/index.js?hot=true&live-reload=true",
+        // Your entry
+        "/appl/main",
+    ];
+}
