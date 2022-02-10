@@ -136,7 +136,7 @@
     "karma-opera-launcher": "^1.0.0",
     "karma-webpack": "^5.0.0",
     "mini-css-extract-plugin": "^2.4.2",
-    "node-sass": "^6.0.1",
+    "node-sass": "^7.0.0",
     "parcel": "^2.0.0",
     "parcel-transformer-strip": "file:parcel/appl/js/parcel-transformer-strip",
     "path": "^0.12.7",
