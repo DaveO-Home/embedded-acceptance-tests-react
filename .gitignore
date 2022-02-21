@@ -1,5 +1,6 @@
-deploy
 .metals
+log
+*sqlite3*
 .cache
 .parcel-*
 .DS_Store

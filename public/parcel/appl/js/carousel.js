@@ -46,7 +46,8 @@ export default function () {
 		var toRotate = elements[i].getAttribute("data-rotate");
 		var period = elements[i].getAttribute("data-period");
 		if (toRotate) {
-			new TxtRotate(elements[i], JSON.parse(toRotate), period);
+			toRotate = ["Acceptance Testing with a React App"];
+			new TxtRotate(elements[i], JSON.parse(JSON.stringify(toRotate)), period);
 		}
 	}
 	// INJECT CSS

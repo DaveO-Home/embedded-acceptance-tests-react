@@ -77,7 +77,7 @@ The basic idea is to build a production application ensuring consistent and stab
 
   To install all required dependencies. If trying Brunch, install the global package for Brunch, `npm install brunch -g`.
 
-  __Note;__ The install will produce a few vulnerabilities, run `npm audit fix` to remove some of these and then `npm audit` to review the remaining.
+  __Note;__ The install will produce a few vulnerabilities, run `npm audit --omit dev` to see production vulnerabilities. Do not run `audit fix` or `npm update`. These commands may invalidate the `parcel` bundler.
 
 **Client:**
 

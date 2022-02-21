@@ -1,5 +1,12 @@
 # Changelog
 
+## [v2.1.0](https://github.com/DaveO-Home/dodex/tree/v2.1.0) (2022-02-21)
+[Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-react/compare/v2.0.2...v2.1.0)
+
+* Upgraded dependencies
+* Added new koa dev server to allow dodex-mess out of the box.
+* Parcel still stuck at 2.0.0
+
 ## [v2.0.2](https://github.com/DaveO-Home/dodex/tree/v2.0.2) (2021-10-18)
 
 [Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-react/compare/v2.0.1...v2.0.2)

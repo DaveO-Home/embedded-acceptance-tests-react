@@ -6,8 +6,6 @@ const config = require("../config");
 const webpack = require("webpack");
 const baseWebpackConfig = require("./webpack.base.conf");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-// const packageDep = require("../../package.json");
-// const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0]);
 const isWatch = process.env.USE_WATCH === "true";
 const devPublicPath = process.env.PUBLIC_PATH ? process.env.PUBLIC_PATH : "/dist_test/webpack/";
 

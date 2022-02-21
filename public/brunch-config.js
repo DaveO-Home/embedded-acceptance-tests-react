@@ -3,7 +3,10 @@ const isProduction = process.env.NODE_ENV === "production";
 const deployDir = isProduction ? "dist/brunch" : "dist_test/brunch";
 const fontLocation = isProduction ? "../fonts" : process.env.USE_WATCH === "true" ? "fonts" : "../fonts";
 const singleRun = process.env.USE_HMR !== "true" && !process.env.USE_TDD;
-const htmlFile = isProduction ? "brunch/appl/testapp.html" : "brunch/appl/testapp_dev.htm";
+const htmlFiles = [isProduction ? "brunch/appl/testapp.html" : "brunch/appl/testapp_dev.html"];
+if(!isProduction) {
+  htmlFiles.push("brunch/appl/testapp_dev.htm");
+}
 
 function resolve(dir) {
   return path.join(__dirname, "brunch", dir);
@@ -58,7 +61,7 @@ let pluginsObject = {
     "appl/templates": ["brunch/appl/templates"],
     "appl/dodex": ["brunch/appl/dodex"],
     "./": ["README.md"],
-    "appl": [htmlFile],
+    "appl": htmlFiles,
     "images": ["brunch/images"],
     "appl/assets": ["brunch/appl/assets/logo.svg"],
     verbose: false,

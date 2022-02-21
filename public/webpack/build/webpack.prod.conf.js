@@ -8,8 +8,6 @@ const TerserPlugin = require("terser-webpack-plugin");
 const baseWebpackConfig = require("./webpack.base.conf");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-// const packageDep = require("../../package.json");
-// const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0]);
 
 const env = process.env.NODE_ENV === "testing"
   ? require("../config/test.env") : require("../config/prod.env");

@@ -3,24 +3,13 @@ const path = require("path");
 const utils = require("./utils");
 const config = require("../config");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const packageDep = require("../../package.json");
-const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0]);
+const ESLintPlugin = require("eslint-webpack-plugin");
+// const packageDep = require("../../package.json");
+// const version = Number(/\d/.exec(packageDep.devDependencies.webpack)[0]);
 
 function resolve(dir) {
     return path.join(__dirname, "..", dir);
 }
-
-const createLintingRule = () => ({
-    test: /\.(js)$/,
-    loader: "eslint-loader",
-    enforce: "pre",
-    include: [resolve("appl"), resolve("test")],
-    options: {
-        formatter: require("eslint-friendly-formatter"),
-        emitWarning: !config.dev.showEslintErrorsInOverlay
-    },
-    type: "javascript/auto"
-});
 
 module.exports = {
     context: path.resolve(__dirname, "../"),
@@ -29,7 +18,7 @@ module.exports = {
     },
     output: {
         path: config.build.assetsRoot,
-        filename: process.env.NODE_ENV === "development"? "main.js": "[name].js",
+        filename: process.env.NODE_ENV === "development" ? "main.js" : "[name].js",
         chunkFilename: "app[name]-[chunkhash].js",
         publicPath: process.env.NODE_ENV === "production"
             ? config.build.assetsPublicPath
@@ -83,42 +72,31 @@ module.exports = {
     module: {
         rules: [
             ...(config.dev.useEslint ? [createLintingRule()] : []),
-            version < 4 ?
-                {
-                    test: /.css$/,
-                    use: [
-                        { loader: "style-loader" },
-                        { loader: "css-loader?sourceMap" }
-                    ]
-                } :
-                {
-                    test: /\.(css|sass|scss)$/,
-                    use: [
-                        MiniCssExtractPlugin.loader,
-                        {
-                            loader: "css-loader",
-                        },
-                        // {
-                        //     loader: "resolve-url-loader"
-                        // },
-                        {
-                            loader: "sass-loader"
-                        }
-                    ],
-                    type: "javascript/auto"
-                }
-            ,{
+            {
+                test: /\.(css|sass|scss)$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    {
+                        loader: "css-loader",
+                    },
+                    {
+                        loader: "sass-loader"
+                    }
+                ],
+                type: "javascript/auto"
+            }
+            , {
                 test: /\.stache$/,
                 type: "asset/source"
             },
             {
                 test: /\.js|jsx$/,
-                use: [ {
-                        loader: "babel-loader",
-                        options: {
-                            presets: ["@babel/preset-react"]
-                          }
+                use: [{
+                    loader: "babel-loader",
+                    options: {
+                        presets: ["@babel/preset-react"]
                     }
+                }
                 ],
                 include: [resolve("appl"), resolve("test"), resolve("node_modules/webpack-dev-server/client")],
                 type: "javascript/auto"
@@ -138,32 +116,28 @@ module.exports = {
                 },
                 type: "asset"
             },
-            setJsonLoader(version)
         ]
     },
     experiments: {
-        asset: true
+        // asset: true
     },
     node: false,
 };
 
+const eslintOptions = {
+    context: "../appl",
+    extensions: ["js", "jsx"],
+    fix: true
+}
+
 module.exports.plugins = (module.exports.plugins || []).concat([
     new MiniCssExtractPlugin({
-        filename: process.env.NODE_ENV === "development" 
+        filename: process.env.NODE_ENV === "development"
             ? "main.css" : "[name].[contenthash].css",
-        chunkFilename: process.env.NODE_ENV === "development" 
+        chunkFilename: process.env.NODE_ENV === "development"
             ? "[name].[id].css" : "[name].[id].[contenthash].css"
-})]);
+    }),
+    new ESLintPlugin(eslintOptions)
+]);
 
-function setJsonLoader(version) {
-    let rules = {};
 
-    if (version < 4) {
-        rules = {
-            test: /\.json$/,
-            use: "json-loader"
-        };
-    }
-
-    return rules;
-}

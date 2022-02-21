@@ -1,0 +1,16 @@
+#!/usr/bin/bash
+
+build=false
+map="-m build/bundle.js.map"
+if [ -z $1 ]; then
+    build=false
+else
+    build=$1
+    if [ "$build"=="prod" -o "$build"=="true" ]; then
+        compact="--compact"
+        map=
+        build=true
+    fi
+fi
+
+npx rollup -c -o build/bundle.js $map --silent --banner "let fs" --environment BUILD:$build $compact
