@@ -217,7 +217,7 @@ function parcelBuild(watch, cb, serve = false) {
     const port = 3080;
     // Bundler options
     const options = {
-        mode: isProduction? "production": "development",
+        mode: isProduction ? "production" : "development",
         entryRoot: "../appl",
         entries: file,
         shouldDisableCache: !isProduction,
@@ -230,8 +230,8 @@ function parcelBuild(watch, cb, serve = false) {
         defaultConfig: require.resolve("@parcel/config-default"),
         shouldPatchConsole: false,
         additionalReporters: [
-           { packageName: "@parcel/reporter-cli", resolveFrom: __filename },
-           // { packageName: "@parcel/reporter-dev-server", resolveFrom: __filename }
+            { packageName: "@parcel/reporter-cli", resolveFrom: __filename },
+            //    { packageName: "@parcel/reporter-dev-server", resolveFrom: __filename }
         ],
         defaultTargetOptions: {
             shouldOptimize: isProduction,
@@ -239,13 +239,13 @@ function parcelBuild(watch, cb, serve = false) {
             sourceMaps: isProduction,
             publicUrl: "./",
             distDir: "../../" + dist + "/appl",
-            engines: {
-                browsers: ["> 0.2%, not dead, not op_mini all"]
-            }
-          },
+            // engines: {
+            //     browsers: ["> 0.2%, not dead, not op_mini all"]
+            // }
+        },
     };
 
-    return ( async () => {
+    return (async () => {
         const parcel = new Parcel(options);
         if (serve || watch) {
             options.hmrOptions = {
@@ -262,14 +262,14 @@ function parcelBuild(watch, cb, serve = false) {
             });
             cb();
         } else {
-        try {
+            try {
                 await parcel.run(err => {
-                    console.error(err, err.diagnostics[0]? err.diagnostics[0].codeFrame: "");
+                    console.error(err, err.diagnostics[0] ? err.diagnostics[0].codeFrame : "");
                 });
-        } catch(e) { 
-            console.error(e);
-            process.exit(1);	
-        }
+            } catch (e) {
+                console.error(e);
+                process.exit(1);
+            }
             cb();
         }
     })();
@@ -278,7 +278,7 @@ function parcelBuild(watch, cb, serve = false) {
 function copySrc() {
     return src(["../appl/view*/**/*", "../appl/temp*/**/*", "../appl/assets*/**/*", "../appl/dodex*/**/*"])
         .pipe(flatten({ includeParents: -2 })
-        .pipe(dest("../../" + dist + "/appl/")));
+            .pipe(dest("../../" + dist + "/appl/")));
 }
 
 function copyImages() {
@@ -305,15 +305,15 @@ function karmaServer(done, singleRun = false, watch = true) {
         { promiseConfig: true, throwErrors: true },
     ).then(
         (karmaConfig) => {
-            if(!singleRun) {
+            if (!singleRun) {
                 done();
             }
             new Server(karmaConfig, function doneCallback(exitCode) {
                 console.warn("Karma has exited with " + exitCode);
-                if(singleRun) {
+                if (singleRun) {
                     done();
                 }
-                if(exitCode > 0) {
+                if (exitCode > 0) {
                     process.exit(exitCode);
                 }
             }).start();
