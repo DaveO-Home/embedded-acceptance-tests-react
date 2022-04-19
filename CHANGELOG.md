@@ -1,5 +1,12 @@
 # Changelog
 
+## [v2.1.2](https://github.com/DaveO-Home/embedded-acceptance-tests-ng/tree/v2.1.2) (2022-04-19)
+
+[Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-ng/compare/v2.1.1...v2.1.2)
+
+* Upgraded dependencies.
+* Made Dodex compatable with parcel 2.4.1.
+
 ## [v2.1.1](https://github.com/DaveO-Home/dodex/tree/v2.1.1) (2022-02-24)
 [Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-react/compare/v2.1.0...v2.1.1)
 
