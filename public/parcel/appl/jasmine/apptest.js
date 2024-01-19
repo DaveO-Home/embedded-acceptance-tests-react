@@ -7,7 +7,7 @@ import dodexTest from "./dodextest";
 import inputTest from "./inputtest";
 import Start from "../js/controller/start";
 import Helpers from "../js/utils/helpers";
-import React from "react";
+import * as React from "react";
 import ReactDOM from "react-dom";
 import StartC, { getStartComp } from "../components/StartC";
 import { getPdfComp } from "../components/PdfC";

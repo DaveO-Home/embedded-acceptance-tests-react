@@ -1,4 +1,4 @@
-
+import "../../../node_modules/react/jsx-dev-runtime";
 import "./utils/set.globals";
 import "./config";
 

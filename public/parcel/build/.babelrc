@@ -1,5 +1,11 @@
 { 
-  "presets": ["@parcel/babel-preset-env", "@babel/preset-react", [
+  "presets": ["@parcel/babel-preset-env", 
+  [
+      "@babel/preset-react",
+      {
+        "runtime": "automatic"
+      }
+    ], [
     "@babel/preset-env", {
       "targets": {
            "ie": 11,

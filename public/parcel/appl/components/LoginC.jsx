@@ -1,7 +1,7 @@
-import React from "react";
+import { Component } from "react";
 import start from "../js/controller/start";
 
-class Login extends React.Component {
+class Login extends Component {
   render() {
     return (
       <small>

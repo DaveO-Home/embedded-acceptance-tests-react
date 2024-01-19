@@ -1,5 +1,6 @@
 {
   "extends": "@parcel/config-default",
+  // "runtimes": ["react/jsx-dev-runtime", "..."],
   "transformers": {
     "*.js": ["parcel-transformer-strip", "..."]
   }

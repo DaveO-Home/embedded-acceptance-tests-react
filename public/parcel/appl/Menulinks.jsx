@@ -1,4 +1,3 @@
-import React from "react";
 import {/* BrowserRouter as Router, */ Route, Link, HashRouter } from "react-router-dom";
 import ReactDOM from "react-dom";
 import Start from "./components/StartC";
@@ -15,7 +14,7 @@ const SideBar = () => (
             <li className="nav-item">
                 <Link to="/"><i className="fa fa-fw fa-home"></i> Home</Link>
             </li>
-            <li className="nav-item" >
+            <li className="nav-item">
                 <Link to={{ pathname: "/pdf/test" }}><i className="far fa-fw fa-file-pdf"></i> PDF View</Link>
             </li>
             {/* 

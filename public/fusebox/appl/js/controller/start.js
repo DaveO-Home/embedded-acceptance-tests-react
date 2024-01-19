@@ -4,6 +4,7 @@ import App from "../app";
 import Base from "../utils/base.control";
 import Menu from "../utils/menu";
 import { marked } from "marked";
+
 let me;
 
 export default App.controllers.Start ||
@@ -136,8 +137,12 @@ export default App.controllers.Start ||
         },
         finish (options) {
             me = this;
+            const markedOptions = {
+//                "marked-mangle": false, "marked-gfm-heading-id": false
+                mangle: false, headerIds: false
+            };
             const mdFunction = data => {
-                me.html = `${App.html} ${marked.parse(data)}`;
+                me.html = `${App.html} ${marked.parse(data, markedOptions)}`;
             };
             $.get(options.urlMd, mdFunction, "text")
             .fail(err => {

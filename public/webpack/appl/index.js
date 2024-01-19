@@ -2,7 +2,7 @@ import "config";
 import "setglobals";
 import App from "app";
 import Default from "default";
-import Setup from "setup";
+import Setup from "setup"; 
 import "tablepager";
 
 App.init(Default);

@@ -1,6 +1,6 @@
 
-require("dodex/dist/dodex.min.css");
 require("bootstrap/dist/css/bootstrap.min.css");
+require("dodex/dist/dodex.min.css");
 require("../css/site.css");
 require("@fortawesome/fontawesome-free/js/all.js");
 require("@fortawesome/fontawesome-free/js/fontawesome.js");

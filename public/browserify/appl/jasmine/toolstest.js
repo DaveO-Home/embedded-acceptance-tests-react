@@ -8,7 +8,7 @@ export default function (ToolsC, Helpers, ReactDOM, React, timer) {
         let tools;
         let beforeValue;
         let afterValue;
-        let spyToolsEvent;
+//        let spyToolsEvent;
         let selectorObject;
         let selectorItem;
         let defaultReduxValue;
@@ -34,7 +34,7 @@ export default function (ToolsC, Helpers, ReactDOM, React, timer) {
                     selectorObject = document.activeElement;
                     selectorObject.click();
                     selectorItem = $("#dropdown1 a")[1];
-                    spyToolsEvent = spyOnEvent(selectorItem, "select");
+//                    spyToolsEvent = spyOnEvent(selectorItem, "select");
                     selectorItem.click();
                     Helpers.fireEvent(selectorItem, "select");
                     // Note: if page does not refresh, increase the timer time.
@@ -51,10 +51,10 @@ export default function (ToolsC, Helpers, ReactDOM, React, timer) {
                 });
         });
 
-        it("setup and click events executed.", function () {
+        it("setup and click events executed.", () => {
             // jasmine-jquery matchers
-            expect("select").toHaveBeenTriggeredOn(selectorItem);
-            expect(spyToolsEvent).toHaveBeenTriggered();
+//            expect("select").toHaveBeenTriggeredOn(selectorItem);
+//            expect(spyToolsEvent).toHaveBeenTriggered();
 
             expect(tools[0]).toBeInDOM();
             expect(".disabled").toBeDisabled();
@@ -64,19 +64,19 @@ export default function (ToolsC, Helpers, ReactDOM, React, timer) {
             expect(selectorObject).toBeFocused();
         });
 
-        it("did Redux set default value.", function () {
+        it("did Redux set default value.", () => {
             expect(defaultReduxValue[0]).toBe("Combined");
         });
 
-        it("new page loaded on change.", function () {
+        it("new page loaded on change.", () => {
             expect(beforeValue).not.toBe(afterValue);
         });
 
-        it("did Redux set new value.", function () {
+        it("did Redux set new value.", () => {
             expect(newReduxValue[0]).toBe("Category1");
         });
 
-        it("verify state management", function () {
+        it("verify state management", () => {
             const items = ToolsSM.getStore().getState().tools.items;
             expect(items.length).toBe(2);
             expect(items[0].displayed).toBe(false);

@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import { Component } from "react";
+import * as React from "react";
 import ReactDOM from "react-dom";
 import Table from "../js/controller/table";
 import Setup from "../js/utils/setup";

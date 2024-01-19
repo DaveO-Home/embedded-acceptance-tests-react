@@ -4,7 +4,6 @@
  */
 const { src, dest, task, series, parallel } = require("gulp");
 const log = require("fancy-log");
-const rmf = require("rimraf");
 const copy = require("gulp-copy");
 const exec = require("child_process").exec;
 const path = require("path");
@@ -22,6 +21,7 @@ const stripCode = require("gulp-strip-code");
 const browserify = require("browserify");
 const removeCode = require("gulp-remove-code");
 const sourcemaps = require("gulp-sourcemaps");
+const rimrafSync = require("rimraf").rimrafSync;
 const browserSync = require("browser-sync").create("devl");
 
 const startComment = "develblock:start",
@@ -138,29 +138,29 @@ const bootLint = function (cb) {
 const clean = function (done) {
     isProduction = true;
     dist = prodDist;
-    return rmf("../../" + prodDist, [], (err) => {
-        if (err) {
-            log(err);
-        }
-        done();
+    rimrafSync("../../${prodDist}/**/*", [], (err) => {
+       if (err) {
+           log(err);
+       }
     });
+    return done()
 };
 /**
  * Remove previous browserify test build
  */
 const cleant = function (done) {
     isProduction = false;
-    rmf("../../" + testDist + "/node_modules", [], (err) => {
-        if (err) {
-            log(err);
-        }
+    rimrafSync("../../${testDist}/node_modules", [], (err) => {
+       if (err) {
+           log(err);
+       }
     });
-    return rmf("../../" + testDist + "/browserify", [], (err) => {
-        if (err) {
-            log(err);
-        }
-        done();
+    rimrafSync("../../${testDist}/browserify", [], (err) => {
+       if (err) {
+           log(err);
+       }
     });
+    return done();
 };
 /**
  * Resources and content copied to dist directory - for production
@@ -346,6 +346,7 @@ function browserifyApp(cb) {
         .pipe(sourcemaps.write("../../" + dist + "/maps", { addComment: !isProduction }));
 
     stream = stream.pipe(dest("../../" + dist));
+
     return stream.on("end", function () {
         if(typeof cb === "function") {
             cb();

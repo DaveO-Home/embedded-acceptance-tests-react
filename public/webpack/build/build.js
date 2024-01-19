@@ -3,20 +3,23 @@ require("./check-versions")();
 
 process.env.NODE_ENV = "production";
 
-const rm = require("rimraf");
 const path = require("path");
 const chalk = require("chalk");
 const webpack = require("webpack");
 const config = require("../config");
+const rimrafSync = require("rimraf").rimrafSync;
 const webpackConfig = require("./webpack.prod.conf");
 const { log } = require("console");
 
 log(chalk.cyan("building for production..."));
 
-rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
-  if (err) throw err;
-  webpack(webpackConfig, (err, stats) => {
+rimrafSync(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), [], (err) => {
     if (err) throw err;
+});
+
+webpack(webpackConfig, (err, stats) => {
+    if (err) throw err;
+
     process.stdout.write(stats.toString({
       colors: true,
       modules: false,
@@ -31,5 +34,5 @@ rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
     }
 
     log(chalk.cyan("  Build complete.\n"));
-  });
 });
+

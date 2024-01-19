@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom";
 import Menulinks, { Dodexlink } from "../Menulinks";
 import dodex from "dodex";

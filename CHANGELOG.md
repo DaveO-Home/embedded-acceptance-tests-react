@@ -1,5 +1,12 @@
 # Changelog
 
+## [v2.2.0](https://github.com/DaveO-Home/embedded-acceptance-tests-ng/tree/v2.2.0) (2024-01-19)
+
+[Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-ng/compare/v2.1.2...v2.2.0)
+
+* Upgraded dependencies.
+* Upgraded React to v17. Too many breaking changes for v18.
+
 ## [v2.1.2](https://github.com/DaveO-Home/embedded-acceptance-tests-ng/tree/v2.1.2) (2022-04-19)
 
 [Full Changelog](https://github.com/DaveO-Home/embedded-acceptance-tests-ng/compare/v2.1.1...v2.1.2)

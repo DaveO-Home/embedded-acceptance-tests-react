@@ -138,7 +138,11 @@ export default App.controllers.Start ||
             // const marked = require('../utils/marked')
             me = this;
             const mdFunction = data => {
-                me.html = `${App.html} ${marked.parse(data)}`;
+                const markedOptions = {
+//                    "marked-mangle": false, "marked-gfm-heading-id": false
+                    mangle: false, headerIds: false
+                };
+                me.html = `${App.html} ${marked.parse(data, markedOptions)}`;
             };
             $.get(options.urlMd, mdFunction, "text")
             .fail(err => {

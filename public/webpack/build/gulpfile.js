@@ -6,7 +6,8 @@
 const { src, dest, series, parallel, task } = require("gulp");
 const env = require("gulp-env");
 const log = require("fancy-log");
-const rmf = require("rimraf");
+const rimrafSync = require("rimraf").rimrafSync;
+// const rmf = require("rimraf");
 const exec = require("child_process").exec;
 const path = require("path");
 const chalk = require("chalk");
@@ -156,12 +157,17 @@ const webpack_rebuild = function (cb) {
         USE_TEST: "true",
         USE_BUILD: "false"
     });
+    rimrafSync("../../dist_test/webpack", [], (err) => {
+           if (err) {
+               log(err);
+           }
+        });
 
-    rmf("../../dist_test/webpack", [], (err) => {
-        if (err) {
-            log(err);
-        }
-    });
+//    rmf("../../dist_test/webpack", [], (err) => {
+//        if (err) {
+//            log(err);
+//        }
+//    });
 
     return src("../appl/main.js")
         .pipe(envs)
@@ -193,11 +199,16 @@ const test_build = function (cb) {
             .pipe(envs);
     }
 
-    rmf("../../dist_test/webpack", [], (err) => {
-        if (err) {
-            log(err);
-        }
-    });
+    rimrafSync("../../dist_test/webpack", [], (err) => {
+           if (err) {
+               log(err);
+           }
+        });
+//    rmf("../../dist_test/webpack", [], (err) => {
+//        if (err) {
+//            log(err);
+//        }
+//    });
 
     return src("../appl/main.js")
         .pipe(envs)
@@ -233,11 +244,16 @@ const webpack_watch = function (cb) {
         USE_HMR: "false",
     });
 
-    rmf("../../dist_test/webpack", [], (err) => {
-        if (err) {
-            log(err);
-        }
-    });
+    rimrafSync("../../dist_test/webpack", [], (err) => {
+           if (err) {
+               log(err);
+           }
+        });
+//    rmf("../../dist_test/webpack", [], (err) => {
+//        if (err) {
+//            log(err);
+//        }
+//    });
     return src("../appl/**/*")
         .pipe(envs)
         .pipe(webpackStream(require("./webpack.dev.conf.js"), webpack))

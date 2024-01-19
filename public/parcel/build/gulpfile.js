@@ -9,7 +9,6 @@ const eslint = require("gulp-eslint");
 const csslint = require("gulp-csslint");
 const exec = require("child_process").exec;
 const copy = require("gulp-copy");
-const del = require("del");
 const log = require("fancy-log");
 const flatten = require("gulp-flatten");
 const chalk = require("chalk");
@@ -105,9 +104,15 @@ const bootLint = function (cb) {
 const clean = function (done) {
     isProduction = true;
     dist = prodDist;
-    return del([
-        "../../" + prodDist + "/**/*"
-    ], { dryRun: false, force: true }, done);
+    return import("del").then(del => {
+        del.deleteSync([
+                 "../../" + prodDist + "/**/*"
+             ], { dryRun: false, force: true });
+        done();
+     });
+//    return del([
+//        "../../" + prodDist + "/**/*"
+//    ], { dryRun: false, force: true }, done);
 };
 
 const cleant = function (done) {
@@ -117,15 +122,27 @@ const cleant = function (done) {
     }
     isProduction = false;
     dist = testDist;
-    return del([
-        "../../" + testDist + "/**/*"
-    ], { dryRun: dryRun, force: true }, done);
+    return import("del").then(del => {
+        del.deleteSync([
+                 "../../" + testDist + "/**/*"
+             ], { dryRun: false, force: true });
+        done();
+     });
+//    return del([
+//        "../../" + testDist + "/**/*"
+//    ], { dryRun: dryRun, force: true }, done);
 };
 
 const delCache = function (cb) {
-    return del([
-        ".cache/**/*"
-    ], { dryRun: false, force: true }, cb);
+    return import("del").then(del => {
+        del.deleteSync([
+                 ".cache/**/*"
+             ], { dryRun: false, force: true });
+        cb();
+     });
+//    return del([
+//        ".cache/**/*"
+//    ], { dryRun: false, force: true }, cb);
 };
 /**
  * Resources and content copied to dist directory - for production
@@ -229,19 +246,22 @@ function parcelBuild(watch, cb, serve = false) {
         detailedReport: isProduction,
         defaultConfig: require.resolve("@parcel/config-default"),
         shouldPatchConsole: false,
-        additionalReporters: [
+	      additionalReporters: watch ? [
             { packageName: "@parcel/reporter-cli", resolveFrom: __filename },
             //    { packageName: "@parcel/reporter-dev-server", resolveFrom: __filename }
-        ],
+        ] : [],
         defaultTargetOptions: {
             shouldOptimize: isProduction,
             shouldScopeHoist: false,
             sourceMaps: isProduction,
             publicUrl: "./",
             distDir: "../../" + dist + "/appl",
-            // engines: {
-            //     browsers: ["> 0.2%, not dead, not op_mini all"]
-            // }
+	          context: "browser",
+/*
+            engines: {
+                browsers: ["> 0.2%, not dead, not op_mini all"]
+            }
+*/
         },
     };
 
@@ -262,6 +282,14 @@ function parcelBuild(watch, cb, serve = false) {
             });
             cb();
         } else {
+            /*
+                This removes the "process not defined" problem??
+            */
+            options.serveOptions = {
+                host: "localhost",
+                port: port,
+                https: false
+            };
             try {
                 await parcel.run(err => {
                     console.error(err, err.diagnostics[0] ? err.diagnostics[0].codeFrame : "");
